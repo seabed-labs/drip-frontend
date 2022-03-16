@@ -1,8 +1,10 @@
 import { ChakraProvider } from '@chakra-ui/react';
 import { FC } from 'react';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import styled from 'styled-components';
 import { Header } from './component/Header';
 import { WalletContext } from './contexts';
+import { Deposits, Positions } from './pages';
 import { theme } from './theme';
 
 require('./App.css');
@@ -21,17 +23,16 @@ const App: FC = () => {
   return (
     <ChakraProvider theme={theme}>
       <WalletContext>
-        <Content />
+        <StyledAppContainer>
+          <Header />
+          <Routes>
+            <Route path="/deposit" element={<Deposits />} />
+            <Route path="/positions" element={<Positions />} />
+            <Route path="*" element={<Navigate to="/deposit" />} />
+          </Routes>
+        </StyledAppContainer>
       </WalletContext>
     </ChakraProvider>
   );
 };
 export default App;
-
-const Content: FC = () => {
-  return (
-    <StyledAppContainer>
-      <Header />
-    </StyledAppContainer>
-  );
-};

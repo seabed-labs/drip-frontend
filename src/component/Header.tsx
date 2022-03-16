@@ -1,6 +1,7 @@
 import { Button, Image } from '@chakra-ui/react';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { FC } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import Logo from '../assets/logo.svg';
 
@@ -40,11 +41,12 @@ const StyledLogo = styled(Image)`
   width: 120px;
 `;
 
-const StyledNavButton = styled(Button)`
+const StyledNavButton = styled(Button)<{ selected: boolean }>`
   width: 100px;
   background: transparent !important;
   font-size: 26px !important;
-  color: rgba(255, 255, 255, 0.6);
+  color: ${(props) => (props.selected ? '#62aaff' : 'rgba(255, 255, 255, 0.6)')};
+  text-decoration: ${(props) => (props.selected ? 'underline' : 'none')};
 
   &:hover {
     color: #62aaff;
@@ -53,14 +55,20 @@ const StyledNavButton = styled(Button)`
 `;
 
 export const Header: FC = () => {
+  const { pathname } = useLocation();
+
   return (
     <StyledContainer>
       <StyledLeftContainer>
         <StyledLogo src={Logo} />
       </StyledLeftContainer>
       <StyledMiddleContainer>
-        <StyledNavButton>Deposit</StyledNavButton>
-        <StyledNavButton>Positions</StyledNavButton>
+        <Link to="/deposit">
+          <StyledNavButton selected={pathname === '/deposit'}>Deposit</StyledNavButton>
+        </Link>
+        <Link to="/positions">
+          <StyledNavButton selected={pathname === '/positions'}>Positions</StyledNavButton>
+        </Link>
       </StyledMiddleContainer>
       <StyledRightContainer>
         <WalletMultiButton />
