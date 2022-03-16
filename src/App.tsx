@@ -13,13 +13,14 @@ import {
 } from '@solana/wallet-adapter-wallets';
 import { clusterApiUrl } from '@solana/web3.js';
 import { FC, ReactNode, useMemo } from 'react';
+import { theme } from './theme';
 
 require('./App.css');
 require('@solana/wallet-adapter-react-ui/styles.css');
 
 const App: FC = () => {
   return (
-    <ChakraProvider>
+    <ChakraProvider theme={theme}>
       <Context>
         <Content />
       </Context>
