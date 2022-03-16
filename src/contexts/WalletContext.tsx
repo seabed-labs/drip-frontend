@@ -1,7 +1,6 @@
-import { ChakraProvider } from '@chakra-ui/react';
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
-import { WalletModalProvider, WalletMultiButton } from '@solana/wallet-adapter-react-ui';
+import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
 import {
   LedgerWalletAdapter,
   PhantomWalletAdapter,
@@ -14,21 +13,7 @@ import {
 import { clusterApiUrl } from '@solana/web3.js';
 import { FC, ReactNode, useMemo } from 'react';
 
-require('./App.css');
-require('@solana/wallet-adapter-react-ui/styles.css');
-
-const App: FC = () => {
-  return (
-    <ChakraProvider>
-      <Context>
-        <Content />
-      </Context>
-    </ChakraProvider>
-  );
-};
-export default App;
-
-const Context: FC<{ children: ReactNode }> = ({ children }) => {
+export const WalletContext: FC<{ children: ReactNode }> = ({ children }) => {
   // The network can be set to 'devnet', 'testnet', or 'mainnet-beta'.
   const network = WalletAdapterNetwork.Devnet;
 
@@ -57,13 +42,5 @@ const Context: FC<{ children: ReactNode }> = ({ children }) => {
         <WalletModalProvider>{children}</WalletModalProvider>
       </WalletProvider>
     </ConnectionProvider>
-  );
-};
-
-const Content: FC = () => {
-  return (
-    <div className="App">
-      <WalletMultiButton />
-    </div>
   );
 };
