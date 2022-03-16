@@ -14,4 +14,8 @@ const config: ThemeConfig = {
   useSystemColorMode: false
 };
 
-export const theme = extendTheme({ config, styles });
+export const theme = extendTheme({
+  config,
+  styles,
+  components: { Button: { baseStyle: { _focus: { boxShadow: 'none' } } } }
+});
