@@ -12,7 +12,7 @@ import {
   Code,
   Link
 } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import DatePicker from 'react-datepicker';
 
@@ -58,6 +58,10 @@ export const DepositBox = (props: DepositFormProps) => {
   const vaultClient = useVaultClient(network);
   const toast = useToast();
 
+  useEffect(() => {
+    console.log('hi');
+  }, []);
+
   async function handleDeposit() {
     try {
       const result = await vaultClient.deposit(
@@ -88,7 +92,7 @@ export const DepositBox = (props: DepositFormProps) => {
     } catch (err) {
       console.error(err);
       toast({
-        title: 'Vault creation failed',
+        title: 'Deposit failed',
         description: (err as Error).message,
         status: 'error',
         duration: 9000,

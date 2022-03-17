@@ -39,3 +39,19 @@ export function useVaultClient(network?: Network) {
     [wallet]
   );
 }
+
+export function useTokenABalance(tokenA: string, network?: Network) {
+  const clusterUrl = clusterApiUrl(network === Network.Mainnet ? 'mainnet-beta' : 'devnet');
+  const wallet = useAnchorWallet();
+  return useMemo(
+    () =>
+      new VaultClient(
+        new Provider(
+          new Connection(clusterUrl, 'confirmed'),
+          wallet || defaultWallet,
+          Provider.defaultOptions()
+        )
+      ),
+    [wallet]
+  );
+}
