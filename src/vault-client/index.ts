@@ -10,17 +10,17 @@ import {
   Transaction
 } from '@solana/web3.js';
 import {
+  Account,
   ASSOCIATED_TOKEN_PROGRAM_ID,
   createApproveCheckedInstruction,
   createInitializeAccountInstruction,
-  getAccount,
   getAssociatedTokenAddress,
   getMint,
+  Mint,
   TOKEN_PROGRAM_ID
 } from '@solana/spl-token';
 import { assertWalletConnected } from '../utils/wallet';
 import { findProgramAddressSync } from '@project-serum/anchor/dist/cjs/utils/pubkey';
-import { program } from '@project-serum/anchor/dist/cjs/spl/token';
 
 const CONSTANT_SEEDS = {
   vault: 'dca-vault-v1',
@@ -60,6 +60,7 @@ function getVaultPeriodPDA(vaultProgramId: PublicKey, vault: PublicKey, periodId
   ]);
 }
 
+// TODO: Remove vault from this after upgrading the program
 function getPositionPDA(vaultProgramId: PublicKey, vault: PublicKey, positionNftMint: PublicKey) {
   return findPDA(vaultProgramId, [
     Buffer.from(CONSTANT_SEEDS.userPosition),
@@ -352,5 +353,41 @@ export class VaultClient {
     return {
       txHash
     };
+  }
+
+  public async getUserPositions(): Promise<PublicKey[]> {
+    const userPublicKey = this.program.provider.wallet.publicKey;
+
+    const userTokenAccounts = await this.program.provider.connection.getParsedTokenAccountsByOwner(
+      userPublicKey,
+      {
+        programId: TOKEN_PROGRAM_ID
+      }
+    );
+
+    const userPossibleNftAccounts = userTokenAccounts.value.filter((tokenAccountData) => {
+      const tokenAccount: Account = tokenAccountData.account.data.parsed;
+      return tokenAccount.amount.toString() === '1';
+    });
+
+    const userPossibleNftMints: PublicKey[] = userPossibleNftAccounts.map(
+      (nftAccount) => nftAccount.account.data.parsed.mint
+    );
+
+    const userPossiblePositionAccounts = userPossibleNftMints.map(
+      (mintPublicKey) =>
+        getPositionPDA(
+          this.program.programId,
+          // TODO: Remove this
+          toPublicKey('8NmRaD8gvZiomrzoXsuJRFU742WK6DBaW4Wanw1xAbPX'),
+          mintPublicKey
+        ).publicKey
+    );
+
+    const userPositionAccounts = await this.program.account.position.fetchMultiple(
+      userPossiblePositionAccounts
+    );
+
+    return userPossiblePositionAccounts.filter((_, i) => userPositionAccounts[i] != null);
   }
 }
