@@ -7,6 +7,7 @@ import {
 } from '../utils/time';
 
 export enum DcaGranularity {
+  EveryFiveSeconds = 5,
   Hourly = SECONDS_IN_A_HOUR,
   Daily = SECONDS_IN_A_DAY,
   Weekly = SECONDS_IN_A_WEEK,

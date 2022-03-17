@@ -6,7 +6,8 @@ import { Keypair, SystemProgram } from '@solana/web3.js';
 import { assertWalletConnected } from '../utils/wallet';
 
 export class VaultClient {
-  public static readonly ProgramID = '6rCWVjanBs1gx5jhpUAXoDqLwwURaNxKoGUxczjG6hFX';
+  // TODO: Move this to an env var
+  public static readonly ProgramID = '3Q1eJ9m3jYJ3F32gcJYL7gMPn9kj87MzzjgoAL7VSN6E';
   public readonly program: Program<DcaVault>;
 
   public constructor(provider: Provider) {
