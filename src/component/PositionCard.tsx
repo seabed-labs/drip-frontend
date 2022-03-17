@@ -1,3 +1,4 @@
+import { Box, Progress } from '@chakra-ui/react';
 import { FC } from 'react';
 import styled from 'styled-components';
 import { useTokenMintInfo } from '../hooks/TokenMintInfo';
@@ -53,6 +54,28 @@ const ClosedStatusPill = styled.div`
   border-radius: 20px;
 `;
 
+const Row = styled.div`
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const InfoField = styled.div<{ isFlexStart?: boolean }>`
+  display: flex;
+  flex-direction: column;
+  align-items: ${(props) => (props.isFlexStart ? 'flex-start' : 'flex-end')};
+  justify-content: center;
+`;
+
+const InfoKey = styled.div`
+  font-weight: bold;
+  color: #62aaff;
+`;
+
+const InfoValue = styled.div``;
+
 interface Props {
   position: Position;
 }
@@ -79,6 +102,27 @@ export const PositionCard: FC<Props> = ({ position }) => {
           <InProgressStatusPill />
         )}
       </Header>
+      <Box my="15px" />
+      <Row>
+        <InfoField isFlexStart>
+          <InfoKey>Accrued SOL</InfoKey> <InfoValue>125 SOL</InfoValue>
+        </InfoField>
+        <InfoField>
+          <InfoKey>Average Price</InfoKey>
+          <InfoValue>20 SOL per USDC</InfoValue>
+        </InfoField>
+      </Row>
+      <Box my="15px" />
+      <Row>
+        <InfoField isFlexStart>
+          <InfoValue>20% completed</InfoValue>
+          <Progress mt="14px" width="150%" borderRadius="20px" height="8px" value={20} />
+        </InfoField>
+        <InfoField>
+          <InfoKey>Withdrawn SOL</InfoKey>
+          <InfoValue>20 SOL</InfoValue>
+        </InfoField>
+      </Row>
     </Container>
   );
 };
