@@ -14,6 +14,7 @@ import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
   createApproveCheckedInstruction,
   createInitializeAccountInstruction,
+  getAccount,
   getAssociatedTokenAddress,
   getMint,
   Mint,
@@ -388,5 +389,25 @@ export class VaultClient {
       }),
       {} as Record<string, unknown>
     );
+  }
+
+  public async getUserTokenBalance(tokenMint: string): Promise<BigInt | undefined> {
+    assertWalletConnected(this.program.provider.wallet);
+
+    const userPublicKey = this.program.provider.wallet.publicKey;
+
+    const userTokenAccount = await getAssociatedTokenAddress(
+      toPublicKey(tokenMint),
+      userPublicKey,
+      true,
+      TOKEN_PROGRAM_ID,
+      ASSOCIATED_TOKEN_PROGRAM_ID
+    );
+
+    const userTokenAccountInfo = await getAccount(
+      this.program.provider.connection,
+      userTokenAccount
+    );
+    return BigInt(userTokenAccountInfo.amount);
   }
 }

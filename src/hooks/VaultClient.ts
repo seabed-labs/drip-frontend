@@ -1,8 +1,10 @@
 import { Provider } from '@project-serum/anchor';
 import { Wallet } from '@project-serum/anchor/src/provider';
+import { getAssociatedTokenAddress } from '@solana/spl-token';
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
 import { clusterApiUrl, Connection, PublicKey, Transaction } from '@solana/web3.js';
 import { useMemo } from 'react';
+import { useAsyncMemo } from 'use-async-memo';
 import { Network } from '../models/network';
 import { VaultClient } from '../vault-client';
 
@@ -40,18 +42,16 @@ export function useVaultClient(network?: Network) {
   );
 }
 
-export function useTokenABalance(tokenA: string, network?: Network) {
+export function useTokenABalance(tokenAMint: string, network?: Network) {
   const clusterUrl = clusterApiUrl(network === Network.Mainnet ? 'mainnet-beta' : 'devnet');
   const wallet = useAnchorWallet();
-  return useMemo(
-    () =>
-      new VaultClient(
-        new Provider(
-          new Connection(clusterUrl, 'confirmed'),
-          wallet || defaultWallet,
-          Provider.defaultOptions()
-        )
-      ),
-    [wallet]
+
+  const vaultClient = new VaultClient(
+    new Provider(
+      new Connection(clusterUrl, 'confirmed'),
+      wallet || defaultWallet,
+      Provider.defaultOptions()
+    )
   );
+  return useAsyncMemo(() => vaultClient.getUserTokenBalance(tokenAMint), [wallet]);
 }
