@@ -66,14 +66,24 @@ export const VaultProtoConfig: FC = () => {
 
   return (
     <Center>
-      <Select value={granularity} placeholder="Select granularity" onChange={handleSelectOnChange}>
-        {GRANULARITIES.map((granularity) => (
-          <option key={granularity} value={granularity}>
-            {renderGranularity(granularity)}
-          </option>
-        ))}
-      </Select>
-      <Button onClick={handleInitVaultProtoConfig}>Deploy VaultProtoConfig</Button>
+      <Box>
+        <Box>
+          <Select
+            value={granularity}
+            placeholder="Select granularity"
+            onChange={handleSelectOnChange}
+          >
+            {GRANULARITIES.map((granularity) => (
+              <option key={granularity} value={granularity}>
+                {renderGranularity(granularity)}
+              </option>
+            ))}
+          </Select>
+        </Box>
+        <Box mt="10px">
+          <Button onClick={handleInitVaultProtoConfig}>Deploy VaultProtoConfig</Button>
+        </Box>
+      </Box>
     </Center>
   );
 };
