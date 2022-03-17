@@ -98,32 +98,36 @@ export class VaultClient {
         toPublicKey(tokenA),
         vaultPDA.publicKey,
         true,
-        this.program.programId,
+        TOKEN_PROGRAM_ID,
         ASSOCIATED_TOKEN_PROGRAM_ID
       ),
       getAssociatedTokenAddress(
         toPublicKey(tokenB),
         vaultPDA.publicKey,
         true,
-        this.program.programId,
+        TOKEN_PROGRAM_ID,
         ASSOCIATED_TOKEN_PROGRAM_ID
       )
     ]);
 
+    const accounts = {
+      vault: vaultPDA.publicKey.toBase58(),
+      vaultProtoConfig: protoConfig.toString(),
+      tokenAMint: tokenA.toString(),
+      tokenBMint: tokenB.toString(),
+      tokenAAccount: vaultTokenAAccount.toBase58(),
+      tokenBAccount: vaultTokenBAccount.toBase58(),
+      creator: this.program.provider.wallet.publicKey.toBase58(),
+      systemProgram: SystemProgram.programId.toBase58(),
+      tokenProgram: TOKEN_PROGRAM_ID.toBase58(),
+      associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID.toBase58(),
+      rent: SYSVAR_RENT_PUBKEY.toBase58()
+    };
+
+    console.log('INIT VAULT ACCOUNTS:', accounts);
+
     const txHash = await this.program.rpc.initVault({
-      accounts: {
-        vault: vaultPDA.publicKey.toBase58(),
-        vaultProtoConfig: protoConfig.toString(),
-        tokenAMint: tokenA.toString(),
-        tokenBMint: tokenB.toString(),
-        tokenAAccount: vaultTokenAAccount.toBase58(),
-        tokenBAccount: vaultTokenBAccount.toBase58(),
-        creator: this.program.provider.wallet.publicKey.toBase58(),
-        systemProgram: SystemProgram.programId,
-        tokenProgram: TOKEN_PROGRAM_ID,
-        associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-        rent: SYSVAR_RENT_PUBKEY
-      }
+      accounts
     });
 
     return {
