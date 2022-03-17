@@ -1,21 +1,22 @@
-import { Address, BN, Program, Provider } from '@project-serum/anchor';
+import { BN, Program, Provider } from '@project-serum/anchor';
 import { DcaVault } from '../idl/type';
 import DcaVaultIDL from '../idl/idl.json';
 import { DcaGranularity, InitTxResult } from './types';
 import { Keypair, SystemProgram } from '@solana/web3.js';
-import invariant from 'tiny-invariant';
+import { assertWalletConnected } from '../utils/wallet';
 
 export class VaultClient {
+  public static readonly ProgramID = '6rCWVjanBs1gx5jhpUAXoDqLwwURaNxKoGUxczjG6hFX';
   public readonly program: Program<DcaVault>;
 
-  public constructor(vaultProgramId: Address, provider?: Provider) {
-    this.program = new Program(DcaVaultIDL as DcaVault, vaultProgramId, provider);
+  public constructor(provider: Provider) {
+    this.program = new Program(DcaVaultIDL as DcaVault, VaultClient.ProgramID, provider);
   }
 
   public async initVaultProtoConfig(granularity: DcaGranularity): Promise<InitTxResult> {
     const vaultProtoConfigKeypair = Keypair.generate();
 
-    invariant(this.program.provider, 'Provider is null');
+    assertWalletConnected(this.program.provider.wallet);
 
     const txHash = await this.program.rpc.initVaultProtoConfig(
       {

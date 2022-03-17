@@ -1,5 +1,8 @@
+import { Button } from '@chakra-ui/react';
 import { FC } from 'react';
 import styled from 'styled-components';
+import { useVaultClient } from '../hooks/VaultClient';
+import { DcaGranularity } from '../vault-client/types';
 
 // TODO: Finalize the border-shadow on this
 const Container = styled.div`
@@ -12,5 +15,20 @@ const Container = styled.div`
 `;
 
 export const DepositBox: FC = () => {
-  return <Container></Container>;
+  const vaultClient = useVaultClient();
+
+  async function handleInitVaultProtoConfig() {
+    console.log('Running initVaultProtoConfig');
+    const result = await vaultClient.initVaultProtoConfig(DcaGranularity.Hourly);
+    console.log('Init Vault Proto Config', {
+      vaultProtoConfig: result.publicKey.toBase58(),
+      txHash: result.txHash
+    });
+  }
+
+  return (
+    <Container>
+      <Button onClick={handleInitVaultProtoConfig}>Init Vault Proto Config</Button>
+    </Container>
+  );
 };
