@@ -66,7 +66,7 @@ export const VaultProtoConfig: FC = () => {
 
   return (
     <Center>
-      <Box>
+      <Box w="100%">
         <Box>
           <Select
             value={granularity}
@@ -81,7 +81,9 @@ export const VaultProtoConfig: FC = () => {
           </Select>
         </Box>
         <Box mt="10px">
-          <Button onClick={handleInitVaultProtoConfig}>Deploy VaultProtoConfig</Button>
+          <Button w="100%" onClick={handleInitVaultProtoConfig}>
+            Deploy VaultProtoConfig
+          </Button>
         </Box>
       </Box>
     </Center>
