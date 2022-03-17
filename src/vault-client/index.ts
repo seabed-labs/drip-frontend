@@ -60,11 +60,9 @@ function getVaultPeriodPDA(vaultProgramId: PublicKey, vault: PublicKey, periodId
   ]);
 }
 
-// TODO: Remove vault from this after upgrading the program
-function getPositionPDA(vaultProgramId: PublicKey, vault: PublicKey, positionNftMint: PublicKey) {
+function getPositionPDA(vaultProgramId: PublicKey, positionNftMint: PublicKey) {
   return findPDA(vaultProgramId, [
     Buffer.from(CONSTANT_SEEDS.userPosition),
-    vault.toBuffer(),
     positionNftMint.toBuffer()
   ]);
 }
@@ -232,7 +230,6 @@ export class VaultClient {
     const positionNftMintKeypair = Keypair.generate();
     const userPositionPDA = getPositionPDA(
       this.program.programId,
-      vault,
       positionNftMintKeypair.publicKey
     );
 
@@ -375,13 +372,7 @@ export class VaultClient {
     );
 
     const userPossiblePositionAccounts = userPossibleNftMints.map(
-      (mintPublicKey) =>
-        getPositionPDA(
-          this.program.programId,
-          // TODO: Remove this
-          toPublicKey('8NmRaD8gvZiomrzoXsuJRFU742WK6DBaW4Wanw1xAbPX'),
-          mintPublicKey
-        ).publicKey
+      (mintPublicKey) => getPositionPDA(this.program.programId, mintPublicKey).publicKey
     );
 
     const userPositionAccounts = await this.program.account.position.fetchMultiple(
