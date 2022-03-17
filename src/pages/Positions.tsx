@@ -3,10 +3,11 @@ import { useAnchorWallet } from '@solana/wallet-adapter-react';
 import { PublicKey } from '@solana/web3.js';
 import BN from 'bn.js';
 import { FC, useEffect, useMemo, useState } from 'react';
+import { PositionCard } from '../component/PositionCard';
 import { useNetwork } from '../contexts/NetworkContext';
 import { useVaultClient } from '../hooks/VaultClient';
 
-interface Position {
+export interface Position {
   vault: PublicKey;
   publicKey: PublicKey;
   positionAuthority: PublicKey;
@@ -68,7 +69,8 @@ export const Positions: FC = () => {
     <Grid templateColumns="repeat(3, 1fr)" gap="80px">
       {positions.map((position) => (
         <GridItem key={position.publicKey.toBase58()} mt="80px">
-          <Box>
+          <PositionCard position={position} />
+          {/* <Box>
             <Box>
               <Text>Public Key:</Text>
               <Code>{position.publicKey.toBase58()}</Code>
@@ -77,7 +79,7 @@ export const Positions: FC = () => {
               <Text>Closed</Text>
               <Code>{position.isClosed == false ? 'false' : 'true'}</Code>
             </Box>
-          </Box>
+          </Box> */}
         </GridItem>
       ))}
     </Grid>
