@@ -1,7 +1,7 @@
 import { Address, BN, Program, Provider } from '@project-serum/anchor';
 import { DcaVault } from '../idl/type';
 import DcaVaultIDL from '../idl/idl.json';
-import { DcaGranularity, InitTxResult } from './types';
+import { DcaGranularity, InitTxResult, TxResult } from './types';
 import {
   Keypair,
   PublicKey,
@@ -10,15 +10,17 @@ import {
   Transaction
 } from '@solana/web3.js';
 import {
+  Account,
   ASSOCIATED_TOKEN_PROGRAM_ID,
   createApproveCheckedInstruction,
+  createInitializeAccountInstruction,
   getAssociatedTokenAddress,
   getMint,
+  Mint,
   TOKEN_PROGRAM_ID
 } from '@solana/spl-token';
 import { assertWalletConnected } from '../utils/wallet';
 import { findProgramAddressSync } from '@project-serum/anchor/dist/cjs/utils/pubkey';
-import { program } from '@project-serum/anchor/dist/cjs/spl/token';
 
 const CONSTANT_SEEDS = {
   vault: 'dca-vault-v1',
@@ -58,6 +60,7 @@ function getVaultPeriodPDA(vaultProgramId: PublicKey, vault: PublicKey, periodId
   ]);
 }
 
+// TODO: Remove vault from this after upgrading the program
 function getPositionPDA(vaultProgramId: PublicKey, vault: PublicKey, positionNftMint: PublicKey) {
   return findPDA(vaultProgramId, [
     Buffer.from(CONSTANT_SEEDS.userPosition),
@@ -273,5 +276,118 @@ export class VaultClient {
       publicKey: userPositionPDA.publicKey,
       txHash
     };
+  }
+
+  public async withdrawB(vault: Address, position: Address): Promise<TxResult> {
+    const vaultAccount = await this.program.account.vault.fetch(vault);
+    const userPublicKey = this.program.provider.wallet.publicKey;
+    const userTokenBAccount = await getAssociatedTokenAddress(
+      toPublicKey(vaultAccount.tokenBMint),
+      userPublicKey,
+      true,
+      TOKEN_PROGRAM_ID,
+      ASSOCIATED_TOKEN_PROGRAM_ID
+    );
+
+    const userTokenBAccountInfo = await this.program.provider.connection.getAccountInfo(
+      userTokenBAccount
+    );
+
+    const tx = new Transaction({
+      recentBlockhash: (await this.program.provider.connection.getLatestBlockhash()).blockhash,
+      feePayer: this.program.provider.wallet.publicKey
+    });
+
+    if (!userTokenBAccountInfo) {
+      tx.add(
+        createInitializeAccountInstruction(
+          userTokenBAccount,
+          vaultAccount.tokenBMint,
+          userPublicKey
+        )
+      );
+    }
+
+    const userPositionAccount = await this.program.account.position.fetch(position);
+    const { publicKey: vaultPeriodI } = getVaultPeriodPDA(
+      this.program.programId,
+      toPublicKey(vault),
+      userPositionAccount.dcaPeriodIdBeforeDeposit
+    );
+    const { publicKey: vaultPeriodJ } = getVaultPeriodPDA(
+      this.program.programId,
+      toPublicKey(vault),
+      userPositionAccount.dcaPeriodIdBeforeDeposit.add(userPositionAccount.numberOfSwaps)
+    );
+
+    const userPositionNftMint = userPositionAccount.positionAuthority;
+    const userPositionNftAccount = await getAssociatedTokenAddress(
+      userPositionNftMint,
+      userPublicKey,
+      true,
+      TOKEN_PROGRAM_ID,
+      ASSOCIATED_TOKEN_PROGRAM_ID
+    );
+
+    tx.add(
+      this.program.instruction.withdrawB({
+        accounts: {
+          vault,
+          vaultPeriodI,
+          vaultPeriodJ,
+          userPosition: userPositionAccount,
+          userPositionNftAccount,
+          userPositionNftMint,
+          vaultTokenBAccount: vaultAccount.tokenBAccount,
+          vaultTokenBMint: vaultAccount.tokenBMint,
+          userTokenBAccount,
+          withdrawer: userPublicKey,
+          tokenProgram: TOKEN_PROGRAM_ID,
+          associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID
+        }
+      })
+    );
+
+    const txHash = await this.program.provider.send(tx);
+
+    return {
+      txHash
+    };
+  }
+
+  public async getUserPositions(): Promise<PublicKey[]> {
+    const userPublicKey = this.program.provider.wallet.publicKey;
+
+    const userTokenAccounts = await this.program.provider.connection.getParsedTokenAccountsByOwner(
+      userPublicKey,
+      {
+        programId: TOKEN_PROGRAM_ID
+      }
+    );
+
+    const userPossibleNftAccounts = userTokenAccounts.value.filter((tokenAccountData) => {
+      const tokenAccount: Account = tokenAccountData.account.data.parsed;
+      return tokenAccount.amount.toString() === '1';
+    });
+
+    const userPossibleNftMints: PublicKey[] = userPossibleNftAccounts.map(
+      (nftAccount) => nftAccount.account.data.parsed.mint
+    );
+
+    const userPossiblePositionAccounts = userPossibleNftMints.map(
+      (mintPublicKey) =>
+        getPositionPDA(
+          this.program.programId,
+          // TODO: Remove this
+          toPublicKey('8NmRaD8gvZiomrzoXsuJRFU742WK6DBaW4Wanw1xAbPX'),
+          mintPublicKey
+        ).publicKey
+    );
+
+    const userPositionAccounts = await this.program.account.position.fetchMultiple(
+      userPossiblePositionAccounts
+    );
+
+    return userPossiblePositionAccounts.filter((_, i) => userPositionAccounts[i] != null);
   }
 }
