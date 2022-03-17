@@ -1,4 +1,4 @@
-import { Box, Progress } from '@chakra-ui/react';
+import { Box, Popover, PopoverContent, PopoverTrigger, Progress } from '@chakra-ui/react';
 import { FC } from 'react';
 import styled from 'styled-components';
 import { useTokenMintInfo } from '../hooks/TokenMintInfo';
@@ -7,6 +7,7 @@ import { Position } from '../pages';
 import { formatTokenAmount } from '../utils/format';
 
 const Container = styled.div`
+  cursor: pointer;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
