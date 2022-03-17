@@ -1,4 +1,4 @@
-import { Address, BN, Program, Provider, SplToken } from '@project-serum/anchor';
+import { Address, BN, Program, Provider } from '@project-serum/anchor';
 import { DcaVault } from '../idl/type';
 import DcaVaultIDL from '../idl/idl.json';
 import { DcaGranularity, InitTxResult } from './types';
@@ -7,12 +7,13 @@ import {
   PublicKey,
   SystemProgram,
   SYSVAR_RENT_PUBKEY,
-  TokenAmount,
   Transaction
 } from '@solana/web3.js';
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
+  createApproveCheckedInstruction,
   getAssociatedTokenAddress,
+  getMint,
   TOKEN_PROGRAM_ID
 } from '@solana/spl-token';
 import { assertWalletConnected } from '../utils/wallet';
@@ -160,7 +161,12 @@ export class VaultClient {
     };
   }
 
-  public async deposit(vault: PublicKey, amount: BN, numberOfCycles: BN): Promise<InitTxResult> {
+  public async deposit(
+    vaultAddress: Address,
+    amount: BN,
+    numberOfCycles: BN
+  ): Promise<InitTxResult> {
+    const vault = new PublicKey(vaultAddress);
     // TODO: Account for token A being SOL here
     assertWalletConnected(this.program.provider.wallet);
 
@@ -179,7 +185,10 @@ export class VaultClient {
       ASSOCIATED_TOKEN_PROGRAM_ID
     );
 
-    const tx = new Transaction();
+    const tx = new Transaction({
+      recentBlockhash: (await this.program.provider.connection.getLatestBlockhash()).blockhash,
+      feePayer: this.program.provider.wallet.publicKey
+    });
 
     if (!endPeriodAccount) {
       tx.add(
@@ -202,19 +211,19 @@ export class VaultClient {
       );
     }
 
-    const tokenProgram = program(this.program.provider);
-
-    const tokenAMintInfo = await tokenProgram.account.mint.fetch(vaultAccount.tokenAMint);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const tokenAMintInfo = await getMint(this.program.provider.connection, vaultAccount.tokenAMint);
 
     tx.add(
-      tokenProgram.instruction.approveChecked(amount, tokenAMintInfo.decimals, {
-        accounts: {
-          mint: vaultAccount.tokenAMint,
-          source: userTokenAAccount,
-          delegate: vault,
-          authority: this.program.provider.wallet.publicKey
-        }
-      })
+      createApproveCheckedInstruction(
+        userTokenAAccount,
+        vaultAccount.tokenAMint,
+        vault,
+        this.program.provider.wallet.publicKey,
+        BigInt(amount.toString()),
+        tokenAMintInfo.decimals
+      )
     );
 
     const positionNftMintKeypair = Keypair.generate();
@@ -225,8 +234,8 @@ export class VaultClient {
     );
 
     const userPositionNftAccount = await getAssociatedTokenAddress(
-      toPublicKey(vaultAccount.tokenAMint),
-      vault,
+      positionNftMintKeypair.publicKey,
+      this.program.provider.wallet.publicKey,
       true,
       TOKEN_PROGRAM_ID,
       ASSOCIATED_TOKEN_PROGRAM_ID
@@ -258,9 +267,7 @@ export class VaultClient {
       )
     );
 
-    tx.partialSign(positionNftMintKeypair);
-
-    const txHash = await this.program.provider.send(tx);
+    const txHash = await this.program.provider.send(tx, [positionNftMintKeypair]);
 
     return {
       publicKey: userPositionPDA.publicKey,

@@ -6,13 +6,21 @@ import {
   Input,
   Select,
   VStack,
-  Text
+  Text,
+  useToast,
+  Box,
+  Code,
+  Link
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import styled from 'styled-components';
 import DatePicker from 'react-datepicker';
 
 import 'react-datepicker/dist/react-datepicker.css';
+import { useNetwork } from '../contexts/NetworkContext';
+import { useVaultClient } from '../hooks/VaultClient';
+import { BN } from '@project-serum/anchor';
+import { solscanTxUrl } from '../utils/block-explorer';
 
 // TODO: Finalize the border-shadow on this
 const Container = styled.div`
@@ -45,6 +53,50 @@ export const DepositBox = (props: DepositFormProps) => {
   const [granularity, setGranularity] = useState('Minutely');
 
   const maxTokenALabel = props.maxTokenA ? `max: ${props.maxTokenA}` : `-`;
+
+  const network = useNetwork();
+  const vaultClient = useVaultClient(network);
+  const toast = useToast();
+
+  async function handleDeposit() {
+    try {
+      const result = await vaultClient.deposit(
+        '8NmRaD8gvZiomrzoXsuJRFU742WK6DBaW4Wanw1xAbPX',
+        new BN(1000 * 1e6),
+        new BN(10)
+      );
+
+      toast({
+        title: 'Deposit successful',
+        description: (
+          <>
+            <Box>
+              <Code colorScheme="black">{result.publicKey.toBase58()}</Code>
+            </Box>
+            <Box>
+              <Link href={solscanTxUrl(result.txHash, network)} isExternal>
+                Solscan
+              </Link>
+            </Box>
+          </>
+        ),
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-right'
+      });
+    } catch (err) {
+      console.error(err);
+      toast({
+        title: 'Vault creation failed',
+        description: (err as Error).message,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-right'
+      });
+    }
+  }
 
   return (
     <Container>
@@ -124,7 +176,7 @@ export const DepositBox = (props: DepositFormProps) => {
       <DepositRow>
         <VStack>
           <Text>{'Previe Text'}</Text>
-          <Button bg="#62AAFF" color="#FFFFFF">
+          <Button onClick={handleDeposit} bg="#62AAFF" color="#FFFFFF">
             Deposit
           </Button>
         </VStack>
