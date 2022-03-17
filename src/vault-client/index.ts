@@ -1,9 +1,49 @@
-import { BN, Program, Provider } from '@project-serum/anchor';
+import { Address, BN, Program, Provider } from '@project-serum/anchor';
 import { DcaVault } from '../idl/type';
 import DcaVaultIDL from '../idl/idl.json';
 import { DcaGranularity, InitTxResult } from './types';
-import { Keypair, SystemProgram } from '@solana/web3.js';
+import { Keypair, PublicKey, SystemProgram, SYSVAR_RENT_PUBKEY } from '@solana/web3.js';
+import {
+  ASSOCIATED_TOKEN_PROGRAM_ID,
+  getAssociatedTokenAddress,
+  TOKEN_PROGRAM_ID
+} from '@solana/spl-token';
 import { assertWalletConnected } from '../utils/wallet';
+import { findProgramAddressSync } from '@project-serum/anchor/dist/cjs/utils/pubkey';
+
+const CONSTANT_SEEDS = {
+  vault: 'dca-vault-v1',
+  tokenAAccount: 'token_a_account',
+  tokenBAccount: 'token_b_account',
+  vaultPeriod: 'vault_period',
+  userPosition: 'user_position'
+};
+
+function findPDA(programId: PublicKey, seeds: (Uint8Array | Buffer)[]) {
+  const [publicKey, bump] = findProgramAddressSync(seeds, programId);
+  return {
+    publicKey,
+    bump
+  };
+}
+
+function getVaultPDA(
+  vaultProgramId: PublicKey,
+  tokenA: PublicKey,
+  tokenB: PublicKey,
+  protoConfig: PublicKey
+) {
+  return findPDA(vaultProgramId, [
+    Buffer.from(CONSTANT_SEEDS.vault),
+    tokenA.toBuffer(),
+    tokenB.toBuffer(),
+    protoConfig.toBuffer()
+  ]);
+}
+
+function toPublicKey(address: Address): PublicKey {
+  return new PublicKey(address.toString());
+}
 
 export class VaultClient {
   // TODO: Move this to an env var
@@ -35,6 +75,59 @@ export class VaultClient {
 
     return {
       publicKey: vaultProtoConfigKeypair.publicKey,
+      txHash
+    };
+  }
+
+  public async initVault(
+    tokenA: Address,
+    tokenB: Address,
+    protoConfig: Address
+  ): Promise<InitTxResult> {
+    assertWalletConnected(this.program.provider.wallet);
+
+    const vaultPDA = getVaultPDA(
+      this.program.programId,
+      toPublicKey(tokenA),
+      toPublicKey(tokenB),
+      toPublicKey(protoConfig)
+    );
+
+    const [vaultTokenAAccount, vaultTokenBAccount] = await Promise.all([
+      getAssociatedTokenAddress(
+        toPublicKey(tokenA),
+        vaultPDA.publicKey,
+        true,
+        this.program.programId,
+        ASSOCIATED_TOKEN_PROGRAM_ID
+      ),
+      getAssociatedTokenAddress(
+        toPublicKey(tokenB),
+        vaultPDA.publicKey,
+        true,
+        this.program.programId,
+        ASSOCIATED_TOKEN_PROGRAM_ID
+      )
+    ]);
+
+    const txHash = await this.program.rpc.initVault({
+      accounts: {
+        vault: vaultPDA.publicKey.toBase58(),
+        vaultProtoConfig: protoConfig.toString(),
+        tokenAMint: tokenA.toString(),
+        tokenBMint: tokenB.toString(),
+        tokenAAccount: vaultTokenAAccount.toBase58(),
+        tokenBAccount: vaultTokenBAccount.toBase58(),
+        creator: this.program.provider.wallet.publicKey.toBase58(),
+        systemProgram: SystemProgram.programId,
+        tokenProgram: TOKEN_PROGRAM_ID,
+        associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+        rent: SYSVAR_RENT_PUBKEY
+      }
+    });
+
+    return {
+      publicKey: vaultPDA.publicKey,
       txHash
     };
   }
