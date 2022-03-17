@@ -13,6 +13,7 @@ import {
   Link
 } from '@chakra-ui/react';
 import { useState } from 'react';
+import Decimal from 'decimal.js';
 import styled from 'styled-components';
 import DatePicker from 'react-datepicker';
 import { useNetwork } from '../contexts/NetworkContext';
@@ -20,6 +21,8 @@ import { useTokenABalance, useVaultClient } from '../hooks/VaultClient';
 import { BN } from '@project-serum/anchor';
 import { solscanTxUrl } from '../utils/block-explorer';
 import 'react-datepicker/dist/react-datepicker.css';
+import { useTokenMintInfo } from '../hooks/TokenMintInfo';
+import { formatTokenAmount } from '../utils/format';
 
 // TODO: Finalize the border-shadow on this
 const Container = styled.div`
@@ -29,10 +32,35 @@ const Container = styled.div`
   background: #101010;
   border-radius: 60px;
   box-shadow: 0 0 128px 1px rgba(98, 170, 255, 0.15);
+  padding: 50px;
 `;
 
 const DepositRow = styled.div`
-  padding: 40px 40px 0px 40px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justtify-content: space-between;
+  align-items: center;
+  gap: 10px;
+`;
+
+const AmountContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+`;
+
+const MaxAmount = styled.span`
+  cursor: pointer;
+  opacity: 0.8;
+  transition: 0.2s ease;
+
+  &:hover {
+    text-decoration: underline;
+    opacity: 1;
+    transition: 0.2s ease;
+  }
 `;
 
 // TODO(Mocha): Refactor styles
@@ -90,8 +118,12 @@ export const DepositBox = () => {
   console.log('granularity:', granularity);
 
   // TODO(Mocha): this is base values rn, we need decimals
+  const tokenAMintInfo = useTokenMintInfo('3btAv45JmtLu8W8ySwYqxyY1P27xcgFTc4jr3shLyfvE');
   const userTokenABlance = useTokenABalance('3btAv45JmtLu8W8ySwYqxyY1P27xcgFTc4jr3shLyfvE');
-  const maxTokenALabel = userTokenABlance ? `max: ${userTokenABlance.toString()}` : `-`;
+  const maxTokenALabel =
+    userTokenABlance && tokenAMintInfo
+      ? `${formatTokenAmount(new BN(userTokenABlance.toString()), tokenAMintInfo.decimals)}`
+      : '-';
 
   const network = useNetwork();
   const vaultClient = useVaultClient(network);
@@ -137,16 +169,31 @@ export const DepositBox = () => {
   return (
     <Container>
       <DepositRow>
-        <HStack>
-          <FormControl variant="floating">
-            <FormLabel htmlFor="drip-select">Drip</FormLabel>
-            <Select id="drip-select" bg="#262626">
-              <option>USDC</option>
-            </Select>
-          </FormControl>
-          <FormControl variant="floating">
-            <FormLabel htmlFor="drip-amount-select">{maxTokenALabel}</FormLabel>
+        <FormControl variant="floating">
+          <FormLabel fontSize="20px" htmlFor="drip-select">
+            Drip
+          </FormLabel>
+          <Select
+            maxW="70%"
+            fontSize="20px"
+            size="lg"
+            borderRadius="20px"
+            id="drip-select"
+            bg="#262626"
+          >
+            <option>USDC</option>
+          </Select>
+        </FormControl>
+        <FormControl variant="floating">
+          <AmountContainer>
+            <FormLabel fontSize="20px" htmlFor="drip-amount-select">
+              max: <MaxAmount>{maxTokenALabel}</MaxAmount>
+            </FormLabel>
             <Input
+              size="lg"
+              ml="-30%"
+              w="130%"
+              borderRadius="20px"
               id="drip-amount-select"
               placeholder="0"
               bg="#262626"
@@ -154,8 +201,8 @@ export const DepositBox = () => {
               value={tokenAAmount === 0 ? undefined : tokenAAmount}
               onChange={(event) => setTokenAAmount(Number(event.target.value))}
             />
-          </FormControl>
-        </HStack>
+          </AmountContainer>
+        </FormControl>
       </DepositRow>
 
       {/* To */}
