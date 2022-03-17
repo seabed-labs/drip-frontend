@@ -1,7 +1,6 @@
 import { FC } from 'react';
 import styled from 'styled-components';
 
-// TODO: Finalize the border-shadow on this
 const Container = styled.div`
   padding: 20px;
   height: 252px;

@@ -352,7 +352,9 @@ export class VaultClient {
     };
   }
 
-  public async getUserPositions(): Promise<PublicKey[]> {
+  public async getUserPositions(): Promise<Record<string, unknown>> {
+    assertWalletConnected(this.program.provider.wallet);
+
     const userPublicKey = this.program.provider.wallet.publicKey;
 
     const userTokenAccounts = await this.program.provider.connection.getParsedTokenAccountsByOwner(
@@ -363,12 +365,12 @@ export class VaultClient {
     );
 
     const userPossibleNftAccounts = userTokenAccounts.value.filter((tokenAccountData) => {
-      const tokenAccount: Account = tokenAccountData.account.data.parsed;
-      return tokenAccount.amount.toString() === '1';
+      const tokenAmount = tokenAccountData.account.data.parsed.info.tokenAmount.amount;
+      return tokenAmount === '1';
     });
 
-    const userPossibleNftMints: PublicKey[] = userPossibleNftAccounts.map(
-      (nftAccount) => nftAccount.account.data.parsed.mint
+    const userPossibleNftMints: PublicKey[] = userPossibleNftAccounts.map((nftAccount) =>
+      toPublicKey(nftAccount.account.data.parsed.info.mint)
     );
 
     const userPossiblePositionAccounts = userPossibleNftMints.map(
@@ -379,6 +381,12 @@ export class VaultClient {
       userPossiblePositionAccounts
     );
 
-    return userPossiblePositionAccounts.filter((_, i) => userPositionAccounts[i] != null);
+    return userPositionAccounts.reduce(
+      (map, position, i) => ({
+        ...map,
+        ...(position ? { [userPossiblePositionAccounts[i].toBase58()]: position } : {})
+      }),
+      {} as Record<string, unknown>
+    );
   }
 }
