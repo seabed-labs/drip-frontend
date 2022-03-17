@@ -1,8 +1,15 @@
-import { Address, BN, Program, Provider } from '@project-serum/anchor';
+import { Address, BN, Program, Provider, SplToken } from '@project-serum/anchor';
 import { DcaVault } from '../idl/type';
 import DcaVaultIDL from '../idl/idl.json';
 import { DcaGranularity, InitTxResult } from './types';
-import { Keypair, PublicKey, SystemProgram, SYSVAR_RENT_PUBKEY } from '@solana/web3.js';
+import {
+  Keypair,
+  PublicKey,
+  SystemProgram,
+  SYSVAR_RENT_PUBKEY,
+  TokenAmount,
+  Transaction
+} from '@solana/web3.js';
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
   getAssociatedTokenAddress,
@@ -10,6 +17,7 @@ import {
 } from '@solana/spl-token';
 import { assertWalletConnected } from '../utils/wallet';
 import { findProgramAddressSync } from '@project-serum/anchor/dist/cjs/utils/pubkey';
+import { program } from '@project-serum/anchor/dist/cjs/spl/token';
 
 const CONSTANT_SEEDS = {
   vault: 'dca-vault-v1',
@@ -38,6 +46,22 @@ function getVaultPDA(
     tokenA.toBuffer(),
     tokenB.toBuffer(),
     protoConfig.toBuffer()
+  ]);
+}
+
+function getVaultPeriodPDA(vaultProgramId: PublicKey, vault: PublicKey, periodId: BN) {
+  return findPDA(vaultProgramId, [
+    Buffer.from(CONSTANT_SEEDS.vaultPeriod),
+    vault.toBuffer(),
+    Buffer.from(periodId.toString())
+  ]);
+}
+
+function getPositionPDA(vaultProgramId: PublicKey, vault: PublicKey, positionNftMint: PublicKey) {
+  return findPDA(vaultProgramId, [
+    Buffer.from(CONSTANT_SEEDS.userPosition),
+    vault.toBuffer(),
+    positionNftMint.toBuffer()
   ]);
 }
 
@@ -132,6 +156,114 @@ export class VaultClient {
 
     return {
       publicKey: vaultPDA.publicKey,
+      txHash
+    };
+  }
+
+  public async deposit(vault: PublicKey, amount: BN, numberOfCycles: BN): Promise<InitTxResult> {
+    // TODO: Account for token A being SOL here
+    assertWalletConnected(this.program.provider.wallet);
+
+    const vaultAccount = await this.program.account.vault.fetch(vault);
+    const currentPeriodId = vaultAccount.lastDcaPeriod;
+    const endPeriodId = currentPeriodId.add(numberOfCycles);
+    const endPeriodPDA = getVaultPeriodPDA(this.program.programId, vault, endPeriodId);
+    const endPeriodAccount = await this.program.account.vaultPeriod.fetchNullable(
+      endPeriodPDA.publicKey
+    );
+    const userTokenAAccount = await getAssociatedTokenAddress(
+      toPublicKey(vaultAccount.tokenAMint),
+      this.program.provider.wallet.publicKey,
+      true,
+      TOKEN_PROGRAM_ID,
+      ASSOCIATED_TOKEN_PROGRAM_ID
+    );
+
+    const tx = new Transaction();
+
+    if (!endPeriodAccount) {
+      tx.add(
+        this.program.instruction.initVaultPeriod(
+          {
+            periodId: endPeriodId
+          },
+          {
+            accounts: {
+              vault: vault,
+              vaultPeriod: endPeriodPDA.publicKey,
+              vaultProtoConfig: vaultAccount.protoConfig,
+              tokenAMint: vaultAccount.tokenAMint,
+              tokenBMint: vaultAccount.tokenBMint,
+              creator: this.program.provider.wallet.publicKey,
+              systemProgram: SystemProgram.programId
+            }
+          }
+        )
+      );
+    }
+
+    const tokenProgram = program(this.program.provider);
+
+    const tokenAMintInfo = await tokenProgram.account.mint.fetch(vaultAccount.tokenAMint);
+
+    tx.add(
+      tokenProgram.instruction.approveChecked(amount, tokenAMintInfo.decimals, {
+        accounts: {
+          mint: vaultAccount.tokenAMint,
+          source: userTokenAAccount,
+          delegate: vault,
+          authority: this.program.provider.wallet.publicKey
+        }
+      })
+    );
+
+    const positionNftMintKeypair = Keypair.generate();
+    const userPositionPDA = getPositionPDA(
+      this.program.programId,
+      vault,
+      positionNftMintKeypair.publicKey
+    );
+
+    const userPositionNftAccount = await getAssociatedTokenAddress(
+      toPublicKey(vaultAccount.tokenAMint),
+      vault,
+      true,
+      TOKEN_PROGRAM_ID,
+      ASSOCIATED_TOKEN_PROGRAM_ID
+    );
+
+    tx.add(
+      this.program.instruction.deposit(
+        {
+          tokenADepositAmount: amount,
+          dcaCycles: numberOfCycles
+        },
+        {
+          accounts: {
+            vault,
+            vaultPeriodEnd: endPeriodPDA.publicKey,
+            userPosition: userPositionPDA.publicKey,
+            tokenAMint: vaultAccount.tokenAMint,
+            userPositionNftMint: positionNftMintKeypair.publicKey,
+            vaultTokenAAccount: vaultAccount.tokenAAccount,
+            userTokenAAccount,
+            userPositionNftAccount,
+            depositor: this.program.provider.wallet.publicKey,
+            tokenProgram: TOKEN_PROGRAM_ID,
+            associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+            rent: SYSVAR_RENT_PUBKEY,
+            systemProgram: SystemProgram.programId
+          }
+        }
+      )
+    );
+
+    tx.partialSign(positionNftMintKeypair);
+
+    const txHash = await this.program.provider.send(tx);
+
+    return {
+      publicKey: userPositionPDA.publicKey,
       txHash
     };
   }
