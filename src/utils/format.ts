@@ -4,5 +4,5 @@ import numeral from 'numeral';
 
 export function formatTokenAmount(amount: BN, decimals: number): string {
   const amountDecimal = new Decimal(amount.toString()).div(new Decimal(10).pow(decimals));
-  return numeral(amountDecimal.toString()).format('0.0[000]a');
+  return numeral(amountDecimal.toString()).format('0.[00]a');
 }
