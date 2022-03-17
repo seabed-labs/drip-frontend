@@ -29,7 +29,7 @@ export function useVaultClient() {
     () =>
       new VaultClient(
         new Provider(
-          new Connection('http://127.0.0.1:8899', 'processed'),
+          new Connection('http://127.0.0.1:8899', 'confirmed'),
           wallet || defaultWallet,
           Provider.defaultOptions()
         )
