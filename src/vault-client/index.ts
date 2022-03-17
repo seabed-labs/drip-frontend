@@ -1,7 +1,7 @@
 import { Address, BN, Program, Provider } from '@project-serum/anchor';
 import { DcaVault } from '../idl/type';
 import DcaVaultIDL from '../idl/idl.json';
-import { DcaGranularity, InitTxResult } from './types';
+import { DcaGranularity, InitTxResult, TxResult } from './types';
 import {
   Keypair,
   PublicKey,
@@ -12,6 +12,8 @@ import {
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
   createApproveCheckedInstruction,
+  createInitializeAccountInstruction,
+  getAccount,
   getAssociatedTokenAddress,
   getMint,
   TOKEN_PROGRAM_ID
@@ -271,6 +273,83 @@ export class VaultClient {
 
     return {
       publicKey: userPositionPDA.publicKey,
+      txHash
+    };
+  }
+
+  public async withdrawB(vault: Address, position: Address): Promise<TxResult> {
+    const vaultAccount = await this.program.account.vault.fetch(vault);
+    const userPublicKey = this.program.provider.wallet.publicKey;
+    const userTokenBAccount = await getAssociatedTokenAddress(
+      toPublicKey(vaultAccount.tokenBMint),
+      userPublicKey,
+      true,
+      TOKEN_PROGRAM_ID,
+      ASSOCIATED_TOKEN_PROGRAM_ID
+    );
+
+    const userTokenBAccountInfo = await this.program.provider.connection.getAccountInfo(
+      userTokenBAccount
+    );
+
+    const tx = new Transaction({
+      recentBlockhash: (await this.program.provider.connection.getLatestBlockhash()).blockhash,
+      feePayer: this.program.provider.wallet.publicKey
+    });
+
+    if (!userTokenBAccountInfo) {
+      tx.add(
+        createInitializeAccountInstruction(
+          userTokenBAccount,
+          vaultAccount.tokenBMint,
+          userPublicKey
+        )
+      );
+    }
+
+    const userPositionAccount = await this.program.account.position.fetch(position);
+    const { publicKey: vaultPeriodI } = getVaultPeriodPDA(
+      this.program.programId,
+      toPublicKey(vault),
+      userPositionAccount.dcaPeriodIdBeforeDeposit
+    );
+    const { publicKey: vaultPeriodJ } = getVaultPeriodPDA(
+      this.program.programId,
+      toPublicKey(vault),
+      userPositionAccount.dcaPeriodIdBeforeDeposit.add(userPositionAccount.numberOfSwaps)
+    );
+
+    const userPositionNftMint = userPositionAccount.positionAuthority;
+    const userPositionNftAccount = await getAssociatedTokenAddress(
+      userPositionNftMint,
+      userPublicKey,
+      true,
+      TOKEN_PROGRAM_ID,
+      ASSOCIATED_TOKEN_PROGRAM_ID
+    );
+
+    tx.add(
+      this.program.instruction.withdrawB({
+        accounts: {
+          vault,
+          vaultPeriodI,
+          vaultPeriodJ,
+          userPosition: userPositionAccount,
+          userPositionNftAccount,
+          userPositionNftMint,
+          vaultTokenBAccount: vaultAccount.tokenBAccount,
+          vaultTokenBMint: vaultAccount.tokenBMint,
+          userTokenBAccount,
+          withdrawer: userPublicKey,
+          tokenProgram: TOKEN_PROGRAM_ID,
+          associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID
+        }
+      })
+    );
+
+    const txHash = await this.program.provider.send(tx);
+
+    return {
       txHash
     };
   }
