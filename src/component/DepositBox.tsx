@@ -33,6 +33,41 @@ const Container = styled.div`
   border-radius: 60px;
   box-shadow: 0 0 128px 1px rgba(98, 170, 255, 0.15);
   padding: 50px;
+
+  .react-datepicker__triangle {
+    border-bottom-color: #262626 !important;
+    &::before,
+    &::after {
+      border-bottom-color: #262626 !important;
+    }
+  }
+
+  .react-datepicker {
+    border-radius: 20px;
+    font-size: 0.8rem;
+    background-color: #262626;
+    color: rgba(255, 255, 255, 0.4);
+    border: 0px;
+    border-radius: 0;
+    display: inline-block;
+    position: relative;
+
+    .react-datepicker__header {
+      background-color: #262626;
+    }
+
+    .react-datepicker__time-list {
+      background-color: #262626;
+    }
+
+    .react-datepicker__day--disabled {
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    div {
+      color: white;
+    }
+  }
 `;
 
 const DepositRow = styled.div`
@@ -61,6 +96,15 @@ const MaxAmount = styled.span`
     opacity: 1;
     transition: 0.2s ease;
   }
+`;
+
+const StyledDatePicker = styled(DatePicker)`
+  border-radius: 20px;
+  padding: 14px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  width: 100%;
+  background: #262626;
+  color: white;
 `;
 
 // TODO(Mocha): Refactor styles
@@ -234,10 +278,14 @@ export const DepositBox = () => {
         </HStack>
       </DepositRow>
       {/* Till */}
+      <Box h="20px" />
       <DepositRow>
-        <FormControl variant="floating">
+        <FormControl w="100%" variant="floating">
           <FormLabel htmlFor="granularity-select">Till</FormLabel>
-          <DatePicker
+          <StyledDatePicker
+            autoComplete="off"
+            value={endDateTime?.toISOString()}
+            placeholderText="Select end date"
             id="granularity-select"
             selected={endDateTime}
             minDate={new Date()}
