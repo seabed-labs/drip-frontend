@@ -168,10 +168,10 @@ export class VaultClient {
     amount: BN,
     numberOfCycles: BN
   ): Promise<InitTxResult> {
-    const vault = new PublicKey(vaultAddress);
     // TODO: Account for token A being SOL here
     assertWalletConnected(this.program.provider.wallet);
 
+    const vault = new PublicKey(vaultAddress);
     const vaultAccount = await this.program.account.vault.fetch(vault);
     const currentPeriodId = vaultAccount.lastDcaPeriod;
     const endPeriodId = currentPeriodId.add(numberOfCycles);

@@ -1,0 +1,92 @@
+[
+  {
+    "vault": "8NmRaD8gvZiomrzoXsuJRFU742WK6DBaW4Wanw1xAbPX",
+    "vaultProtoConfig": "6s5BvnrZVKNpawJuSE2ciL8d1Cd3vNVNVCSoA7PY6LH5",
+    "vaultProtoConfigGranularity": "60",
+    "tokenAMint": "3btAv45JmtLu8W8ySwYqxyY1P27xcgFTc4jr3shLyfvE",
+    "tokenASymbol": "DOGE",
+    "tokenBMint": "6fhWUnc2Bgc2KmTooRV3xqc2wF2M6ozZWw6FUhi8kk3C",
+    "tokenBSymbol": "COW"
+  },
+  {
+    "vault": "8NmRaD8gvZiomrzoXsuJRFU742WK6DBaW4Wanw1xAbPX",
+    "vaultProtoConfig": "6s5BvnrZVKNpawJuSE2ciL8d1Cd3vNVNVCSoA7PY6LH5",
+    "vaultProtoConfigGranularity": "3600",
+    "tokenAMint": "3btAv45JmtLu8W8ySwYqxyY1P27xcgFTc4jr3shLyfvE",
+    "tokenASymbol": "DOGE",
+    "tokenBMint": "6fhWUnc2Bgc2KmTooRV3xqc2wF2M6ozZWw6FUhi8kk3C",
+    "tokenBSymbol": "COW"
+  },
+  {
+    "vault": "8NmRaD8gvZiomrzoXsuJRFU742WK6DBaW4Wanw1xAbPX",
+    "vaultProtoConfig": "6s5BvnrZVKNpawJuSE2ciL8d1Cd3vNVNVCSoA7PY6LH5",
+    "vaultProtoConfigGranularity": "86400",
+    "tokenAMint": "3btAv45JmtLu8W8ySwYqxyY1P27xcgFTc4jr3shLyfvE",
+    "tokenASymbol": "DOGE",
+    "tokenBMint": "6fhWUnc2Bgc2KmTooRV3xqc2wF2M6ozZWw6FUhi8kk3C",
+    "tokenBSymbol": "COW"
+  },
+  {
+    "vault": "8NmRaD8gvZiomrzoXsuJRFU742WK6DBaW4Wanw1xAbPX",
+    "vaultProtoConfig": "6s5BvnrZVKNpawJuSE2ciL8d1Cd3vNVNVCSoA7PY6LH5",
+    "vaultProtoConfigGranularity": "604800",
+    "tokenAMint": "3btAv45JmtLu8W8ySwYqxyY1P27xcgFTc4jr3shLyfvE",
+    "tokenASymbol": "DOGE",
+    "tokenBMint": "6fhWUnc2Bgc2KmTooRV3xqc2wF2M6ozZWw6FUhi8kk3C",
+    "tokenBSymbol": "COW"
+  },
+  {
+    "vault": "8NmRaD8gvZiomrzoXsuJRFU742WK6DBaW4Wanw1xAbPX",
+    "vaultProtoConfig": "6s5BvnrZVKNpawJuSE2ciL8d1Cd3vNVNVCSoA7PY6LH5",
+    "vaultProtoConfigGranularity": "2592000",
+    "tokenAMint": "3btAv45JmtLu8W8ySwYqxyY1P27xcgFTc4jr3shLyfvE",
+    "tokenASymbol": "DOGE",
+    "tokenBMint": "6fhWUnc2Bgc2KmTooRV3xqc2wF2M6ozZWw6FUhi8kk3C",
+    "tokenBSymbol": "COW"
+  },
+  {
+    "vault": "8NmRaD8gvZiomrzoXsuJRFU742WK6DBaW4Wanw1xAbPX",
+    "vaultProtoConfig": "6s5BvnrZVKNpawJuSE2ciL8d1Cd3vNVNVCSoA7PY6LH5",
+    "vaultProtoConfigGranularity": "60",
+    "tokenAMint": "3btAv45JmtLu8W8ySwYqxyY1P27xcgFTc4jr3shLyfvE",
+    "tokenASymbol": "DOGE",
+    "tokenBMint": "B1CphS1mqPxNgRrcTsLENfeGErUE59PKHzSEAe3mUcHc",
+    "tokenBSymbol": "SHIB"
+  },
+  {
+    "vault": "8NmRaD8gvZiomrzoXsuJRFU742WK6DBaW4Wanw1xAbPX",
+    "vaultProtoConfig": "6s5BvnrZVKNpawJuSE2ciL8d1Cd3vNVNVCSoA7PY6LH5",
+    "vaultProtoConfigGranularity": "3600",
+    "tokenAMint": "3btAv45JmtLu8W8ySwYqxyY1P27xcgFTc4jr3shLyfvE",
+    "tokenASymbol": "DOGE",
+    "tokenBMint": "B1CphS1mqPxNgRrcTsLENfeGErUE59PKHzSEAe3mUcHc",
+    "tokenBSymbol": "SHIB"
+  },
+  {
+    "vault": "8NmRaD8gvZiomrzoXsuJRFU742WK6DBaW4Wanw1xAbPX",
+    "vaultProtoConfig": "6s5BvnrZVKNpawJuSE2ciL8d1Cd3vNVNVCSoA7PY6LH5",
+    "vaultProtoConfigGranularity": "86400",
+    "tokenAMint": "3btAv45JmtLu8W8ySwYqxyY1P27xcgFTc4jr3shLyfvE",
+    "tokenASymbol": "DOGE",
+    "tokenBMint": "B1CphS1mqPxNgRrcTsLENfeGErUE59PKHzSEAe3mUcHc",
+    "tokenBSymbol": "SHIB"
+  },
+  {
+    "vault": "8NmRaD8gvZiomrzoXsuJRFU742WK6DBaW4Wanw1xAbPX",
+    "vaultProtoConfig": "6s5BvnrZVKNpawJuSE2ciL8d1Cd3vNVNVCSoA7PY6LH5",
+    "vaultProtoConfigGranularity": "604800",
+    "tokenAMint": "3btAv45JmtLu8W8ySwYqxyY1P27xcgFTc4jr3shLyfvE",
+    "tokenASymbol": "DOGE",
+    "tokenBMint": "B1CphS1mqPxNgRrcTsLENfeGErUE59PKHzSEAe3mUcHc",
+    "tokenBSymbol": "SHIB"
+  },
+  {
+    "vault": "8NmRaD8gvZiomrzoXsuJRFU742WK6DBaW4Wanw1xAbPX",
+    "vaultProtoConfig": "6s5BvnrZVKNpawJuSE2ciL8d1Cd3vNVNVCSoA7PY6LH5",
+    "vaultProtoConfigGranularity": "2592000",
+    "tokenAMint": "3btAv45JmtLu8W8ySwYqxyY1P27xcgFTc4jr3shLyfvE",
+    "tokenASymbol": "DOGE",
+    "tokenBMint": "B1CphS1mqPxNgRrcTsLENfeGErUE59PKHzSEAe3mUcHc",
+    "tokenBSymbol": "SHIB"
+  }
+]

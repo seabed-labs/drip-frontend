@@ -2,7 +2,6 @@ import {
   Button,
   FormControl,
   FormLabel,
-  HStack,
   Input,
   Select,
   VStack,
@@ -13,7 +12,6 @@ import {
   Link
 } from '@chakra-ui/react';
 import { useState } from 'react';
-import Decimal from 'decimal.js';
 import styled from 'styled-components';
 import DatePicker from 'react-datepicker';
 import { useNetwork } from '../contexts/NetworkContext';
@@ -23,7 +21,18 @@ import { solscanTxUrl } from '../utils/block-explorer';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useTokenMintInfo } from '../hooks/TokenMintInfo';
 import { formatTokenAmount } from '../utils/format';
+import Config from '../config.json';
 
+interface VaultConfig {
+  vault: string;
+  vaultProtoConfig: string;
+  vaultProtoConfigGranularity: string;
+  tokenAMint: string;
+  tokenASymbol: string;
+  tokenBMint: string;
+  tokenBSymbol: string;
+}
+const vaultConfigs = Config as [VaultConfig];
 // TODO: Finalize the border-shadow on this
 const Container = styled.div`
   padding: 40px 50px 40px 50px;
@@ -130,7 +139,7 @@ function granularityToUnix(granularity: Granularity): number {
     case Granularity.Weekly:
       return 60 * 60 * 24 * 7;
     case Granularity.Monthly:
-      return 50 * 60 * 24 * 30;
+      return 60 * 60 * 24 * 30;
   }
 }
 
@@ -140,7 +149,12 @@ function getNumSwaps(startTime: Date, endTime: Date, granularity: Granularity): 
   );
 }
 
-function getPreviewText(endDateTime: Date, granularity: Granularity, tokenAAmount: number) {
+function getPreviewText(
+  endDateTime: Date,
+  granularity: Granularity,
+  tokenAAmount: number,
+  tokenASymbol: string
+) {
   const swaps = getNumSwaps(new Date(), endDateTime, granularity);
   const dripAmount = Math.floor(tokenAAmount / swaps);
   return (
@@ -150,7 +164,7 @@ function getPreviewText(endDateTime: Date, granularity: Granularity, tokenAAmoun
         <Text as="u">{swaps}</Text>
         {' swaps of '}
         <Text as="u">{dripAmount}</Text>
-        {` ${'USDC'} `}
+        {` ${tokenASymbol} `}
         <Text as="u">{granularity}</Text>
       </Text>
     </>
@@ -159,33 +173,47 @@ function getPreviewText(endDateTime: Date, granularity: Granularity, tokenAAmoun
 
 export const DepositBox = () => {
   const [endDateTime, setEndDateTime] = useState<Date | undefined>();
-  console.log('endDateTime:', Math.floor(endDateTime?.getTime() ?? 0 / 1000));
   const [tokenAAmount, setTokenAAmount] = useState<number>(0);
-  console.log('tokenAAmount:', tokenAAmount);
   const [granularity, setGranularity] = useState(Granularity.Minutely);
+  const [vaultConfig, setVaultConfig] = useState<VaultConfig>(vaultConfigs[0]);
+  const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
+
+  console.log('tokenAAmount:', tokenAAmount);
+  console.log('endDateTime:', Math.floor(endDateTime?.getTime() ?? 0 / 1000));
   console.log('granularity:', granularity);
+  console.log('vaultConfig', vaultConfig);
+
+  const tokenAToMint: Record<string, string> = {};
+  const tokenBToMint: Record<string, string> = {};
+
+  vaultConfigs.forEach((c) => {
+    tokenAToMint[c.tokenASymbol] = c.tokenAMint;
+
+    if (c.tokenASymbol === vaultConfig.tokenASymbol) {
+      tokenBToMint[c.tokenBSymbol] = c.tokenBMint;
+    }
+  });
 
   // TODO(Mocha): this is base values rn, we need decimals
-  const tokenAMintInfo = useTokenMintInfo('3btAv45JmtLu8W8ySwYqxyY1P27xcgFTc4jr3shLyfvE');
-  const userTokenABlance = useTokenABalance('3btAv45JmtLu8W8ySwYqxyY1P27xcgFTc4jr3shLyfvE');
+  const tokenAMintInfo = useTokenMintInfo(vaultConfig.tokenAMint);
+  const userTokenABlance = useTokenABalance(vaultConfig.tokenAMint);
   const maxTokenALabel =
     userTokenABlance && tokenAMintInfo
       ? `${formatTokenAmount(new BN(userTokenABlance.toString()), tokenAMintInfo.decimals)}`
       : '-';
 
   const baseAmount = new BN(tokenAAmount).mul(
-    new BN(10).pow(new BN(tokenAMintInfo?.decimals ?? 0))
+    new BN(10).pow(new BN(tokenAMintInfo?.decimals ?? 1))
   );
 
   const network = useNetwork();
   const vaultClient = useVaultClient(network);
   const toast = useToast();
 
-  // const granulairtyOptions = ;
   async function handleDeposit(vault: string, baseAmount: BN, numberOfCycles: BN) {
+    setIsSubmitDisabled(true);
     try {
       const result = await vaultClient.deposit(vault, baseAmount, numberOfCycles);
-
       toast({
         title: 'Deposit successful',
         description: (
@@ -216,6 +244,7 @@ export const DepositBox = () => {
         position: 'top-right'
       });
     }
+    setIsSubmitDisabled(false);
   }
 
   return (
@@ -233,8 +262,33 @@ export const DepositBox = () => {
             borderRadius="20px"
             bg="#262626"
             id="drip-select"
+            value={vaultConfig.tokenASymbol}
+            onChange={(event) => {
+              const newTokenA = event.target.selectedOptions[0].text;
+              // reset fields if they are no longer valid
+              const newValidConfig = vaultConfigs.filter(
+                (c) =>
+                  c.tokenASymbol === newTokenA &&
+                  c.tokenBSymbol == vaultConfig.tokenBSymbol &&
+                  c.vaultProtoConfigGranularity === vaultConfig.vaultProtoConfigGranularity
+              );
+              if (!newValidConfig.length) {
+                // Don't need to reset granularity, all granularties will be support per pair
+                setVaultConfig(
+                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                  vaultConfigs.find(
+                    (c) =>
+                      c.tokenASymbol === newTokenA &&
+                      c.vaultProtoConfigGranularity === vaultConfig.vaultProtoConfigGranularity
+                  )!
+                );
+              }
+              setVaultConfig(newValidConfig[0]);
+            }}
           >
-            <option>USDC</option>
+            {Object.keys(tokenAToMint).map((symbol) => (
+              <option>{symbol}</option>
+            ))}
           </Select>
         </FormControl>
         <FormControl variant="floating">
@@ -252,7 +306,13 @@ export const DepositBox = () => {
               bg="#262626"
               type={'number'}
               value={tokenAAmount === 0 ? undefined : tokenAAmount}
-              onChange={(event) => setTokenAAmount(Number(event.target.value))}
+              onChange={(event) => {
+                const newTokenAAmount = Number(event.target.value);
+                setIsSubmitDisabled(newTokenAAmount === 0 || endDateTime === undefined);
+                if (userTokenABlance && BigInt(newTokenAAmount) <= userTokenABlance) {
+                  setTokenAAmount(newTokenAAmount);
+                }
+              }}
             />
           </AmountContainer>
         </FormControl>
@@ -272,8 +332,21 @@ export const DepositBox = () => {
             borderRadius="20px"
             bg="#262626"
             id="drip-select"
+            value={vaultConfig.tokenBSymbol}
+            onChange={(event) => {
+              const newTokenB = event.target.selectedOptions[0].text;
+              const newValidConfig = vaultConfigs.filter(
+                (c) =>
+                  c.tokenBSymbol === newTokenB &&
+                  c.tokenASymbol == vaultConfig.tokenASymbol &&
+                  c.vaultProtoConfigGranularity === vaultConfig.vaultProtoConfigGranularity
+              );
+              setVaultConfig(newValidConfig[0]);
+            }}
           >
-            <option>USDC</option>
+            {Object.keys(tokenBToMint).map((symbol) => (
+              <option>{symbol}</option>
+            ))}
           </Select>
         </FormControl>
         <FormControl variant="floating">
@@ -288,8 +361,16 @@ export const DepositBox = () => {
               borderRadius="20px"
               bg="#262626"
               id="granularity-select"
-              onChange={(option) => {
-                setGranularity(option.target.selectedOptions[0].text as Granularity);
+              onChange={(event) => {
+                const newGranularity = event.target.selectedOptions[0].text as Granularity;
+                const newValidConfig = vaultConfigs.filter(
+                  (c) =>
+                    c.tokenBSymbol === vaultConfig.tokenBSymbol &&
+                    c.tokenASymbol == vaultConfig.tokenASymbol &&
+                    c.vaultProtoConfigGranularity === granularityToUnix(newGranularity).toString()
+                );
+                setGranularity(newGranularity);
+                setVaultConfig(newValidConfig[0]);
               }}
               value={granularity}
             >
@@ -315,7 +396,10 @@ export const DepositBox = () => {
             id="granularity-select"
             selected={endDateTime}
             minDate={new Date()}
-            onChange={(date: Date) => setEndDateTime(date)}
+            onChange={(date: Date) => {
+              setIsSubmitDisabled(tokenAAmount === 0 || date === undefined);
+              setEndDateTime(date);
+            }}
             showTimeSelect={
               granularity == Granularity.Minutely || granularity == Granularity.Hourly
             }
@@ -333,21 +417,15 @@ export const DepositBox = () => {
       <DepositRow>
         <VStack width={'100%'}>
           {tokenAAmount && endDateTime && granularity
-            ? getPreviewText(endDateTime, granularity, tokenAAmount)
+            ? getPreviewText(endDateTime, granularity, tokenAAmount, vaultConfig.tokenASymbol)
             : undefined}
           <Box h="20px" />
           <Button
             onClick={() => {
               const swaps = getNumSwaps(new Date(), endDateTime ?? new Date(), granularity);
-              console.log('numSwaps', swaps);
-              console.log('tokenAAmount', tokenAAmount);
-              handleDeposit(
-                '8NmRaD8gvZiomrzoXsuJRFU742WK6DBaW4Wanw1xAbPX',
-                baseAmount,
-                new BN(swaps)
-              );
+              handleDeposit(vaultConfig.vault, baseAmount, new BN(swaps));
             }}
-            disabled={tokenAAmount === 0 || endDateTime === undefined}
+            disabled={isSubmitDisabled}
             bg="#62AAFF"
             color="#FFFFFF"
             width={'100%'}
