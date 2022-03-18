@@ -26,13 +26,12 @@ import { formatTokenAmount } from '../utils/format';
 
 // TODO: Finalize the border-shadow on this
 const Container = styled.div`
-  padding: 20px;
+  padding: 40px 50px 40px 50px;
   height: 600px;
   width: 500px;
   background: #101010;
   border-radius: 60px;
   box-shadow: 0 0 128px 1px rgba(98, 170, 255, 0.15);
-  padding: 50px;
 
   .react-datepicker__triangle {
     border-bottom-color: #262626 !important;
@@ -85,6 +84,8 @@ const AmountContainer = styled.div`
   justify-content: center;
   align-items: flex-end;
 `;
+
+const GranularityContainer = AmountContainer;
 
 const MaxAmount = styled.span`
   cursor: pointer;
@@ -143,13 +144,16 @@ function getPreviewText(endDateTime: Date, granularity: Granularity, tokenAAmoun
   const swaps = getNumSwaps(new Date(), endDateTime, granularity);
   const dripAmount = Math.floor(tokenAAmount / swaps);
   return (
-    <Text>
-      <Text as="u">{swaps}</Text>
-      {' swaps of '}
-      <Text as="u">{dripAmount}</Text>
-      {` ${'USDC'} `}
-      <Text as="u">{granularity}</Text>
-    </Text>
+    <>
+      <Box h="20px" />
+      <Text>
+        <Text as="u">{swaps}</Text>
+        {' swaps of '}
+        <Text as="u">{dripAmount}</Text>
+        {` ${'USDC'} `}
+        <Text as="u">{granularity}</Text>
+      </Text>
+    </>
   );
 }
 
@@ -212,6 +216,7 @@ export const DepositBox = () => {
 
   return (
     <Container>
+      {/* Drip */}
       <DepositRow>
         <FormControl variant="floating">
           <FormLabel fontSize="20px" htmlFor="drip-select">
@@ -222,8 +227,8 @@ export const DepositBox = () => {
             fontSize="20px"
             size="lg"
             borderRadius="20px"
-            id="drip-select"
             bg="#262626"
+            id="drip-select"
           >
             <option>USDC</option>
           </Select>
@@ -250,21 +255,35 @@ export const DepositBox = () => {
       </DepositRow>
 
       {/* To */}
+      <Box h="20px" />
       <DepositRow>
-        <HStack>
-          <FormControl variant="floating">
-            <FormLabel htmlFor="drip-to-select">To</FormLabel>
-            <Select id="drip-to-select" bg="#262626">
-              <option>BTC</option>
-            </Select>
-          </FormControl>
-          <FormControl variant="floating">
-            {/* TODO(Mocha): How do I remove this form label but still have the row bottom aligned */}
-            <FormLabel htmlFor="granularity-select">Granularity</FormLabel>
-            {/* Not updating to granularity value */}
+        <FormControl variant="floating">
+          <FormLabel fontSize="20px" htmlFor="drip-select">
+            Drip
+          </FormLabel>
+          <Select
+            maxW="70%"
+            fontSize="20px"
+            size="lg"
+            borderRadius="20px"
+            bg="#262626"
+            id="drip-select"
+          >
+            <option>USDC</option>
+          </Select>
+        </FormControl>
+        <FormControl variant="floating">
+          <GranularityContainer>
+            <FormLabel fontSize="20px" htmlFor="granularity-select">
+              Granularity
+            </FormLabel>
             <Select
-              id="granularity-select"
+              size="lg"
+              ml="-30%"
+              w="130%"
+              borderRadius="20px"
               bg="#262626"
+              id="granularity-select"
               onChange={(option) => {
                 setGranularity(option.target.selectedOptions[0].text as Granularity);
               }}
@@ -274,14 +293,17 @@ export const DepositBox = () => {
                 <option>{granularity}</option>
               ))}
             </Select>
-          </FormControl>
-        </HStack>
+          </GranularityContainer>
+        </FormControl>
       </DepositRow>
+
       {/* Till */}
       <Box h="20px" />
       <DepositRow>
         <FormControl w="100%" variant="floating">
-          <FormLabel htmlFor="granularity-select">Till</FormLabel>
+          <FormLabel fontSize="20px" htmlFor="granularity-select">
+            Till
+          </FormLabel>
           <StyledDatePicker
             autoComplete="off"
             value={endDateTime?.toISOString()}
@@ -305,10 +327,11 @@ export const DepositBox = () => {
       </DepositRow>
       {/* Preview and Deposit */}
       <DepositRow>
-        <VStack>
+        <VStack width={'100%'}>
           {tokenAAmount && endDateTime && granularity
             ? getPreviewText(endDateTime, granularity, tokenAAmount)
             : undefined}
+          <Box h="20px" />
           <Button
             onClick={() => {
               const swaps = getNumSwaps(new Date(), endDateTime ?? new Date(), granularity);
