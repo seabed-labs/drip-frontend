@@ -1,0 +1,113 @@
+[
+  {
+    "vault": "7Pne15s8NpYBPwPKYcHHjfUDURCyXfDt5ZdKnqReiXXS",
+    "vaultProtoConfig": "5Vg4z8YfKSNin3QyfT4AXVKbm8wrQjVKXWf2iWFgVKN5",
+    "vaultTokenAAccount": "CHfBGMjX4emjjgczj7M9XHwHxbiqq3pRkuxW8m4c5JHj",
+    "vaultTokenBAccount": "GobG39R6U4aSqLzJ8vHR1kCPU2mq7edZ3mdjWwzynpmF",
+    "tokenAMint": "72HBqn7K1wu6dbxY3L9FNe6aLetwN9KfmB4RFDPR14Y3",
+    "tokenBMint": "HjzNr3kHnWv2iLbq79eqkCvnYZ5eGAXtnhske9AxnhV",
+    "tokenASymbol": "USDC",
+    "tokenBSymbol": "BTC",
+    "vaultProtoConfigGranularity": 60
+  },
+  {
+    "vault": "7ZtxVqjFRfvhqfWzNrp2zUzwmTVTsK34YhhgL146HPWc",
+    "vaultProtoConfig": "8Q8oKRa5ky2gWK9xkS7yBwtcaoG5E8a4CxJjeA4kha9s",
+    "vaultTokenAAccount": "GcGBpgkbMGUya695UKAdHz3NXTdvgw7XoTcYh6bmJ2oN",
+    "vaultTokenBAccount": "2zNLACiT5o2C597byXDjwxuvtDaH7i6XWbHM8S3L9e3X",
+    "tokenAMint": "72HBqn7K1wu6dbxY3L9FNe6aLetwN9KfmB4RFDPR14Y3",
+    "tokenBMint": "HjzNr3kHnWv2iLbq79eqkCvnYZ5eGAXtnhske9AxnhV",
+    "tokenASymbol": "USDC",
+    "tokenBSymbol": "BTC",
+    "vaultProtoConfigGranularity": 3600
+  },
+  {
+    "vault": "GpyB66jpCJh5DDS1avaEzMxZe7xMWz7phqJVwU9gCdJy",
+    "vaultProtoConfig": "8HHMnxt5uzFjcJDinHLmhS3rufQYavDAZ29Jf6QPxuiY",
+    "vaultTokenAAccount": "AY3PtKtk4JqtUM72j2hrbaetGt4jCUxoTqkn454MnNzr",
+    "vaultTokenBAccount": "CrqZ5BGjA7p3FsbPqqwWmR8oJWPxN9cQ9qDdciJQSkck",
+    "tokenAMint": "72HBqn7K1wu6dbxY3L9FNe6aLetwN9KfmB4RFDPR14Y3",
+    "tokenBMint": "HjzNr3kHnWv2iLbq79eqkCvnYZ5eGAXtnhske9AxnhV",
+    "tokenASymbol": "USDC",
+    "tokenBSymbol": "BTC",
+    "vaultProtoConfigGranularity": 86400
+  },
+  {
+    "vault": "AGq4rcfFxaxzAhBVwCUSxccxNFVRG8R6J7D3Dfbg977N",
+    "vaultProtoConfig": "6VVpp3vSsexBhoTHph7adfYfyVshs7BcgBV7jWqTV4p6",
+    "vaultTokenAAccount": "3CpfHMpLcSPywrcNVMis91XRsrhbyNLV6KWx1k7Ebhxs",
+    "vaultTokenBAccount": "99nqoRsQBzP1gYQ6vPoG1PJwQQRtCbMFL7Hh5jSNL3HK",
+    "tokenAMint": "72HBqn7K1wu6dbxY3L9FNe6aLetwN9KfmB4RFDPR14Y3",
+    "tokenBMint": "HjzNr3kHnWv2iLbq79eqkCvnYZ5eGAXtnhske9AxnhV",
+    "tokenASymbol": "USDC",
+    "tokenBSymbol": "BTC",
+    "vaultProtoConfigGranularity": 604800
+  },
+  {
+    "vault": "DzxR5agoHk3FT2SxZ7veWGR1pqkWZb4FpFrQswbkqzFB",
+    "vaultProtoConfig": "7ZQMuGB6odU6JwBST6fnRZU2iVrMrXFumQtsYibmvgeB",
+    "vaultTokenAAccount": "4fnEQKDiyvy1iKFYDz9AGpoRFdoNJ7JnDig458Trnui8",
+    "vaultTokenBAccount": "Vc1RRqgF6z8Kcfwk4ckWCNmeL8iWGaRNAnbNjVyNSEf",
+    "tokenAMint": "72HBqn7K1wu6dbxY3L9FNe6aLetwN9KfmB4RFDPR14Y3",
+    "tokenBMint": "HjzNr3kHnWv2iLbq79eqkCvnYZ5eGAXtnhske9AxnhV",
+    "tokenASymbol": "USDC",
+    "tokenBSymbol": "BTC",
+    "vaultProtoConfigGranularity": 2592000
+  },
+
+  {
+    "vault": "5VUGTdCuGKbg7vxJBagZWsXUwjEwMFKpyHS7foqVdV36",
+    "vaultProtoConfig": "FBP4GyMZ8bwoxS8qFTe2fgBY4PP6cTXjZMfT8pTu9kMK",
+    "vaultTokenAAccount": "3sTgctCc7smkzupPb84vRfvwoH1qW8qv1L96pot3auRV",
+    "vaultTokenBAccount": "1rCYgXzETRVmB6q9oEfQnpcaSR5Emep2wXWeYg5WLuA",
+    "tokenAMint": "72HBqn7K1wu6dbxY3L9FNe6aLetwN9KfmB4RFDPR14Y3",
+    "tokenBMint": "B5bofMWM87jfjPA2QuzAjvQf1Li4osGQcCwjsVxMU5hu",
+    "tokenASymbol": "USDC",
+    "tokenBSymbol": "ETH",
+    "vaultProtoConfigGranularity": 60
+  },
+  {
+    "vault": "61ku9YPLiSARZEqvvpazsrNKb2dpiKacusyUR16wQcjK",
+    "vaultProtoConfig": "7c2SyuYAaGWxRgp8w7DzZh2Qg2gw71uETpLKH1sKctP7",
+    "vaultTokenAAccount": "teFFKdBqZSmwb4ZJzmTY3TvyHEGzfmzSbNJJmWCqTiD",
+    "vaultTokenBAccount": "CS59hzxsM9uyrqp481b4nEsL92Ajxm781ij1hmwVfvRm",
+    "tokenAMint": "72HBqn7K1wu6dbxY3L9FNe6aLetwN9KfmB4RFDPR14Y3",
+    "tokenBMint": "B5bofMWM87jfjPA2QuzAjvQf1Li4osGQcCwjsVxMU5hu",
+    "tokenASymbol": "USDC",
+    "tokenBSymbol": "ETH",
+    "vaultProtoConfigGranularity": 3600
+  },
+  {
+    "vault": "4QUinWs3ieS83bmkoJcgUE3cWLowWSwsZY8EMHxRRnjD",
+    "vaultProtoConfig": "DztQU46V3LhEaPQJsoFsXAiTHo5vhEFSe16bqngcdQm",
+    "vaultTokenAAccount": "ExncQDAAQp2nXdhQymkHwJGwXkVeoRY5CwnxtaCRYHBo",
+    "vaultTokenBAccount": "9N3A5SQCjbnBZrVMfuiYXn5WVPmqGMTb9TnrCJPx3WF1",
+    "tokenAMint": "72HBqn7K1wu6dbxY3L9FNe6aLetwN9KfmB4RFDPR14Y3",
+    "tokenBMint": "B5bofMWM87jfjPA2QuzAjvQf1Li4osGQcCwjsVxMU5hu",
+    "tokenASymbol": "USDC",
+    "tokenBSymbol": "ETH",
+    "vaultProtoConfigGranularity": 86400
+  },
+  {
+    "vault": "3D1p4zs8WhPq34MTJqiY9h3MUazXXFJTdBuaB1R8UZ89",
+    "vaultProtoConfig": "BgNxHAMnVk9GkJWXSSnDRuG7rtJ8iXXzNbVqRCn8hh7V",
+    "vaultTokenAAccount": "24LP6vryVyfB3JMvKkbYgrnis6ZSu1zCAo1K6AJpBbh2",
+    "vaultTokenBAccount": "BVmQgDyQPfiSrVWWH4LJkk7yBqKbgNSNhANZYUCe3FYW",
+    "tokenAMint": "72HBqn7K1wu6dbxY3L9FNe6aLetwN9KfmB4RFDPR14Y3",
+    "tokenBMint": "B5bofMWM87jfjPA2QuzAjvQf1Li4osGQcCwjsVxMU5hu",
+    "tokenASymbol": "USDC",
+    "tokenBSymbol": "ETH",
+    "vaultProtoConfigGranularity": 604800
+  },
+  {
+    "vault": "Hm2JYzqRPh5pHLDtc3Wbxq2gpmjonEo9kkH1hUtXwie7",
+    "vaultProtoConfig": "6PUGKpdoajjo6RPGNuduMtQzP6PcTTjKSXq9ubu3L8cE",
+    "vaultTokenAAccount": "8vaVbsGrSJUgkgeQHgJszrTK2LSiPzXE6Hry9MTc5Tms",
+    "vaultTokenBAccount": "HHhQgJ9RufJjM11fzNayaGZtewcavweutdVrrVbof49B",
+    "tokenAMint": "72HBqn7K1wu6dbxY3L9FNe6aLetwN9KfmB4RFDPR14Y3",
+    "tokenBMint": "B5bofMWM87jfjPA2QuzAjvQf1Li4osGQcCwjsVxMU5hu",
+    "tokenASymbol": "USDC",
+    "tokenBSymbol": "ETH",
+    "vaultProtoConfigGranularity": 2592000
+  }
+]
