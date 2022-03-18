@@ -173,6 +173,10 @@ export const DepositBox = () => {
       ? `${formatTokenAmount(new BN(userTokenABlance.toString()), tokenAMintInfo.decimals)}`
       : '-';
 
+  const baseAmount = new BN(tokenAAmount).mul(
+    new BN(10).pow(new BN(tokenAMintInfo?.decimals ?? 0))
+  );
+
   const network = useNetwork();
   const vaultClient = useVaultClient(network);
   const toast = useToast();
@@ -339,7 +343,7 @@ export const DepositBox = () => {
               console.log('tokenAAmount', tokenAAmount);
               handleDeposit(
                 '8NmRaD8gvZiomrzoXsuJRFU742WK6DBaW4Wanw1xAbPX',
-                new BN(tokenAAmount),
+                baseAmount,
                 new BN(swaps)
               );
             }}
