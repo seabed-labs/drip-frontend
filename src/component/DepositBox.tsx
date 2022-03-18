@@ -22,21 +22,23 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { useTokenMintInfo } from '../hooks/TokenMintInfo';
 import { formatTokenAmount } from '../utils/format';
 import Config from '../config.json';
+import Decimal from 'decimal.js';
 
 interface VaultConfig {
   vault: string;
+  vaultTokenAAccount: string;
+  vaultTokenBAccount: string;
   vaultProtoConfig: string;
-  vaultProtoConfigGranularity: string;
+  vaultProtoConfigGranularity: number;
   tokenAMint: string;
   tokenASymbol: string;
   tokenBMint: string;
   tokenBSymbol: string;
 }
-const vaultConfigs = Config as [VaultConfig];
+const vaultConfigs = Config as VaultConfig[];
 // TODO: Finalize the border-shadow on this
 const Container = styled.div`
   padding: 40px 50px 40px 50px;
-  height: 600px;
   width: 500px;
   background: #101010;
   border-radius: 60px;
@@ -294,7 +296,18 @@ export const DepositBox = () => {
         <FormControl variant="floating">
           <AmountContainer>
             <FormLabel fontSize="20px" htmlFor="drip-amount-select">
-              max: <MaxAmount>{maxTokenALabel}</MaxAmount>
+              max:{' '}
+              <MaxAmount
+                onClick={() =>
+                  setTokenAAmount(
+                    new Decimal(userTokenABlance?.toString() ?? '0')
+                      .div(new Decimal(10).pow(tokenAMintInfo?.decimals ?? 1))
+                      .toNumber()
+                  )
+                }
+              >
+                {maxTokenALabel}
+              </MaxAmount>
             </FormLabel>
             <Input
               size="lg"
@@ -367,7 +380,7 @@ export const DepositBox = () => {
                   (c) =>
                     c.tokenBSymbol === vaultConfig.tokenBSymbol &&
                     c.tokenASymbol == vaultConfig.tokenASymbol &&
-                    c.vaultProtoConfigGranularity === granularityToUnix(newGranularity).toString()
+                    c.vaultProtoConfigGranularity === granularityToUnix(newGranularity)
                 );
                 setGranularity(newGranularity);
                 setVaultConfig(newValidConfig[0]);
