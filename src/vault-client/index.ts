@@ -53,7 +53,7 @@ function getVaultPDA(
   ]);
 }
 
-function getVaultPeriodPDA(vaultProgramId: PublicKey, vault: PublicKey, periodId: BN) {
+export function getVaultPeriodPDA(vaultProgramId: PublicKey, vault: PublicKey, periodId: BN) {
   return findPDA(vaultProgramId, [
     Buffer.from(CONSTANT_SEEDS.vaultPeriod),
     vault.toBuffer(),
