@@ -35,7 +35,7 @@ interface VaultConfig {
   tokenBMint: string;
   tokenBSymbol: string;
 }
-const vaultConfigs = Config as VaultConfig[];
+let vaultConfigs = Config as VaultConfig[];
 // TODO: Finalize the border-shadow on this
 const Container = styled.div`
   padding: 40px 50px 40px 50px;
@@ -187,7 +187,7 @@ export const DepositBox = () => {
 
   const tokenAToMint: Record<string, string> = {};
   const tokenBToMint: Record<string, string> = {};
-
+  vaultConfigs = vaultConfigs.filter((c) => c.vaultProtoConfigGranularity !== 10);
   vaultConfigs.forEach((c) => {
     tokenAToMint[c.tokenASymbol] = c.tokenAMint;
 
