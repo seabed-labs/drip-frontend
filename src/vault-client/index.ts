@@ -86,23 +86,23 @@ export class VaultClient {
 
     assertWalletConnected(this.program.provider.wallet);
 
-    const txHash = await this.program.rpc.initVaultProtoConfig(
-      {
-        granularity: new BN(granularity)
-      },
-      {
-        accounts: {
-          vaultProtoConfig: vaultProtoConfigKeypair.publicKey,
-          creator: this.program.provider.wallet.publicKey,
-          systemProgram: SystemProgram.programId
-        },
-        signers: [vaultProtoConfigKeypair]
-      }
-    );
+    // const txHash = await this.program.rpc.initVaultProtoConfig(
+    //   {
+    //     granularity: new BN(granularity)
+    //   },
+    //   {
+    //     accounts: {
+    //       vaultProtoConfig: vaultProtoConfigKeypair.publicKey,
+    //       creator: this.program.provider.wallet.publicKey,
+    //       systemProgram: SystemProgram.programId
+    //     },
+    //     signers: [vaultProtoConfigKeypair]
+    //   }
+    // );
 
     return {
       publicKey: vaultProtoConfigKeypair.publicKey,
-      txHash
+      txHash: ''
     };
   }
 
@@ -153,13 +153,13 @@ export class VaultClient {
 
     console.log('INIT VAULT ACCOUNTS:', accounts);
 
-    const txHash = await this.program.rpc.initVault({
-      accounts
-    });
+    // const txHash = await this.program.rpc.initVault({
+    //   accounts
+    // });
 
     return {
       publicKey: vaultPDA.publicKey,
-      txHash
+      txHash: ''
     };
   }
 
@@ -329,29 +329,29 @@ export class VaultClient {
       ASSOCIATED_TOKEN_PROGRAM_ID
     );
 
-    tx.add(
-      this.program.instruction.withdrawB({
-        accounts: {
-          vault,
-          vaultPeriodI,
-          vaultPeriodJ,
-          userPosition: userPositionAccount,
-          userPositionNftAccount,
-          userPositionNftMint,
-          vaultTokenBAccount: vaultAccount.tokenBAccount,
-          vaultTokenBMint: vaultAccount.tokenBMint,
-          userTokenBAccount,
-          withdrawer: userPublicKey,
-          tokenProgram: TOKEN_PROGRAM_ID,
-          associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID
-        }
-      })
-    );
+    // tx.add(
+    //   this.program.instruction.withdrawB({
+    //     accounts: {
+    //       vault,
+    //       vaultPeriodI,
+    //       vaultPeriodJ,
+    //       userPosition: userPositionAccount,
+    //       userPositionNftAccount,
+    //       userPositionNftMint,
+    //       vaultTokenBAccount: vaultAccount.tokenBAccount,
+    //       vaultTokenBMint: vaultAccount.tokenBMint,
+    //       userTokenBAccount,
+    //       withdrawer: userPublicKey,
+    //       tokenProgram: TOKEN_PROGRAM_ID,
+    //       associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID
+    //     }
+    //   })
+    // );
 
-    const txHash = await this.program.provider.send(tx);
+    // const txHash = await this.program.provider.send(tx);
 
     return {
-      txHash
+      txHash: ''
     };
   }
 
