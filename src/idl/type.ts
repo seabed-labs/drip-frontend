@@ -39,6 +39,11 @@ export type DcaVault = {
           isSigner: false;
         },
         {
+          name: 'vaultProtoConfig';
+          isMut: false;
+          isSigner: false;
+        },
+        {
           name: 'tokenAAccount';
           isMut: true;
           isSigner: false;
@@ -49,17 +54,17 @@ export type DcaVault = {
           isSigner: false;
         },
         {
+          name: 'treasuryTokenBAccount';
+          isMut: false;
+          isSigner: false;
+        },
+        {
           name: 'tokenAMint';
           isMut: false;
           isSigner: false;
         },
         {
           name: 'tokenBMint';
-          isMut: false;
-          isSigner: false;
-        },
-        {
-          name: 'vaultProtoConfig';
           isMut: false;
           isSigner: false;
         },
@@ -148,6 +153,11 @@ export type DcaVault = {
           isSigner: false;
         },
         {
+          name: 'vaultProtoConfig';
+          isMut: false;
+          isSigner: false;
+        },
+        {
           name: 'vaultPeriodI';
           isMut: false;
           isSigner: false;
@@ -178,12 +188,17 @@ export type DcaVault = {
           isSigner: false;
         },
         {
-          name: 'userTokenAAccount';
+          name: 'vaultTreasuryTokenBAccount';
           isMut: true;
           isSigner: false;
         },
         {
           name: 'userTokenBAccount';
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: 'userTokenAAccount';
           isMut: true;
           isSigner: false;
         },
@@ -209,7 +224,7 @@ export type DcaVault = {
         },
         {
           name: 'withdrawer';
-          isMut: true;
+          isMut: false;
           isSigner: true;
         },
         {
@@ -312,6 +327,11 @@ export type DcaVault = {
           isSigner: false;
         },
         {
+          name: 'vaultProtoConfig';
+          isMut: false;
+          isSigner: false;
+        },
+        {
           name: 'vaultPeriodI';
           isMut: false;
           isSigner: false;
@@ -332,18 +352,8 @@ export type DcaVault = {
           isSigner: false;
         },
         {
-          name: 'userPositionNftMint';
-          isMut: false;
-          isSigner: false;
-        },
-        {
           name: 'vaultTokenBAccount';
           isMut: true;
-          isSigner: false;
-        },
-        {
-          name: 'vaultTokenBMint';
-          isMut: false;
           isSigner: false;
         },
         {
@@ -352,8 +362,23 @@ export type DcaVault = {
           isSigner: false;
         },
         {
-          name: 'withdrawer';
+          name: 'vaultTreasuryTokenBAccount';
           isMut: true;
+          isSigner: false;
+        },
+        {
+          name: 'userPositionNftMint';
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: 'tokenBMint';
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: 'withdrawer';
+          isMut: false;
           isSigner: true;
         },
         {
@@ -374,7 +399,7 @@ export type DcaVault = {
       accounts: [
         {
           name: 'dcaTriggerSource';
-          isMut: true;
+          isMut: false;
           isSigner: true;
         },
         {
@@ -438,13 +463,18 @@ export type DcaVault = {
           isSigner: false;
         },
         {
-          name: 'swap';
+          name: 'dcaTriggerFeeTokenAAccount';
           isMut: true;
           isSigner: false;
         },
         {
+          name: 'swap';
+          isMut: false;
+          isSigner: false;
+        },
+        {
           name: 'swapAuthority';
-          isMut: true;
+          isMut: false;
           isSigner: false;
         },
         {
@@ -526,50 +556,6 @@ export type DcaVault = {
       };
     },
     {
-      name: 'vault';
-      type: {
-        kind: 'struct';
-        fields: [
-          {
-            name: 'protoConfig';
-            type: 'publicKey';
-          },
-          {
-            name: 'tokenAMint';
-            type: 'publicKey';
-          },
-          {
-            name: 'tokenBMint';
-            type: 'publicKey';
-          },
-          {
-            name: 'tokenAAccount';
-            type: 'publicKey';
-          },
-          {
-            name: 'tokenBAccount';
-            type: 'publicKey';
-          },
-          {
-            name: 'lastDcaPeriod';
-            type: 'u64';
-          },
-          {
-            name: 'dripAmount';
-            type: 'u64';
-          },
-          {
-            name: 'dcaActivationTimestamp';
-            type: 'i64';
-          },
-          {
-            name: 'bump';
-            type: 'u8';
-          }
-        ];
-      };
-    },
-    {
       name: 'vaultPeriod';
       type: {
         kind: 'struct';
@@ -605,6 +591,62 @@ export type DcaVault = {
           {
             name: 'granularity';
             type: 'u64';
+          },
+          {
+            name: 'triggerDcaSpread';
+            type: 'u16';
+          },
+          {
+            name: 'baseWithdrawalSpread';
+            type: 'u16';
+          }
+        ];
+      };
+    },
+    {
+      name: 'vault';
+      type: {
+        kind: 'struct';
+        fields: [
+          {
+            name: 'protoConfig';
+            type: 'publicKey';
+          },
+          {
+            name: 'tokenAMint';
+            type: 'publicKey';
+          },
+          {
+            name: 'tokenBMint';
+            type: 'publicKey';
+          },
+          {
+            name: 'tokenAAccount';
+            type: 'publicKey';
+          },
+          {
+            name: 'tokenBAccount';
+            type: 'publicKey';
+          },
+          {
+            name: 'treasuryTokenBAccount';
+            type: 'publicKey';
+          },
+          {
+            name: 'lastDcaPeriod';
+            type: 'u64';
+          },
+          {
+            name: 'dripAmount';
+            type: 'u64';
+          },
+          {
+            name: 'dcaActivationTimestamp';
+            type: 'i64';
+          },
+          {
+            name: 'bump';
+            type: 'u8';
           }
         ];
       };
@@ -647,6 +689,14 @@ export type DcaVault = {
           {
             name: 'granularity';
             type: 'u64';
+          },
+          {
+            name: 'triggerDcaSpread';
+            type: 'u16';
+          },
+          {
+            name: 'baseWithdrawalSpread';
+            type: 'u16';
           }
         ];
       };
@@ -655,53 +705,63 @@ export type DcaVault = {
   errors: [
     {
       code: 6000;
-      name: 'InvalidGranularity';
-      msg: 'Granularity must be an integer larger than 0';
-    },
-    {
-      code: 6001;
-      name: 'PeriodicDripAmountIsZero';
-      msg: 'Periodic drip amount == 0';
-    },
-    {
-      code: 6002;
-      name: 'CannotGetVaultBump';
-      msg: 'Cannot get vault bump';
-    },
-    {
-      code: 6003;
       name: 'CannotGetPositionBump';
       msg: 'Cannot get position bump';
     },
     {
-      code: 6004;
+      code: 6001;
+      name: 'CannotGetVaultBump';
+      msg: 'Cannot get vault bump';
+    },
+    {
+      code: 6002;
       name: 'CannotGetVaultPeriodBump';
       msg: 'Cannot get vault_period bump';
     },
     {
-      code: 6005;
-      name: 'WithdrawableAmountIsZero';
-      msg: 'Withdrawable amount is zero';
-    },
-    {
-      code: 6006;
+      code: 6003;
       name: 'DuplicateDCAError';
-      msg: 'DCA already triggered for the current period. Duplicate DCA triggers not allowed';
+      msg: 'DCA already triggered for the current period';
     },
     {
-      code: 6007;
+      code: 6004;
       name: 'IncompleteSwapError';
       msg: 'Swap did not complete';
     },
     {
+      code: 6005;
+      name: 'InvalidGranularity';
+      msg: 'Granularity must be an integer larger than 0';
+    },
+    {
+      code: 6006;
+      name: 'InvalidMint';
+      msg: 'Token mint does not match expected value';
+    },
+    {
+      code: 6007;
+      name: 'InvalidSpread';
+      msg: 'Spread must be >=0 and <=10000';
+    },
+    {
       code: 6008;
+      name: 'InvalidSwapAuthorityAccount';
+      msg: 'Invalid swap authority account';
+    },
+    {
+      code: 6009;
       name: 'InvalidSwapFeeAccount';
       msg: 'Invalid swap fee account';
     },
     {
-      code: 6009;
-      name: 'InvalidSwapAuthorityAccount';
-      msg: 'Invalid swap authority account';
+      code: 6010;
+      name: 'PeriodicDripAmountIsZero';
+      msg: 'Periodic drip amount == 0';
+    },
+    {
+      code: 6011;
+      name: 'WithdrawableAmountIsZero';
+      msg: 'Withdrawable amount is zero';
     }
   ];
 };
@@ -747,6 +807,11 @@ export const IDL: DcaVault = {
           isSigner: false
         },
         {
+          name: 'vaultProtoConfig',
+          isMut: false,
+          isSigner: false
+        },
+        {
           name: 'tokenAAccount',
           isMut: true,
           isSigner: false
@@ -757,17 +822,17 @@ export const IDL: DcaVault = {
           isSigner: false
         },
         {
+          name: 'treasuryTokenBAccount',
+          isMut: false,
+          isSigner: false
+        },
+        {
           name: 'tokenAMint',
           isMut: false,
           isSigner: false
         },
         {
           name: 'tokenBMint',
-          isMut: false,
-          isSigner: false
-        },
-        {
-          name: 'vaultProtoConfig',
           isMut: false,
           isSigner: false
         },
@@ -856,6 +921,11 @@ export const IDL: DcaVault = {
           isSigner: false
         },
         {
+          name: 'vaultProtoConfig',
+          isMut: false,
+          isSigner: false
+        },
+        {
           name: 'vaultPeriodI',
           isMut: false,
           isSigner: false
@@ -886,12 +956,17 @@ export const IDL: DcaVault = {
           isSigner: false
         },
         {
-          name: 'userTokenAAccount',
+          name: 'vaultTreasuryTokenBAccount',
           isMut: true,
           isSigner: false
         },
         {
           name: 'userTokenBAccount',
+          isMut: true,
+          isSigner: false
+        },
+        {
+          name: 'userTokenAAccount',
           isMut: true,
           isSigner: false
         },
@@ -917,7 +992,7 @@ export const IDL: DcaVault = {
         },
         {
           name: 'withdrawer',
-          isMut: true,
+          isMut: false,
           isSigner: true
         },
         {
@@ -1020,6 +1095,11 @@ export const IDL: DcaVault = {
           isSigner: false
         },
         {
+          name: 'vaultProtoConfig',
+          isMut: false,
+          isSigner: false
+        },
+        {
           name: 'vaultPeriodI',
           isMut: false,
           isSigner: false
@@ -1040,18 +1120,8 @@ export const IDL: DcaVault = {
           isSigner: false
         },
         {
-          name: 'userPositionNftMint',
-          isMut: false,
-          isSigner: false
-        },
-        {
           name: 'vaultTokenBAccount',
           isMut: true,
-          isSigner: false
-        },
-        {
-          name: 'vaultTokenBMint',
-          isMut: false,
           isSigner: false
         },
         {
@@ -1060,8 +1130,23 @@ export const IDL: DcaVault = {
           isSigner: false
         },
         {
-          name: 'withdrawer',
+          name: 'vaultTreasuryTokenBAccount',
           isMut: true,
+          isSigner: false
+        },
+        {
+          name: 'userPositionNftMint',
+          isMut: false,
+          isSigner: false
+        },
+        {
+          name: 'tokenBMint',
+          isMut: false,
+          isSigner: false
+        },
+        {
+          name: 'withdrawer',
+          isMut: false,
           isSigner: true
         },
         {
@@ -1082,7 +1167,7 @@ export const IDL: DcaVault = {
       accounts: [
         {
           name: 'dcaTriggerSource',
-          isMut: true,
+          isMut: false,
           isSigner: true
         },
         {
@@ -1146,13 +1231,18 @@ export const IDL: DcaVault = {
           isSigner: false
         },
         {
-          name: 'swap',
+          name: 'dcaTriggerFeeTokenAAccount',
           isMut: true,
           isSigner: false
         },
         {
+          name: 'swap',
+          isMut: false,
+          isSigner: false
+        },
+        {
           name: 'swapAuthority',
-          isMut: true,
+          isMut: false,
           isSigner: false
         },
         {
@@ -1234,50 +1324,6 @@ export const IDL: DcaVault = {
       }
     },
     {
-      name: 'vault',
-      type: {
-        kind: 'struct',
-        fields: [
-          {
-            name: 'protoConfig',
-            type: 'publicKey'
-          },
-          {
-            name: 'tokenAMint',
-            type: 'publicKey'
-          },
-          {
-            name: 'tokenBMint',
-            type: 'publicKey'
-          },
-          {
-            name: 'tokenAAccount',
-            type: 'publicKey'
-          },
-          {
-            name: 'tokenBAccount',
-            type: 'publicKey'
-          },
-          {
-            name: 'lastDcaPeriod',
-            type: 'u64'
-          },
-          {
-            name: 'dripAmount',
-            type: 'u64'
-          },
-          {
-            name: 'dcaActivationTimestamp',
-            type: 'i64'
-          },
-          {
-            name: 'bump',
-            type: 'u8'
-          }
-        ]
-      }
-    },
-    {
       name: 'vaultPeriod',
       type: {
         kind: 'struct',
@@ -1313,6 +1359,62 @@ export const IDL: DcaVault = {
           {
             name: 'granularity',
             type: 'u64'
+          },
+          {
+            name: 'triggerDcaSpread',
+            type: 'u16'
+          },
+          {
+            name: 'baseWithdrawalSpread',
+            type: 'u16'
+          }
+        ]
+      }
+    },
+    {
+      name: 'vault',
+      type: {
+        kind: 'struct',
+        fields: [
+          {
+            name: 'protoConfig',
+            type: 'publicKey'
+          },
+          {
+            name: 'tokenAMint',
+            type: 'publicKey'
+          },
+          {
+            name: 'tokenBMint',
+            type: 'publicKey'
+          },
+          {
+            name: 'tokenAAccount',
+            type: 'publicKey'
+          },
+          {
+            name: 'tokenBAccount',
+            type: 'publicKey'
+          },
+          {
+            name: 'treasuryTokenBAccount',
+            type: 'publicKey'
+          },
+          {
+            name: 'lastDcaPeriod',
+            type: 'u64'
+          },
+          {
+            name: 'dripAmount',
+            type: 'u64'
+          },
+          {
+            name: 'dcaActivationTimestamp',
+            type: 'i64'
+          },
+          {
+            name: 'bump',
+            type: 'u8'
           }
         ]
       }
@@ -1355,6 +1457,14 @@ export const IDL: DcaVault = {
           {
             name: 'granularity',
             type: 'u64'
+          },
+          {
+            name: 'triggerDcaSpread',
+            type: 'u16'
+          },
+          {
+            name: 'baseWithdrawalSpread',
+            type: 'u16'
           }
         ]
       }
@@ -1363,53 +1473,63 @@ export const IDL: DcaVault = {
   errors: [
     {
       code: 6000,
-      name: 'InvalidGranularity',
-      msg: 'Granularity must be an integer larger than 0'
-    },
-    {
-      code: 6001,
-      name: 'PeriodicDripAmountIsZero',
-      msg: 'Periodic drip amount == 0'
-    },
-    {
-      code: 6002,
-      name: 'CannotGetVaultBump',
-      msg: 'Cannot get vault bump'
-    },
-    {
-      code: 6003,
       name: 'CannotGetPositionBump',
       msg: 'Cannot get position bump'
     },
     {
-      code: 6004,
+      code: 6001,
+      name: 'CannotGetVaultBump',
+      msg: 'Cannot get vault bump'
+    },
+    {
+      code: 6002,
       name: 'CannotGetVaultPeriodBump',
       msg: 'Cannot get vault_period bump'
     },
     {
-      code: 6005,
-      name: 'WithdrawableAmountIsZero',
-      msg: 'Withdrawable amount is zero'
-    },
-    {
-      code: 6006,
+      code: 6003,
       name: 'DuplicateDCAError',
-      msg: 'DCA already triggered for the current period. Duplicate DCA triggers not allowed'
+      msg: 'DCA already triggered for the current period'
     },
     {
-      code: 6007,
+      code: 6004,
       name: 'IncompleteSwapError',
       msg: 'Swap did not complete'
     },
     {
+      code: 6005,
+      name: 'InvalidGranularity',
+      msg: 'Granularity must be an integer larger than 0'
+    },
+    {
+      code: 6006,
+      name: 'InvalidMint',
+      msg: 'Token mint does not match expected value'
+    },
+    {
+      code: 6007,
+      name: 'InvalidSpread',
+      msg: 'Spread must be >=0 and <=10000'
+    },
+    {
       code: 6008,
+      name: 'InvalidSwapAuthorityAccount',
+      msg: 'Invalid swap authority account'
+    },
+    {
+      code: 6009,
       name: 'InvalidSwapFeeAccount',
       msg: 'Invalid swap fee account'
     },
     {
-      code: 6009,
-      name: 'InvalidSwapAuthorityAccount',
-      msg: 'Invalid swap authority account'
+      code: 6010,
+      name: 'PeriodicDripAmountIsZero',
+      msg: 'Periodic drip amount == 0'
+    },
+    {
+      code: 6011,
+      name: 'WithdrawableAmountIsZero',
+      msg: 'Withdrawable amount is zero'
     }
   ]
 };
