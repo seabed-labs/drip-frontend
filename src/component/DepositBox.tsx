@@ -243,7 +243,7 @@ export const DepositBox = () => {
   const tokenAMintInfo = useTokenMintInfo(tokenA?.mint);
   const userTokenABalance = useTokenABalance(tokenA?.mint?.toBase58());
   const maxTokenADisplay = tokenAMintInfo
-    ? `${formatTokenAmount(userTokenABalance, tokenAMintInfo.decimals)}`
+    ? `${formatTokenAmount(userTokenABalance ?? new BN(0), tokenAMintInfo.decimals)}`
     : '-';
 
   // const baseAmount = new BN(tokenAAmount).mul(
@@ -419,7 +419,7 @@ export const DepositBox = () => {
                 onClick={() => {
                   setEndDate(undefined);
                   setDepositStage(DepositStage.TokenBSelection);
-                  setTokenAAmount(userTokenABalance);
+                  setTokenAAmount(userTokenABalance ?? new BN(0));
                 }}
               >
                 {maxTokenADisplay}
@@ -453,7 +453,7 @@ export const DepositBox = () => {
                   }
                   const tokenAmount = parseTokenAmount(value, tokenAMintInfo.decimals);
 
-                  if (tokenAmount.gt(userTokenABalance)) {
+                  if (tokenAmount.gt(userTokenABalance ?? new BN(0))) {
                     return;
                   }
 
