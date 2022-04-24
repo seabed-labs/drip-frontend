@@ -10,7 +10,10 @@ module.exports = function (config, env) {
         {
           test: /\.(m?js|ts)$/,
           enforce: 'pre',
-          use: ['source-map-loader']
+          use: ['source-map-loader'],
+          resolve: {
+            fullySpecified: false
+          }
         }
       ]
     },
