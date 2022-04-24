@@ -38,7 +38,6 @@ export const VaultProtoConfig: FC = () => {
 
   function handleSelectOnChange(e: ChangeEvent<HTMLSelectElement>) {
     setGranularity(Number(e.target.value));
-    console.log(`Updated granularity to ${e.target.value}`);
   }
 
   async function handleInitVaultProtoConfig() {

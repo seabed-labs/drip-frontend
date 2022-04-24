@@ -263,6 +263,19 @@ export const DepositBox = () => {
 
     if (!vaultProtoConfig) return undefined;
 
+    console.log('Vault Proto Config', vaultProtoConfig.pubkey.toBase58());
+    console.log('Token A Mint', tokenA.mint.toBase58());
+    console.log('Token B Mint', tokenB.mint.toBase58());
+
+    console.log(
+      'Vaults',
+      Object.values(Configs[network].vaults).map((vault) => ({
+        protoConfig: vault.protoConfig.toBase58(),
+        tokenAMint: vault.tokenAMint.toBase58(),
+        tokenBMint: vault.tokenBMint.toBase58()
+      }))
+    );
+
     const vault = Object.values(Configs[network].vaults).find(
       (vault) =>
         vault.protoConfig.equals(vaultProtoConfig.pubkey) &&
@@ -296,13 +309,6 @@ export const DepositBox = () => {
             expiry: endDate
           }
         };
-
-        console.log('Deposit params', {
-          amount: tokenAAmount.toString(),
-          dcaParams: {
-            expiry: endDate
-          }
-        });
 
         result = await dripVault.deposit(params);
       } catch (err) {

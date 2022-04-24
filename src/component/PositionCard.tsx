@@ -1,4 +1,5 @@
 import { Box, Popover, PopoverContent, PopoverTrigger, Progress } from '@chakra-ui/react';
+import { calculateWithdrawTokenBAmount } from '@dcaf/drip-sdk';
 import { BN } from '@project-serum/anchor';
 import { findProgramAddressSync } from '@project-serum/anchor/dist/cjs/utils/pubkey';
 import { FC } from 'react';
@@ -8,12 +9,13 @@ import { useNetwork } from '../contexts/NetworkContext';
 import { useTokenMintInfo } from '../hooks/TokenMintInfo';
 import { useVaultClient } from '../hooks/VaultClient';
 import { useVaultInfo } from '../hooks/VaultInfo';
-import { Position } from '../pages';
+import { Position, VaultPositionAccountWithPubkey } from '../pages';
 import { formatTokenAmount } from '../utils/token-amount';
 import { getVaultPeriodPDA } from '../vault-client';
 
 import Config from '../config.json';
 import Decimal from 'decimal.js';
+import { useDripContext } from '../contexts/DripContext';
 
 interface VaultConfig {
   vault: string;
@@ -100,17 +102,7 @@ const InfoKey = styled.div`
 const InfoValue = styled.div``;
 
 interface Props {
-  position: Position;
-}
-
-function getAccruedTokenB(i: BN, j: BN, twapI: BN, twapJ: BN, dripAmount: BN): BN {
-  if (i.eq(j)) {
-    return new BN(0);
-  }
-  const averagePriveFromStart = twapJ.mul(j).sub(twapI.mul(i)).div(j.sub(i));
-  const drippedSoFar = dripAmount.mul(j.sub(i));
-  const amount = averagePriveFromStart.mul(drippedSoFar);
-  return amount;
+  position: VaultPositionAccountWithPubkey;
 }
 
 function getPercentageDripped(i: BN, j: BN, dripAmount: BN, deposit: BN): Decimal {
@@ -126,11 +118,12 @@ function getAOverBPrice(bOverA: BN, tokenADecimals: number, tokenBDecimals: numb
     .div(new Decimal(2).pow(64))
     .div(new Decimal(10).pow(tokenBDecimals));
 
-  const aOverBDec = new Decimal(1).div(bOverADec);
+  const aOverBDec = new Decimal(1).div(bOverADec).div(new Decimal(10).pow(tokenADecimals));
   return aOverBDec.toSignificantDigits(3).toString();
 }
 
 export const PositionCard: FC<Props> = ({ position }) => {
+  const drip = useDripContext();
   const vaultInfo = useVaultInfo(position.vault);
   const tokenA = useTokenMintInfo(vaultInfo?.tokenA);
   const tokenB = useTokenMintInfo(vaultInfo?.tokenB);
@@ -145,7 +138,19 @@ export const PositionCard: FC<Props> = ({ position }) => {
     );
 
     return vaultClient.program.account.vaultPeriod.fetch(vaultPeriod.publicKey);
-  }, [vaultClient]);
+  }, [vaultClient, position]);
+
+  const vaultProtoConfig = useAsyncMemo(async () => {
+    if (!drip || !vaultInfo) {
+      return undefined;
+    }
+
+    const [vaultProtoConfig] = await drip.querier.fetchVaultProtoConfigAccounts(
+      vaultInfo.protoConfig
+    );
+
+    return vaultProtoConfig;
+  }, [drip, vaultInfo]);
 
   const vaultPeriodJ = useAsyncMemo(() => {
     if (!vaultInfo) {
@@ -158,19 +163,19 @@ export const PositionCard: FC<Props> = ({ position }) => {
     );
 
     return vaultClient.program.account.vaultPeriod.fetch(vaultPeriod.publicKey);
-  }, [vaultClient]);
+  }, [vaultClient, vaultInfo, position]);
 
   const accruedTokenB =
-    vaultPeriodI && vaultPeriodJ
-      ? getAccruedTokenB(
+    vaultPeriodI && vaultPeriodJ && position && vaultProtoConfig
+      ? calculateWithdrawTokenBAmount(
           vaultPeriodI.periodId,
           vaultPeriodJ.periodId,
           vaultPeriodI.twap,
           vaultPeriodJ.twap,
-          position.periodicDripAmount
+          position.periodicDripAmount,
+          new BN(vaultProtoConfig.triggerDcaSpread)
         )
       : new BN(0);
-  console.log(accruedTokenB.toString());
 
   const percentageDripped =
     vaultPeriodI && vaultPeriodJ
@@ -215,7 +220,7 @@ export const PositionCard: FC<Props> = ({ position }) => {
         <InfoField isFlexStart>
           <InfoKey>Accrued {tokenBSymbol}</InfoKey>{' '}
           <InfoValue>
-            {tokenB && formatTokenAmount(accruedTokenB, tokenB?.decimals)} {tokenBSymbol}
+            {tokenB && formatTokenAmount(accruedTokenB, tokenB.decimals, true)} {tokenBSymbol}
           </InfoValue>
         </InfoField>
         <InfoField>
@@ -224,6 +229,7 @@ export const PositionCard: FC<Props> = ({ position }) => {
             {tokenA &&
               tokenB &&
               vaultPeriodJ &&
+              // TODO: Show user THEIR avg price
               getAOverBPrice(vaultPeriodJ.twap, tokenA.decimals, tokenB.decimals)}{' '}
             {tokenASymbol} per {tokenBSymbol}
           </InfoValue>
