@@ -4,6 +4,8 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import styled from 'styled-components';
 import { Header } from './component/Header';
 import { WalletContext } from './contexts';
+import { DripContext } from './contexts/DripContext';
+import { useDrip } from './hooks/Drip';
 import { Deposits, Positions } from './pages';
 import { Admin } from './pages/Admin';
 import { theme } from './theme';
@@ -21,19 +23,23 @@ const StyledAppContainer = styled.div`
 `;
 
 const App: FC = () => {
+  const drip = useDrip();
+
   return (
     <ChakraProvider theme={theme}>
       <WalletContext>
-        <StyledAppContainer>
-          <Header />
-          <Routes>
-            <Route path="/deposit" element={<Deposits />} />
-            <Route path="/positions" element={<Positions />} />
-            {/* TODO: Remove this when deploying */}
-            <Route path="/admin" element={<Admin />} />
-            <Route path="*" element={<Navigate to="/deposit" />} />
-          </Routes>
-        </StyledAppContainer>
+        <DripContext.Provider value={drip}>
+          <StyledAppContainer>
+            <Header />
+            <Routes>
+              <Route path="/deposit" element={<Deposits />} />
+              <Route path="/positions" element={<Positions />} />
+              {/* TODO: Remove this when deploying */}
+              <Route path="/admin" element={<Admin />} />
+              <Route path="*" element={<Navigate to="/deposit" />} />
+            </Routes>
+          </StyledAppContainer>
+        </DripContext.Provider>
       </WalletContext>
     </ChakraProvider>
   );
