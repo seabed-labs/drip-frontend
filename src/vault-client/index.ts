@@ -151,8 +151,6 @@ export class VaultClient {
       rent: SYSVAR_RENT_PUBKEY.toBase58()
     };
 
-    console.log('INIT VAULT ACCOUNTS:', accounts);
-
     // const txHash = await this.program.rpc.initVault({
     //   accounts
     // });
@@ -173,10 +171,8 @@ export class VaultClient {
 
     const vault = new PublicKey(vaultAddress);
     const vaultAccount = await this.program.account.vault.fetch(vault);
-    console.log(vaultAccount);
     const currentPeriodId = vaultAccount.lastDcaPeriod;
     const endPeriodId = currentPeriodId.add(numberOfCycles);
-    console.log(currentPeriodId.toString(), endPeriodId.toString(), numberOfCycles);
     const endPeriodPDA = getVaultPeriodPDA(this.program.programId, vault, endPeriodId);
     const endPeriodAccount = await this.program.account.vaultPeriod.fetchNullable(
       endPeriodPDA.publicKey

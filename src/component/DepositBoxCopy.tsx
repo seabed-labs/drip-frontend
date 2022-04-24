@@ -180,11 +180,6 @@ import Decimal from 'decimal.js';
 //   const [vaultConfig, setVaultConfig] = useState<VaultConfig>(vaultConfigs[0]);
 //   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
 
-//   console.log('tokenAAmount:', tokenAAmount);
-//   console.log('endDateTime:', Math.floor(endDateTime?.getTime() ?? 0 / 1000));
-//   console.log('granularity:', granularity);
-//   console.log('vaultConfig', vaultConfig);
-
 //   const tokenAToMint: Record<string, string> = {};
 //   const tokenBToMint: Record<string, string> = {};
 //   vaultConfigs = vaultConfigs.filter((c) => c.vaultProtoConfigGranularity !== 10);

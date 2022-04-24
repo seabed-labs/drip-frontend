@@ -14,8 +14,6 @@ export function useDrip(): Drip {
   const wallet = useWallet();
   const anchorWallet = useAnchorWallet();
   return useMemo(() => {
-    console.log('Anchor wallet', anchorWallet);
-
     const clusterUrl = clusterApiUrl(network === Network.Mainnet ? 'mainnet-beta' : 'devnet');
     const drip = new Drip(
       network,
