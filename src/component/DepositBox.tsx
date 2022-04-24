@@ -115,13 +115,15 @@ const MaxAmount = styled.span`
   }
 `;
 
-const StyledDatePicker = styled(DatePicker)`
+const StyledDatePicker = styled(DatePicker)<{ disabled?: boolean }>`
   border-radius: 20px;
   padding: 14px 20px;
   border: 1px solid rgba(255, 255, 255, 0.16);
   width: 100%;
   background: #262626;
   color: white;
+
+  ${({ disabled }) => (disabled ? `opacity: 0.3` : '')}
 `;
 
 // TODO(Mocha): Refactor styles
@@ -202,6 +204,7 @@ export const DepositBox = () => {
   const [tokenARecord, setTokenARecord] = useState<Record<string, Token>>();
   const [tokenBRecord, setTokenBRecord] = useState<Record<string, Token>>();
   const [granularity, setGranularity] = useState<Granularity>(Granularity.Minutely);
+  const [endDate, setEndDate] = useState<Date>();
 
   useEffect(() => {
     (async () => {
@@ -302,6 +305,7 @@ export const DepositBox = () => {
             disabled={depositStage < DepositStage.TokenASelection}
             value={tokenA?.mint?.toBase58() || ''}
             onChange={(event) => {
+              setEndDate(undefined);
               const mint = event.target.selectedOptions[0].value;
 
               if (!tokenARecord) return;
@@ -336,6 +340,7 @@ export const DepositBox = () => {
               max:{' '}
               <MaxAmount
                 onClick={() => {
+                  setEndDate(undefined);
                   setDepositStage(DepositStage.TokenBSelection);
                   setTokenAAmount(userTokenABalance);
                 }}
@@ -359,6 +364,7 @@ export const DepositBox = () => {
                 placeholder="0"
                 bg="#262626"
                 onChange={(event) => {
+                  setEndDate(undefined);
                   const value = event.target.value;
 
                   if (!tokenAMintInfo) return;
@@ -400,6 +406,7 @@ export const DepositBox = () => {
             placeholder="Token B"
             value={tokenB?.mint?.toBase58() || ''}
             onChange={(event) => {
+              setEndDate(undefined);
               const mint = event.target.selectedOptions[0].value;
 
               if (!tokenBRecord) return;
@@ -443,6 +450,7 @@ export const DepositBox = () => {
               onChange={(event) => {
                 const newGranularity = event.target.selectedOptions[0].value;
                 setGranularity(newGranularity as Granularity);
+                setEndDate(undefined);
                 setDepositStage(DepositStage.ExpiryDateSelection);
               }}
               value={granularity}
@@ -459,21 +467,26 @@ export const DepositBox = () => {
 
       {/* Till */}
       <Box h="20px" />
-      {/* <DepositRow>
-        <FormControl w="100%" variant="floating">
+      <DepositRow>
+        <FormControl
+          w="100%"
+          variant="floating"
+          isDisabled={depositStage < DepositStage.GranularitySelection}
+        >
           <FormLabel fontSize="20px" htmlFor="granularity-select">
             Till
           </FormLabel>
           <StyledDatePicker
             autoComplete="off"
-            value={endDateTime?.toISOString()}
+            value={endDate?.toISOString() || ''}
             placeholderText="Select end date"
             id="granularity-select"
-            selected={endDateTime}
+            disabled={depositStage < DepositStage.GranularitySelection}
+            selected={endDate}
             minDate={new Date()}
             onChange={(date: Date) => {
-              setIsSubmitDisabled(tokenAAmount === 0 || date === undefined);
-              setEndDateTime(date);
+              setEndDate(date);
+              setDepositStage(DepositStage.ReadyToDeposit);
             }}
             showTimeSelect={
               granularity == Granularity.Minutely || granularity == Granularity.Hourly
@@ -487,7 +500,7 @@ export const DepositBox = () => {
             }
           />
         </FormControl>
-      </DepositRow> */}
+      </DepositRow>
       {/* Preview and Deposit */}
       {/* <DepositRow>
         <VStack width={'100%'}>
