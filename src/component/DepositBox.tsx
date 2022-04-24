@@ -201,6 +201,7 @@ export const DepositBox = () => {
   const [tokenB, setTokenB] = useState<Token>();
   const [tokenARecord, setTokenARecord] = useState<Record<string, Token>>();
   const [tokenBRecord, setTokenBRecord] = useState<Record<string, Token>>();
+  const [granularity, setGranularity] = useState<Granularity>(Granularity.Minutely);
 
   useEffect(() => {
     (async () => {
@@ -299,7 +300,7 @@ export const DepositBox = () => {
             id="drip-select"
             placeholder="Token A"
             disabled={depositStage < DepositStage.TokenASelection}
-            value={tokenA?.mint?.toBase58()}
+            value={tokenA?.mint?.toBase58() || ''}
             onChange={(event) => {
               const mint = event.target.selectedOptions[0].value;
 
@@ -309,6 +310,7 @@ export const DepositBox = () => {
                 if (mint === '') {
                   setTokenA(tokenARecord[mint]);
                   setTokenAAmount(ZERO);
+                  setTokenB(undefined);
                   setDepositStage(DepositStage.TokenASelection);
                 }
 
@@ -334,6 +336,7 @@ export const DepositBox = () => {
               max:{' '}
               <MaxAmount
                 onClick={() => {
+                  setDepositStage(DepositStage.TokenBSelection);
                   setTokenAAmount(userTokenABalance);
                 }}
               >
@@ -344,7 +347,7 @@ export const DepositBox = () => {
               size="lg"
               value={
                 tokenAAmount.isZero() || !tokenAMintInfo
-                  ? undefined
+                  ? ''
                   : formatTokenAmount(tokenAAmount, tokenAMintInfo.decimals)
               }
             >
@@ -360,8 +363,9 @@ export const DepositBox = () => {
 
                   if (!tokenAMintInfo) return;
                   if (value.trim() === '') {
-                    setDepositStage(DepositStage.DepositAmountEntry);
                     setTokenAAmount(ZERO);
+                    setTokenB(undefined);
+                    setDepositStage(DepositStage.DepositAmountEntry);
                     return;
                   }
                   const tokenAmount = parseTokenAmount(value, tokenAMintInfo.decimals);
@@ -394,7 +398,7 @@ export const DepositBox = () => {
             bg="#262626"
             id="drip-select"
             placeholder="Token B"
-            value={tokenB?.mint.toBase58()}
+            value={tokenB?.mint?.toBase58() || ''}
             onChange={(event) => {
               const mint = event.target.selectedOptions[0].value;
 
@@ -403,7 +407,7 @@ export const DepositBox = () => {
               if (!tokenBRecord[mint]) {
                 if (mint === '') {
                   setTokenB(tokenBRecord[mint]);
-                  setDepositStage(DepositStage.TokenASelection);
+                  setDepositStage(DepositStage.TokenBSelection);
                 }
 
                 return;
@@ -421,7 +425,10 @@ export const DepositBox = () => {
               ))}
           </Select>
         </FormControl>
-        {/* <FormControl variant="floating">
+        <FormControl
+          variant="floating"
+          isDisabled={depositStage < DepositStage.GranularitySelection}
+        >
           <GranularityContainer>
             <FormLabel fontSize="20px" htmlFor="granularity-select">
               Granularity
@@ -434,24 +441,20 @@ export const DepositBox = () => {
               bg="#262626"
               id="granularity-select"
               onChange={(event) => {
-                const newGranularity = event.target.selectedOptions[0].text as Granularity;
-                const newValidConfig = vaultConfigs.filter(
-                  (c) =>
-                    c.tokenBSymbol === vaultConfig.tokenBSymbol &&
-                    c.tokenASymbol == vaultConfig.tokenASymbol &&
-                    c.vaultProtoConfigGranularity === granularityToUnix(newGranularity)
-                );
-                setGranularity(newGranularity);
-                setVaultConfig(newValidConfig[0]);
+                const newGranularity = event.target.selectedOptions[0].value;
+                setGranularity(newGranularity as Granularity);
+                setDepositStage(DepositStage.ExpiryDateSelection);
               }}
               value={granularity}
             >
               {Object.values(Granularity).map((granularity) => (
-                <option>{granularity}</option>
+                <option key={granularity} value={granularity}>
+                  {granularity}
+                </option>
               ))}
             </Select>
           </GranularityContainer>
-        </FormControl> */}
+        </FormControl>
       </DepositRow>
 
       {/* Till */}
