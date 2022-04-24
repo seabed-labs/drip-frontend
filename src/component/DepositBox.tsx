@@ -161,18 +161,19 @@ function getNumSwaps(startTime: Date, endTime: Date, granularity: Granularity): 
 function getPreviewText(
   endDateTime: Date,
   granularity: Granularity,
-  tokenAAmount: number,
-  tokenASymbol: string
+  tokenAAmount: BN,
+  tokenASymbol: string,
+  tokenADecimals: number
 ) {
   const swaps = getNumSwaps(new Date(), endDateTime, granularity);
-  const dripAmount = Math.floor(tokenAAmount / swaps);
+  const dripAmount = tokenAAmount.div(new BN(swaps));
   return (
     <>
       <Box h="20px" />
       <Text>
         <Text as="u">{swaps}</Text>
         {' swaps of '}
-        <Text as="u">{dripAmount}</Text>
+        <Text as="u">{formatTokenAmount(dripAmount, tokenADecimals)}</Text>
         {` ${tokenASymbol} `}
         <Text as="u">{granularity}</Text>
       </Text>
@@ -502,18 +503,23 @@ export const DepositBox = () => {
         </FormControl>
       </DepositRow>
       {/* Preview and Deposit */}
-      {/* <DepositRow>
+      <DepositRow>
         <VStack width={'100%'}>
-          {tokenAAmount && endDateTime && granularity
-            ? getPreviewText(endDateTime, granularity, tokenAAmount, vaultConfig.tokenASymbol)
+          {tokenAAmount && endDate && granularity && tokenA && tokenAMintInfo
+            ? getPreviewText(
+                endDate,
+                granularity,
+                tokenAAmount,
+                tokenA?.symbol,
+                tokenAMintInfo?.decimals
+              )
             : undefined}
           <Box h="20px" />
           <Button
             onClick={() => {
-              const swaps = getNumSwaps(new Date(), endDateTime ?? new Date(), granularity);
-              handleDeposit(vaultConfig.vault, baseAmount, new BN(swaps));
+              const swaps = getNumSwaps(new Date(), endDate ?? new Date(), granularity);
             }}
-            disabled={isSubmitDisabled}
+            disabled={depositStage < DepositStage.ReadyToDeposit}
             bg="#62AAFF"
             color="#FFFFFF"
             width={'100%'}
@@ -522,7 +528,7 @@ export const DepositBox = () => {
             Deposit
           </Button>
         </VStack>
-      </DepositRow> */}
+      </DepositRow>
     </Container>
   );
 };
