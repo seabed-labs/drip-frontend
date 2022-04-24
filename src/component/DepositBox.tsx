@@ -198,16 +198,26 @@ export const DepositBox = () => {
   const refreshTrigger = useStateRefresh();
   const drip = useDripContext();
   const [tokenA, setTokenA] = useState<Token>();
+  const [tokenB, setTokenB] = useState<Token>();
   const [tokenARecord, setTokenARecord] = useState<Record<string, Token>>();
+  const [tokenBRecord, setTokenBRecord] = useState<Record<string, Token>>();
 
   useEffect(() => {
     (async () => {
       if (!drip) return;
 
-      const tokens = await drip.querier.getAllTokenAs();
-      setTokenARecord(tokens);
+      const tokenAs = await drip.querier.getAllTokenAs();
+      setTokenARecord(tokenAs);
     })();
   }, [drip, refreshTrigger]);
+
+  useEffect(() => {
+    (async () => {
+      if (!tokenA || !drip) return;
+      const tokenBs = await drip.querier.getAllTokenBs(tokenA.mint);
+      setTokenBRecord(tokenBs);
+    })();
+  }, [tokenA, drip, refreshTrigger]);
 
   // const tokenAToMint: Record<string, string> = {};
   // const tokenBToMint: Record<string, string> = {};
@@ -350,12 +360,17 @@ export const DepositBox = () => {
 
                   if (!tokenAMintInfo) return;
                   if (value.trim() === '') {
+                    setDepositStage(DepositStage.DepositAmountEntry);
                     setTokenAAmount(ZERO);
                     return;
                   }
                   const tokenAmount = parseTokenAmount(value, tokenAMintInfo.decimals);
 
-                  if (tokenAmount.gt(userTokenABalance)) return;
+                  if (tokenAmount.gt(userTokenABalance)) {
+                    return;
+                  }
+
+                  setDepositStage(DepositStage.TokenBSelection);
                   setTokenAAmount(tokenAmount);
                 }}
               />
@@ -366,10 +381,10 @@ export const DepositBox = () => {
 
       {/* To */}
       <Box h="20px" />
-      {/* <DepositRow>
-        <FormControl variant="floating">
+      <DepositRow>
+        <FormControl variant="floating" isDisabled={depositStage < DepositStage.TokenBSelection}>
           <FormLabel fontSize="20px" htmlFor="drip-select">
-            Drip
+            To
           </FormLabel>
           <Select
             maxW="70%"
@@ -378,24 +393,35 @@ export const DepositBox = () => {
             borderRadius="20px"
             bg="#262626"
             id="drip-select"
-            value={vaultConfig.tokenBSymbol}
+            placeholder="Token B"
+            value={tokenB?.mint.toBase58()}
             onChange={(event) => {
-              const newTokenB = event.target.selectedOptions[0].text;
-              const newValidConfig = vaultConfigs.filter(
-                (c) =>
-                  c.tokenBSymbol === newTokenB &&
-                  c.tokenASymbol == vaultConfig.tokenASymbol &&
-                  c.vaultProtoConfigGranularity === vaultConfig.vaultProtoConfigGranularity
-              );
-              setVaultConfig(newValidConfig[0]);
+              const mint = event.target.selectedOptions[0].value;
+
+              if (!tokenBRecord) return;
+
+              if (!tokenBRecord[mint]) {
+                if (mint === '') {
+                  setTokenB(tokenBRecord[mint]);
+                  setDepositStage(DepositStage.TokenASelection);
+                }
+
+                return;
+              }
+
+              setTokenB(tokenBRecord[mint]);
+              setDepositStage(DepositStage.GranularitySelection);
             }}
           >
-            {Object.keys(tokenBToMint).map((symbol) => (
-              <option>{symbol}</option>
-            ))}
+            {tokenBRecord &&
+              Object.values(tokenBRecord).map((tokenB) => (
+                <option key={tokenB.mint.toBase58()} value={tokenB.mint.toBase58()}>
+                  {tokenB.symbol}
+                </option>
+              ))}
           </Select>
         </FormControl>
-        <FormControl variant="floating">
+        {/* <FormControl variant="floating">
           <GranularityContainer>
             <FormLabel fontSize="20px" htmlFor="granularity-select">
               Granularity
@@ -425,8 +451,8 @@ export const DepositBox = () => {
               ))}
             </Select>
           </GranularityContainer>
-        </FormControl>
-      </DepositRow> */}
+        </FormControl> */}
+      </DepositRow>
 
       {/* Till */}
       <Box h="20px" />
