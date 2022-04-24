@@ -1,7 +1,7 @@
-import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
+import { Tab, TabList, TabPanels, Tabs } from '@chakra-ui/react';
 import { FC } from 'react';
-import { Vault } from '../component/Vault';
-import { VaultProtoConfig } from '../component/VaultProtoConfig';
+// import { Vault } from '../component/Vault';
+// import { VaultProtoConfig } from '../component/VaultProtoConfig';
 
 export const Admin: FC = () => {
   return (
@@ -11,12 +11,12 @@ export const Admin: FC = () => {
         <Tab>Vault</Tab>
       </TabList>
       <TabPanels w="100%">
-        <TabPanel w="100%">
+        {/* <TabPanel w="100%">
           <VaultProtoConfig />
-        </TabPanel>
-        <TabPanel>
+        </TabPanel> */}
+        {/* <TabPanel>
           <Vault />
-        </TabPanel>
+        </TabPanel> */}
       </TabPanels>
     </Tabs>
   );

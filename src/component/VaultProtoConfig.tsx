@@ -1,5 +1,8 @@
+export {};
+
+/*
 import { Box, Button, Center, Code, Link, Select, useToast } from '@chakra-ui/react';
-import { ChangeEvent, ChangeEventHandler, FC, useState } from 'react';
+import { ChangeEvent, FC, useState } from 'react';
 import { useNetwork } from '../contexts/NetworkContext';
 import { useVaultClient } from '../hooks/VaultClient';
 import { solscanTxUrl } from '../utils/block-explorer';
@@ -62,7 +65,6 @@ export const VaultProtoConfig: FC = () => {
       position: 'top-right'
     });
   }
-
   return (
     <Center>
       <Box w="100%">
@@ -88,3 +90,4 @@ export const VaultProtoConfig: FC = () => {
     </Center>
   );
 };
+*/

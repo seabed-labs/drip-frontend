@@ -1,4 +1,4 @@
-import { Box, Code, Grid, GridItem, Text } from '@chakra-ui/react';
+import { Grid, GridItem } from '@chakra-ui/react';
 import { VaultPositionAccount } from '@dcaf-protocol/drip-sdk/dist/interfaces/drip-querier/results';
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
 import { PublicKey } from '@solana/web3.js';
@@ -6,8 +6,6 @@ import BN from 'bn.js';
 import { FC, useEffect, useMemo, useState } from 'react';
 import { PositionCard } from '../component/PositionCard';
 import { useDripContext } from '../contexts/DripContext';
-import { useNetwork } from '../contexts/NetworkContext';
-import { useVaultClient } from '../hooks/VaultClient';
 
 export interface Position {
   vault: PublicKey;
@@ -43,7 +41,6 @@ function comparePosition(
 }
 
 function usePositions(): (VaultPositionAccount & { pubkey: PublicKey })[] {
-  const network = useNetwork();
   const drip = useDripContext();
   const wallet = useAnchorWallet();
   const [positionsRecord, setPositionsRecord] = useState<Record<string, VaultPositionAccount>>();

@@ -2,7 +2,6 @@ import {
   Button,
   FormControl,
   FormLabel,
-  Input,
   Select,
   VStack,
   Text,
@@ -10,7 +9,6 @@ import {
   Box,
   Code,
   Link,
-  MenuItemOption,
   NumberInput,
   NumberInputField,
   Spinner
@@ -19,31 +17,17 @@ import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import DatePicker from 'react-datepicker';
 import { useNetwork } from '../contexts/NetworkContext';
-import { useTokenABalance, useVaultClient } from '../hooks/VaultClient';
+import { useTokenABalance } from '../hooks/VaultClient';
 import { BN } from '@project-serum/anchor';
-import { solscanTxUrl } from '../utils/block-explorer';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useTokenMintInfo } from '../hooks/TokenMintInfo';
 import { formatTokenAmount, parseTokenAmount } from '../utils/token-amount';
-import Config from '../config.json';
-import Decimal from 'decimal.js';
-import { Configs, Drip, Token, Vault, ZERO } from '@dcaf-protocol/drip-sdk';
+import { Configs, Token, Vault, ZERO } from '@dcaf-protocol/drip-sdk';
 import { useDripContext } from '../contexts/DripContext';
 import { useStateRefresh } from '../hooks/StateRefresh';
 import { BroadcastTransactionWithMetadata } from '@dcaf-protocol/drip-sdk/dist/types';
 import { Keypair, PublicKey } from '@solana/web3.js';
 
-interface VaultConfig {
-  vault: string;
-  vaultTokenAAccount: string;
-  vaultTokenBAccount: string;
-  vaultProtoConfig: string;
-  vaultProtoConfigGranularity: number;
-  tokenAMint: string;
-  tokenASymbol: string;
-  tokenBMint: string;
-  tokenBSymbol: string;
-}
 // TODO: Finalize the border-shadow on this
 const Container = styled.div`
   padding: 40px 50px 40px 50px;

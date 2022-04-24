@@ -1,7 +1,6 @@
-import { Box, Popover, PopoverContent, PopoverTrigger, Progress } from '@chakra-ui/react';
+import { Box, Progress } from '@chakra-ui/react';
 import { calculateWithdrawTokenBAmount } from '@dcaf-protocol/drip-sdk';
 import { BN } from '@project-serum/anchor';
-import { findProgramAddressSync } from '@project-serum/anchor/dist/cjs/utils/pubkey';
 import { FC } from 'react';
 import styled from 'styled-components';
 import { useAsyncMemo } from 'use-async-memo';
@@ -9,7 +8,7 @@ import { useNetwork } from '../contexts/NetworkContext';
 import { useTokenMintInfo } from '../hooks/TokenMintInfo';
 import { useVaultClient } from '../hooks/VaultClient';
 import { useVaultInfo } from '../hooks/VaultInfo';
-import { Position, VaultPositionAccountWithPubkey } from '../pages';
+import { VaultPositionAccountWithPubkey } from '../pages';
 import { formatTokenAmount } from '../utils/token-amount';
 import { getVaultPeriodPDA } from '../vault-client';
 
