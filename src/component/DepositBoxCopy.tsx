@@ -9,10 +9,9 @@ import {
   useToast,
   Box,
   Code,
-  Link,
-  MenuItemOption
+  Link
 } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import DatePicker from 'react-datepicker';
 import { useNetwork } from '../contexts/NetworkContext';
@@ -24,9 +23,6 @@ import { useTokenMintInfo } from '../hooks/TokenMintInfo';
 import { formatTokenAmount } from '../utils/format';
 import Config from '../config.json';
 import Decimal from 'decimal.js';
-import { Token } from '@dcaf/drip-sdk';
-import { useDripContext } from '../contexts/DripContext';
-import { useStateRefresh } from '../hooks/StateRefresh';
 
 interface VaultConfig {
   vault: string;
@@ -39,6 +35,7 @@ interface VaultConfig {
   tokenBMint: string;
   tokenBSymbol: string;
 }
+let vaultConfigs = Config as VaultConfig[];
 // TODO: Finalize the border-shadow on this
 const Container = styled.div`
   padding: 40px 50px 40px 50px;
@@ -176,99 +173,81 @@ function getPreviewText(
   );
 }
 
-enum DepositStage {
-  TokenASelection,
-  DepositAmountEntry,
-  TokenBSelection,
-  GranularitySelection,
-  ExpiryDateSelection,
-  ReadyToDeposit
-}
-
 export const DepositBox = () => {
-  // const [endDateTime, setEndDateTime] = useState<Date | undefined>();
-  // const [tokenAAmount, setTokenAAmount] = useState<number>(0);
-  // const [granularity, setGranularity] = useState(Granularity.Minutely);
-  // const [vaultConfig, setVaultConfig] = useState<VaultConfig>(vaultConfigs[0]);
-  // const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
-  const [depositStage, setDepositStage] = useState<DepositStage>(DepositStage.TokenASelection);
-  const refreshTrigger = useStateRefresh();
-  const drip = useDripContext();
-  const [tokenA, setTokenA] = useState<Token>();
-  const [tokenARecord, setTokenARecord] = useState<Record<string, Token>>();
+  const [endDateTime, setEndDateTime] = useState<Date | undefined>();
+  const [tokenAAmount, setTokenAAmount] = useState<number>(0);
+  const [granularity, setGranularity] = useState(Granularity.Minutely);
+  const [vaultConfig, setVaultConfig] = useState<VaultConfig>(vaultConfigs[0]);
+  const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
 
-  useEffect(() => {
-    (async () => {
-      if (!drip) return;
+  console.log('tokenAAmount:', tokenAAmount);
+  console.log('endDateTime:', Math.floor(endDateTime?.getTime() ?? 0 / 1000));
+  console.log('granularity:', granularity);
+  console.log('vaultConfig', vaultConfig);
 
-      const tokens = await drip.querier.getAllTokenAs();
-      setTokenARecord(tokens);
-    })();
-  }, [drip, refreshTrigger]);
+  const tokenAToMint: Record<string, string> = {};
+  const tokenBToMint: Record<string, string> = {};
+  vaultConfigs = vaultConfigs.filter((c) => c.vaultProtoConfigGranularity !== 10);
+  vaultConfigs.forEach((c) => {
+    tokenAToMint[c.tokenASymbol] = c.tokenAMint;
 
-  // const tokenAToMint: Record<string, string> = {};
-  // const tokenBToMint: Record<string, string> = {};
-  // vaultConfigs = vaultConfigs.filter((c) => c.vaultProtoConfigGranularity !== 10);
-  // vaultConfigs.forEach((c) => {
-  //   tokenAToMint[c.tokenASymbol] = c.tokenAMint;
-
-  //   if (c.tokenASymbol === vaultConfig.tokenASymbol) {
-  //     tokenBToMint[c.tokenBSymbol] = c.tokenBMint;
-  //   }
-  // });
+    if (c.tokenASymbol === vaultConfig.tokenASymbol) {
+      tokenBToMint[c.tokenBSymbol] = c.tokenBMint;
+    }
+  });
 
   // TODO(Mocha): this is base values rn, we need decimals
-  // const tokenAMintInfo = useTokenMintInfo(vaultConfig.tokenAMint);
-  // const userTokenABlance = useTokenABalance(vaultConfig.tokenAMint);
-  // const maxTokenALabel =
-  //   userTokenABlance && tokenAMintInfo
-  //     ? `${formatTokenAmount(new BN(userTokenABlance.toString()), tokenAMintInfo.decimals)}`
-  //     : '-';
+  const tokenAMintInfo = useTokenMintInfo(vaultConfig.tokenAMint);
+  const userTokenABlance = useTokenABalance(vaultConfig.tokenAMint);
+  const maxTokenALabel =
+    userTokenABlance && tokenAMintInfo
+      ? `${formatTokenAmount(new BN(userTokenABlance.toString()), tokenAMintInfo.decimals)}`
+      : '-';
 
-  // const baseAmount = new BN(tokenAAmount).mul(
-  //   new BN(10).pow(new BN(tokenAMintInfo?.decimals ?? 1))
-  // );
+  const baseAmount = new BN(tokenAAmount).mul(
+    new BN(10).pow(new BN(tokenAMintInfo?.decimals ?? 1))
+  );
 
-  // const network = useNetwork();
-  // const vaultClient = useVaultClient(network);
-  // const toast = useToast();
+  const network = useNetwork();
+  const vaultClient = useVaultClient(network);
+  const toast = useToast();
 
-  // async function handleDeposit(vault: string, baseAmount: BN, numberOfCycles: BN) {
-  //   setIsSubmitDisabled(true);
-  //   try {
-  //     const result = await vaultClient.deposit(vault, baseAmount, numberOfCycles);
-  //     toast({
-  //       title: 'Deposit successful',
-  //       description: (
-  //         <>
-  //           <Box>
-  //             <Code colorScheme="black">{result.publicKey.toBase58()}</Code>
-  //           </Box>
-  //           <Box>
-  //             <Link href={solscanTxUrl(result.txHash, network)} isExternal>
-  //               Solscan
-  //             </Link>
-  //           </Box>
-  //         </>
-  //       ),
-  //       status: 'success',
-  //       duration: 9000,
-  //       isClosable: true,
-  //       position: 'top-right'
-  //     });
-  //   } catch (err) {
-  //     console.error(err);
-  //     toast({
-  //       title: 'Deposit failed',
-  //       description: (err as Error).message,
-  //       status: 'error',
-  //       duration: 9000,
-  //       isClosable: true,
-  //       position: 'top-right'
-  //     });
-  //   }
-  //   setIsSubmitDisabled(false);
-  // }
+  async function handleDeposit(vault: string, baseAmount: BN, numberOfCycles: BN) {
+    setIsSubmitDisabled(true);
+    try {
+      const result = await vaultClient.deposit(vault, baseAmount, numberOfCycles);
+      toast({
+        title: 'Deposit successful',
+        description: (
+          <>
+            <Box>
+              <Code colorScheme="black">{result.publicKey.toBase58()}</Code>
+            </Box>
+            <Box>
+              <Link href={solscanTxUrl(result.txHash, network)} isExternal>
+                Solscan
+              </Link>
+            </Box>
+          </>
+        ),
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-right'
+      });
+    } catch (err) {
+      console.error(err);
+      toast({
+        title: 'Deposit failed',
+        description: (err as Error).message,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-right'
+      });
+    }
+    setIsSubmitDisabled(false);
+  }
 
   return (
     <Container>
@@ -285,25 +264,36 @@ export const DepositBox = () => {
             borderRadius="20px"
             bg="#262626"
             id="drip-select"
-            placeholder="Token A"
-            disabled={depositStage < DepositStage.TokenASelection}
-            value={tokenA?.mint?.toBase58()}
+            value={vaultConfig.tokenASymbol}
             onChange={(event) => {
-              const mint = event.target.selectedOptions[0].value;
-              if (!tokenARecord || !tokenARecord[mint]) return;
-              setTokenA(tokenARecord[mint]);
-              setDepositStage(DepositStage.DepositAmountEntry);
+              const newTokenA = event.target.selectedOptions[0].text;
+              // reset fields if they are no longer valid
+              const newValidConfig = vaultConfigs.filter(
+                (c) =>
+                  c.tokenASymbol === newTokenA &&
+                  c.tokenBSymbol == vaultConfig.tokenBSymbol &&
+                  c.vaultProtoConfigGranularity === vaultConfig.vaultProtoConfigGranularity
+              );
+              if (!newValidConfig.length) {
+                // Don't need to reset granularity, all granularties will be support per pair
+                setVaultConfig(
+                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                  vaultConfigs.find(
+                    (c) =>
+                      c.tokenASymbol === newTokenA &&
+                      c.vaultProtoConfigGranularity === vaultConfig.vaultProtoConfigGranularity
+                  )!
+                );
+              }
+              setVaultConfig(newValidConfig[0]);
             }}
           >
-            {tokenARecord &&
-              Object.values(tokenARecord).map((tokenA) => (
-                <option key={tokenA.mint.toBase58()} value={tokenA.mint.toBase58()}>
-                  {tokenA.symbol}
-                </option>
-              ))}
+            {Object.keys(tokenAToMint).map((symbol) => (
+              <option>{symbol}</option>
+            ))}
           </Select>
         </FormControl>
-        {/* <FormControl variant="floating" isDisabled={depositStage < DepositStage.DepositAmountEntry}>
+        <FormControl variant="floating">
           <AmountContainer>
             <FormLabel fontSize="20px" htmlFor="drip-amount-select">
               max:{' '}
@@ -338,12 +328,12 @@ export const DepositBox = () => {
               }}
             />
           </AmountContainer>
-        </FormControl> */}
+        </FormControl>
       </DepositRow>
 
       {/* To */}
       <Box h="20px" />
-      {/* <DepositRow>
+      <DepositRow>
         <FormControl variant="floating">
           <FormLabel fontSize="20px" htmlFor="drip-select">
             Drip
@@ -403,11 +393,11 @@ export const DepositBox = () => {
             </Select>
           </GranularityContainer>
         </FormControl>
-      </DepositRow> */}
+      </DepositRow>
 
       {/* Till */}
       <Box h="20px" />
-      {/* <DepositRow>
+      <DepositRow>
         <FormControl w="100%" variant="floating">
           <FormLabel fontSize="20px" htmlFor="granularity-select">
             Till
@@ -435,9 +425,9 @@ export const DepositBox = () => {
             }
           />
         </FormControl>
-      </DepositRow> */}
+      </DepositRow>
       {/* Preview and Deposit */}
-      {/* <DepositRow>
+      <DepositRow>
         <VStack width={'100%'}>
           {tokenAAmount && endDateTime && granularity
             ? getPreviewText(endDateTime, granularity, tokenAAmount, vaultConfig.tokenASymbol)
@@ -457,7 +447,7 @@ export const DepositBox = () => {
             Deposit
           </Button>
         </VStack>
-      </DepositRow> */}
+      </DepositRow>
     </Container>
   );
 };
