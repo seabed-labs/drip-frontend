@@ -1,4 +1,4 @@
-import { ZERO } from '@dcaf/drip-sdk';
+import { ZERO } from '@dcaf-protocol/drip-sdk';
 import { BN, Provider } from '@project-serum/anchor';
 import { Wallet } from '@project-serum/anchor/src/provider';
 import { getAssociatedTokenAddress } from '@solana/spl-token';

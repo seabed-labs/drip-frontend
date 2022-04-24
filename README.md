@@ -8,9 +8,9 @@
 yarn
 ```
 
-### Link local @dcaf/drip-sdk (optional)
+### Link local @dcaf-protocol/drip-sdk (optional)
 
-1. Run this in the root directory of the @dcaf/drip-sdk package
+1. Run this in the root directory of the @dcaf-protocol/drip-sdk package
 
 ```bash
 yarn link
@@ -19,7 +19,7 @@ yarn link
 2. Run this in the root directory
 
 ```bash
-yarn link @dcaf/drip-sdk
+yarn link @dcaf-protocol/drip-sdk
 ```
 
 ### Run the app

@@ -27,10 +27,10 @@ import { useTokenMintInfo } from '../hooks/TokenMintInfo';
 import { formatTokenAmount, parseTokenAmount } from '../utils/token-amount';
 import Config from '../config.json';
 import Decimal from 'decimal.js';
-import { Configs, Drip, Token, Vault, ZERO } from '@dcaf/drip-sdk';
+import { Configs, Drip, Token, Vault, ZERO } from '@dcaf-protocol/drip-sdk';
 import { useDripContext } from '../contexts/DripContext';
 import { useStateRefresh } from '../hooks/StateRefresh';
-import { BroadcastTransactionWithMetadata } from '@dcaf/drip-sdk/dist/types';
+import { BroadcastTransactionWithMetadata } from '@dcaf-protocol/drip-sdk/dist/types';
 import { Keypair, PublicKey } from '@solana/web3.js';
 
 interface VaultConfig {
