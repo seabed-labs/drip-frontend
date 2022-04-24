@@ -1,5 +1,5 @@
 import { Box, Popover, PopoverContent, PopoverTrigger, Progress } from '@chakra-ui/react';
-import { calculateWithdrawTokenBAmount } from '@dcaf/drip-sdk';
+import { calculateWithdrawTokenBAmount } from '@dcaf-protocol/drip-sdk';
 import { BN } from '@project-serum/anchor';
 import { findProgramAddressSync } from '@project-serum/anchor/dist/cjs/utils/pubkey';
 import { FC } from 'react';
