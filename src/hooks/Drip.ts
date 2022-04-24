@@ -1,7 +1,7 @@
 import { Drip } from '@dcaf/drip-sdk';
 import { Network } from '@dcaf/drip-sdk/dist/models';
 import { Provider } from '@project-serum/anchor';
-import { useAnchorWallet } from '@solana/wallet-adapter-react';
+import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react';
 import { clusterApiUrl, Connection } from '@solana/web3.js';
 import { useMemo } from 'react';
 import { useNetwork } from '../contexts/NetworkContext';
@@ -11,18 +11,21 @@ const defaultWallet = new DefaultWallet();
 
 export function useDrip(): Drip {
   const network = useNetwork();
-  const wallet = useAnchorWallet();
+  const wallet = useWallet();
+  const anchorWallet = useAnchorWallet();
   return useMemo(() => {
+    console.log('Anchor wallet', anchorWallet);
+
     const clusterUrl = clusterApiUrl(network === Network.Mainnet ? 'mainnet-beta' : 'devnet');
     const drip = new Drip(
       network,
       new Provider(
         new Connection(clusterUrl, 'confirmed'),
-        wallet || defaultWallet,
+        anchorWallet ?? defaultWallet,
         Provider.defaultOptions()
       )
     );
 
     return drip;
-  }, [wallet]);
+  }, [wallet, anchorWallet]);
 }
