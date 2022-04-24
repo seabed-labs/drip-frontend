@@ -9,7 +9,7 @@ import { useTokenMintInfo } from '../hooks/TokenMintInfo';
 import { useVaultClient } from '../hooks/VaultClient';
 import { useVaultInfo } from '../hooks/VaultInfo';
 import { Position } from '../pages';
-import { formatTokenAmount } from '../utils/format';
+import { formatTokenAmount } from '../utils/token-amount';
 import { getVaultPeriodPDA } from '../vault-client';
 
 import Config from '../config.json';

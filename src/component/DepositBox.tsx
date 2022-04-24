@@ -10,7 +10,9 @@ import {
   Box,
   Code,
   Link,
-  MenuItemOption
+  MenuItemOption,
+  NumberInput,
+  NumberInputField
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
@@ -21,10 +23,10 @@ import { BN } from '@project-serum/anchor';
 import { solscanTxUrl } from '../utils/block-explorer';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useTokenMintInfo } from '../hooks/TokenMintInfo';
-import { formatTokenAmount } from '../utils/format';
+import { formatTokenAmount, parseTokenAmount } from '../utils/token-amount';
 import Config from '../config.json';
 import Decimal from 'decimal.js';
-import { Token } from '@dcaf/drip-sdk';
+import { Token, ZERO } from '@dcaf/drip-sdk';
 import { useDripContext } from '../contexts/DripContext';
 import { useStateRefresh } from '../hooks/StateRefresh';
 
@@ -191,6 +193,7 @@ export const DepositBox = () => {
   // const [granularity, setGranularity] = useState(Granularity.Minutely);
   // const [vaultConfig, setVaultConfig] = useState<VaultConfig>(vaultConfigs[0]);
   // const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
+  const [tokenAAmount, setTokenAAmount] = useState<BN>(ZERO);
   const [depositStage, setDepositStage] = useState<DepositStage>(DepositStage.TokenASelection);
   const refreshTrigger = useStateRefresh();
   const drip = useDripContext();
@@ -218,12 +221,11 @@ export const DepositBox = () => {
   // });
 
   // TODO(Mocha): this is base values rn, we need decimals
-  // const tokenAMintInfo = useTokenMintInfo(vaultConfig.tokenAMint);
-  // const userTokenABlance = useTokenABalance(vaultConfig.tokenAMint);
-  // const maxTokenALabel =
-  //   userTokenABlance && tokenAMintInfo
-  //     ? `${formatTokenAmount(new BN(userTokenABlance.toString()), tokenAMintInfo.decimals)}`
-  //     : '-';
+  const tokenAMintInfo = useTokenMintInfo(tokenA?.mint);
+  const userTokenABalance = useTokenABalance(tokenA?.mint?.toBase58());
+  const maxTokenADisplay = tokenAMintInfo
+    ? `${formatTokenAmount(userTokenABalance, tokenAMintInfo.decimals)}`
+    : '-';
 
   // const baseAmount = new BN(tokenAAmount).mul(
   //   new BN(10).pow(new BN(tokenAMintInfo?.decimals ?? 1))
@@ -290,8 +292,21 @@ export const DepositBox = () => {
             value={tokenA?.mint?.toBase58()}
             onChange={(event) => {
               const mint = event.target.selectedOptions[0].value;
-              if (!tokenARecord || !tokenARecord[mint]) return;
+
+              if (!tokenARecord) return;
+
+              if (!tokenARecord[mint]) {
+                if (mint === '') {
+                  setTokenA(tokenARecord[mint]);
+                  setTokenAAmount(ZERO);
+                  setDepositStage(DepositStage.TokenASelection);
+                }
+
+                return;
+              }
+
               setTokenA(tokenARecord[mint]);
+              setTokenAAmount(ZERO);
               setDepositStage(DepositStage.DepositAmountEntry);
             }}
           >
@@ -303,42 +318,50 @@ export const DepositBox = () => {
               ))}
           </Select>
         </FormControl>
-        {/* <FormControl variant="floating" isDisabled={depositStage < DepositStage.DepositAmountEntry}>
+        <FormControl variant="floating" isDisabled={depositStage < DepositStage.DepositAmountEntry}>
           <AmountContainer>
             <FormLabel fontSize="20px" htmlFor="drip-amount-select">
               max:{' '}
               <MaxAmount
-                onClick={() =>
-                  setTokenAAmount(
-                    new Decimal(userTokenABlance?.toString() ?? '0')
-                      .div(new Decimal(10).pow(tokenAMintInfo?.decimals ?? 1))
-                      .toNumber()
-                  )
-                }
+                onClick={() => {
+                  setTokenAAmount(userTokenABalance);
+                }}
               >
-                {maxTokenALabel}
+                {maxTokenADisplay}
               </MaxAmount>
             </FormLabel>
-            <Input
+            <NumberInput
               size="lg"
-              ml="-30%"
-              w="130%"
-              borderRadius="20px"
-              id="drip-amount-select"
-              placeholder="0"
-              bg="#262626"
-              type={'number'}
-              value={tokenAAmount === 0 ? undefined : tokenAAmount}
-              onChange={(event) => {
-                const newTokenAAmount = Number(event.target.value);
-                setIsSubmitDisabled(newTokenAAmount === 0 || endDateTime === undefined);
-                if (userTokenABlance && BigInt(newTokenAAmount) <= userTokenABlance) {
-                  setTokenAAmount(newTokenAAmount);
-                }
-              }}
-            />
+              value={
+                tokenAAmount.isZero() || !tokenAMintInfo
+                  ? undefined
+                  : formatTokenAmount(tokenAAmount, tokenAMintInfo.decimals)
+              }
+            >
+              <NumberInputField
+                ml="-30%"
+                w="130%"
+                borderRadius="20px"
+                id="drip-amount-select"
+                placeholder="0"
+                bg="#262626"
+                onChange={(event) => {
+                  const value = event.target.value;
+
+                  if (!tokenAMintInfo) return;
+                  if (value.trim() === '') {
+                    setTokenAAmount(ZERO);
+                    return;
+                  }
+                  const tokenAmount = parseTokenAmount(value, tokenAMintInfo.decimals);
+
+                  if (tokenAmount.gt(userTokenABalance)) return;
+                  setTokenAAmount(tokenAmount);
+                }}
+              />
+            </NumberInput>
           </AmountContainer>
-        </FormControl> */}
+        </FormControl>
       </DepositRow>
 
       {/* To */}
