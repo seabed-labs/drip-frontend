@@ -12,7 +12,8 @@ import {
   Link,
   MenuItemOption,
   NumberInput,
-  NumberInputField
+  NumberInputField,
+  Spinner
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
@@ -26,9 +27,11 @@ import { useTokenMintInfo } from '../hooks/TokenMintInfo';
 import { formatTokenAmount, parseTokenAmount } from '../utils/token-amount';
 import Config from '../config.json';
 import Decimal from 'decimal.js';
-import { Token, ZERO } from '@dcaf/drip-sdk';
+import { Configs, Drip, Token, Vault, ZERO } from '@dcaf/drip-sdk';
 import { useDripContext } from '../contexts/DripContext';
 import { useStateRefresh } from '../hooks/StateRefresh';
+import { BroadcastTransactionWithMetadata } from '@dcaf/drip-sdk/dist/types';
+import { Keypair, PublicKey } from '@solana/web3.js';
 
 interface VaultConfig {
   vault: string;
@@ -187,7 +190,8 @@ enum DepositStage {
   TokenBSelection,
   GranularitySelection,
   ExpiryDateSelection,
-  ReadyToDeposit
+  ReadyToDeposit,
+  Depositing
 }
 
 export const DepositBox = () => {
@@ -246,46 +250,112 @@ export const DepositBox = () => {
   //   new BN(10).pow(new BN(tokenAMintInfo?.decimals ?? 1))
   // );
 
-  // const network = useNetwork();
+  const network = useNetwork();
   // const vaultClient = useVaultClient(network);
-  // const toast = useToast();
+  const toast = useToast();
 
-  // async function handleDeposit(vault: string, baseAmount: BN, numberOfCycles: BN) {
-  //   setIsSubmitDisabled(true);
-  //   try {
-  //     const result = await vaultClient.deposit(vault, baseAmount, numberOfCycles);
-  //     toast({
-  //       title: 'Deposit successful',
-  //       description: (
-  //         <>
-  //           <Box>
-  //             <Code colorScheme="black">{result.publicKey.toBase58()}</Code>
-  //           </Box>
-  //           <Box>
-  //             <Link href={solscanTxUrl(result.txHash, network)} isExternal>
-  //               Solscan
-  //             </Link>
-  //           </Box>
-  //         </>
-  //       ),
-  //       status: 'success',
-  //       duration: 9000,
-  //       isClosable: true,
-  //       position: 'top-right'
-  //     });
-  //   } catch (err) {
-  //     console.error(err);
-  //     toast({
-  //       title: 'Deposit failed',
-  //       description: (err as Error).message,
-  //       status: 'error',
-  //       duration: 9000,
-  //       isClosable: true,
-  //       position: 'top-right'
-  //     });
-  //   }
-  //   setIsSubmitDisabled(false);
-  // }
+  async function findVault(): Promise<Vault | undefined> {
+    if (!tokenA || !tokenB || !granularity || !drip) return undefined;
+
+    const vaultProtoConfig = Object.values(Configs[network].vaultProtoConfigs).find(
+      (protoConfig) => protoConfig.granularity === granularityToUnix(granularity)
+    );
+
+    if (!vaultProtoConfig) return undefined;
+
+    const vault = Object.values(Configs[network].vaults).find(
+      (vault) =>
+        vault.protoConfig.equals(vaultProtoConfig.pubkey) &&
+        vault.tokenAMint.equals(tokenA.mint) &&
+        vault.tokenBMint.equals(tokenB.mint)
+    );
+
+    return vault;
+  }
+
+  async function handleDeposit() {
+    setDepositStage(DepositStage.Depositing);
+
+    try {
+      const vault = await findVault();
+      if (!vault || !drip || !endDate || !tokenAAmount || tokenAAmount.isZero()) {
+        throw new Error('Not ready to deposit');
+      }
+
+      const dripVault = await drip.getVault(vault.pubkey);
+
+      let result: BroadcastTransactionWithMetadata<{
+        positionNftMint: Keypair;
+        position: PublicKey;
+      }>;
+
+      try {
+        const params = {
+          amount: tokenAAmount,
+          dcaParams: {
+            expiry: endDate
+          }
+        };
+
+        console.log('Deposit params', {
+          amount: tokenAAmount.toString(),
+          dcaParams: {
+            expiry: endDate
+          }
+        });
+
+        result = await dripVault.deposit(params);
+      } catch (err) {
+        const error = err as Error;
+        console.error(error);
+        error.message = `[SDK]: ${error.message}`;
+        throw error;
+      }
+
+      toast({
+        title: 'Deposit successful',
+        description: (
+          <>
+            <Box>
+              <Code colorScheme="black">{result.metadata.position.toBase58()}</Code>
+            </Box>
+            <Box>
+              <Link href={result.solscan} isExternal>
+                Solscan
+              </Link>
+            </Box>
+          </>
+        ),
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-right'
+      });
+
+      reset();
+    } catch (err) {
+      console.error(err);
+      toast({
+        title: 'Deposit failed',
+        description: (err as Error).message,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-right'
+      });
+
+      setDepositStage(DepositStage.ReadyToDeposit);
+    }
+  }
+
+  function reset() {
+    setTokenA(undefined);
+    setTokenAAmount(ZERO);
+    setTokenB(undefined);
+    setGranularity(Granularity.Minutely);
+    setEndDate(undefined);
+    setDepositStage(DepositStage.TokenASelection);
+  }
 
   return (
     <Container>
@@ -516,16 +586,18 @@ export const DepositBox = () => {
             : undefined}
           <Box h="20px" />
           <Button
-            onClick={() => {
-              const swaps = getNumSwaps(new Date(), endDate ?? new Date(), granularity);
-            }}
-            disabled={depositStage < DepositStage.ReadyToDeposit}
+            onClick={handleDeposit}
+            disabled={
+              depositStage < DepositStage.ReadyToDeposit ||
+              !drip ||
+              depositStage === DepositStage.Depositing
+            }
             bg="#62AAFF"
             color="#FFFFFF"
             width={'100%'}
             borderRadius={'60px'}
           >
-            Deposit
+            {depositStage === DepositStage.Depositing ? <Spinner /> : 'Deposit'}
           </Button>
         </VStack>
       </DepositRow>

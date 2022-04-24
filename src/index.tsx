@@ -1,3 +1,4 @@
+import { WalletContext } from './contexts';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
@@ -7,9 +8,11 @@ import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <WalletContext>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </WalletContext>
   </React.StrictMode>,
   document.getElementById('root')
 );
