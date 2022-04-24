@@ -1,7 +1,6 @@
 import { ZERO } from '@dcaf-protocol/drip-sdk';
 import { BN, Provider } from '@project-serum/anchor';
 import { Wallet } from '@project-serum/anchor/src/provider';
-import { getAssociatedTokenAddress } from '@solana/spl-token';
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
 import { clusterApiUrl, Connection, PublicKey, Transaction } from '@solana/web3.js';
 import { useMemo } from 'react';
