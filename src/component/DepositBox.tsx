@@ -417,6 +417,10 @@ export const DepositBox = () => {
               max:{' '}
               <MaxAmount
                 onClick={() => {
+                  if (userTokenABalance.isZero()) {
+                    return;
+                  }
+
                   setEndDate(undefined);
                   setDepositStage(DepositStage.TokenBSelection);
                   setTokenAAmount(userTokenABalance);
