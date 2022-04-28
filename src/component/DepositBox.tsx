@@ -401,7 +401,7 @@ export const DepositBox = () => {
               max:{' '}
               <MaxAmount
                 onClick={() => {
-                  if (userTokenABalance.isZero()) {
+                  if (!userTokenABalance || userTokenABalance.isZero()) {
                     return;
                   }
 
