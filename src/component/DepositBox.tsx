@@ -305,16 +305,11 @@ export const DepositBox = () => {
       toast({
         title: 'Deposit successful',
         description: (
-          <>
-            <Box>
-              <Code colorScheme="black">{result.metadata.position.toBase58()}</Code>
-            </Box>
-            <Box>
-              <Link href={result.solscan} isExternal>
-                Solscan
-              </Link>
-            </Box>
-          </>
+          <Box>
+            <Link href={result.solscan} isExternal textDecoration="underline">
+              Solscan
+            </Link>
+          </Box>
         ),
         status: 'success',
         duration: 9000,

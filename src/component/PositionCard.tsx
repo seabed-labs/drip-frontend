@@ -1,4 +1,4 @@
-import { Box, Progress } from '@chakra-ui/react';
+import { Box, Button, Code, Link, Progress, useToast } from '@chakra-ui/react';
 import { calculateWithdrawTokenBAmount } from '@dcaf-protocol/drip-sdk';
 import { BN } from '@project-serum/anchor';
 import { FC } from 'react';
@@ -36,7 +36,6 @@ const Container = styled.div`
   justify-content: flex-start;
   align-items: center;
   padding: 40px;
-  height: 280px;
   width: 367px;
   background: #101010;
   border-radius: 60px;
@@ -123,6 +122,7 @@ function getAOverBPrice(bOverA: BN, tokenADecimals: number, tokenBDecimals: numb
 
 export const PositionCard: FC<Props> = ({ position }) => {
   const drip = useDripContext();
+  const toast = useToast();
   const vaultInfo = useVaultInfo(position.vault);
   const tokenA = useTokenMintInfo(vaultInfo?.tokenA);
   const tokenB = useTokenMintInfo(vaultInfo?.tokenB);
@@ -184,13 +184,109 @@ export const PositionCard: FC<Props> = ({ position }) => {
           position.periodicDripAmount,
           position.depositedTokenAAmount
         )
-          .toSignificantDigits(3)
+          .toFixed(2)
           .toString()
       : new BN(0);
 
   const depositedTokenAAmountUi = tokenA
-    ? formatTokenAmount(position.depositedTokenAAmount, tokenA?.decimals)
+    ? formatTokenAmount(position.depositedTokenAAmount, tokenA?.decimals, true)
     : '';
+
+  async function withdrawTokenB() {
+    if (!drip) {
+      return;
+    }
+
+    try {
+      const dripPosition = await drip
+        .getPosition(position.pubkey)
+        .catch((e) => console.error('Error 1:', e));
+      if (!dripPosition) {
+        throw new Error('Could not fetch drip position');
+      }
+
+      const tx = await dripPosition.withdrawB().catch((e) => console.error('Error 2:', e));
+      if (!tx) {
+        throw new Error('Could not send withdraw B tx');
+      }
+
+      toast({
+        title: 'Withdrawal successful',
+        description: (
+          <>
+            <Box>
+              <Link href={tx.solscan} isExternal>
+                Solscan
+              </Link>
+            </Box>
+          </>
+        ),
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-right'
+      });
+    } catch (err) {
+      console.error(err);
+      toast({
+        title: 'Withdrawal failed',
+        description: (err as Error).message,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-right'
+      });
+    }
+  }
+
+  async function closePosition() {
+    if (!drip) {
+      return;
+    }
+
+    try {
+      const dripPosition = await drip
+        .getPosition(position.pubkey)
+        .catch((e) => console.error('Error 1:', e));
+      if (!dripPosition) {
+        throw new Error('Could not fetch drip position');
+      }
+
+      const tx = await dripPosition
+        .closePosition()
+        .catch((e) => console.error('Error 2:', e.toString()));
+      if (!tx) {
+        throw new Error('Could not send close position tx');
+      }
+
+      toast({
+        title: 'Close Position successful',
+        description: (
+          <>
+            <Box>
+              <Link href={tx.solscan} isExternal>
+                Solscan
+              </Link>
+            </Box>
+          </>
+        ),
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-right'
+      });
+    } catch (err) {
+      console.error(err);
+      toast({
+        title: 'Close Position failed',
+        description: (err as Error).message,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-right'
+      });
+    }
+  }
 
   const tokenASymbol = vaultConfigs.find(
     (c) => c.tokenAMint == vaultInfo?.tokenA.toString()
@@ -249,10 +345,17 @@ export const PositionCard: FC<Props> = ({ position }) => {
         <InfoField>
           <InfoKey>Withdrawn {tokenBSymbol}</InfoKey>
           <InfoValue>
-            {tokenB && formatTokenAmount(position.withdrawnTokenBAmount, tokenB.decimals)}{' '}
+            {tokenB && formatTokenAmount(position.withdrawnTokenBAmount, tokenB.decimals, true)}{' '}
             {tokenBSymbol}
           </InfoValue>
         </InfoField>
+      </Row>
+      <Box my="15px" />
+      <Row>
+        <Button onClick={withdrawTokenB}>Withdraw {tokenBSymbol}</Button>
+        <Button onClick={closePosition} colorScheme="blue">
+          Close
+        </Button>
       </Row>
     </Container>
   );
