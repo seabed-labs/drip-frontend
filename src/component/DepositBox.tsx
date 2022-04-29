@@ -433,7 +433,7 @@ export const DepositBox = () => {
                   const value = event.target.value;
 
                   if (!tokenAMintInfo) return;
-                  if (value.trim() === '') {
+                  if (['', '0'].includes(value.trim())) {
                     setTokenAAmount(ZERO);
                     setTokenB(undefined);
                     setDepositStage(DepositStage.DepositAmountEntry);
