@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "create-react-app-starter",
-  "version": "0.1.0",
+  "version": "0.0.0-alpha.12",
   "dependencies": {
     "@chakra-ui/react": "^1.8.6",
     "@chakra-ui/theme": "^1.14.0",

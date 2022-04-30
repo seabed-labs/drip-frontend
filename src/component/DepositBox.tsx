@@ -7,7 +7,6 @@ import {
   Text,
   useToast,
   Box,
-  Code,
   Link,
   NumberInput,
   NumberInputField,
