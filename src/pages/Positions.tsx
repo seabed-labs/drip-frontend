@@ -1,11 +1,11 @@
-import { Box, Code, Grid, GridItem, Text } from '@chakra-ui/react';
+import { Grid, GridItem } from '@chakra-ui/react';
+import { VaultPositionAccount } from '@dcaf-protocol/drip-sdk/dist/interfaces/drip-querier/results';
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
 import { PublicKey } from '@solana/web3.js';
 import BN from 'bn.js';
 import { FC, useEffect, useMemo, useState } from 'react';
 import { PositionCard } from '../component/PositionCard';
-import { useNetwork } from '../contexts/NetworkContext';
-import { useVaultClient } from '../hooks/VaultClient';
+import { useDripContext } from '../contexts/DripContext';
 
 export interface Position {
   vault: PublicKey;
@@ -20,9 +20,14 @@ export interface Position {
   isClosed: boolean;
 }
 
-function comparePosition(positionA: Position, positionB: Position): number {
+export type VaultPositionAccountWithPubkey = VaultPositionAccount & { pubkey: PublicKey };
+
+function comparePosition(
+  positionA: VaultPositionAccountWithPubkey,
+  positionB: VaultPositionAccountWithPubkey
+): number {
   if (!positionA.isClosed && !positionB.isClosed) {
-    return Buffer.compare(positionA.publicKey.toBuffer(), positionB.publicKey.toBuffer());
+    return Buffer.compare(positionA.pubkey.toBuffer(), positionB.pubkey.toBuffer());
   } else if (positionA.isClosed && !positionB.isClosed) {
     // A > B
     return 1;
@@ -35,26 +40,29 @@ function comparePosition(positionA: Position, positionB: Position): number {
   }
 }
 
-function usePositions() {
-  const network = useNetwork();
+function usePositions(): (VaultPositionAccount & { pubkey: PublicKey })[] {
+  const drip = useDripContext();
   const wallet = useAnchorWallet();
-  const vaultClient = useVaultClient(network);
-  const [positionsRecord, setPositionsRecord] = useState<Record<string, Position>>();
+  const [positionsRecord, setPositionsRecord] = useState<Record<string, VaultPositionAccount>>();
 
   useEffect(() => {
     (async () => {
-      if (!wallet) return;
+      if (!drip || !wallet) {
+        console.log('Not loaded', {
+          drip,
+          wallet
+        });
+        return;
+      }
 
-      const positionsRecord = await vaultClient.getUserPositions();
-      console.log(positionsRecord);
-      setPositionsRecord(positionsRecord as Record<string, Position>);
+      setPositionsRecord(await drip.querier.getAllPositions(wallet.publicKey));
     })();
-  }, [wallet, vaultClient]);
+  }, [drip, wallet]);
 
   return useMemo(
     () =>
       Object.entries(positionsRecord ?? {})
-        .map(([publicKey, data]) => ({ ...data, publicKey: new PublicKey(publicKey) }))
+        .map(([publicKey, data]) => ({ ...data, pubkey: new PublicKey(publicKey) }))
         .sort(comparePosition),
     [positionsRecord]
   );
@@ -63,12 +71,10 @@ function usePositions() {
 export const Positions: FC = () => {
   const positions = usePositions();
 
-  console.log(positions);
-
   return (
     <Grid templateColumns="repeat(3, 1fr)" gap="80px">
       {positions.map((position) => (
-        <GridItem key={position.publicKey.toBase58()} mt="80px">
+        <GridItem key={position.pubkey.toBase58()} mt="80px">
           <PositionCard position={position} />
           {/* <Box>
             <Box>

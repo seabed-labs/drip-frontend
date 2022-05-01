@@ -8,6 +8,7 @@ interface VaultInfo {
   tokenA: PublicKey;
   tokenB: PublicKey;
   lastDcaPeriod: BN;
+  protoConfig: PublicKey;
 }
 
 export function useVaultInfo(vault: Address): VaultInfo | undefined {
@@ -21,7 +22,8 @@ export function useVaultInfo(vault: Address): VaultInfo | undefined {
       setVaultInfo({
         tokenA: new PublicKey(vaultAccount.tokenAMint),
         tokenB: new PublicKey(vaultAccount.tokenBMint),
-        lastDcaPeriod: vaultAccount.lastDcaPeriod
+        lastDcaPeriod: vaultAccount.lastDcaPeriod,
+        protoConfig: vaultAccount.protoConfig
       });
     })();
   }, [vaultClient, vault]);

@@ -1,6 +1,6 @@
-import { Box, Popover, PopoverContent, PopoverTrigger, Progress } from '@chakra-ui/react';
+import { Box, Button, Link, Progress, useToast } from '@chakra-ui/react';
+import { calculateWithdrawTokenBAmount } from '@dcaf-protocol/drip-sdk';
 import { BN } from '@project-serum/anchor';
-import { findProgramAddressSync } from '@project-serum/anchor/dist/cjs/utils/pubkey';
 import { FC } from 'react';
 import styled from 'styled-components';
 import { useAsyncMemo } from 'use-async-memo';
@@ -8,12 +8,13 @@ import { useNetwork } from '../contexts/NetworkContext';
 import { useTokenMintInfo } from '../hooks/TokenMintInfo';
 import { useVaultClient } from '../hooks/VaultClient';
 import { useVaultInfo } from '../hooks/VaultInfo';
-import { Position } from '../pages';
-import { formatTokenAmount } from '../utils/format';
+import { VaultPositionAccountWithPubkey } from '../pages';
+import { formatTokenAmount } from '../utils/token-amount';
 import { getVaultPeriodPDA } from '../vault-client';
 
 import Config from '../config.json';
 import Decimal from 'decimal.js';
+import { useDripContext } from '../contexts/DripContext';
 
 interface VaultConfig {
   vault: string;
@@ -35,7 +36,6 @@ const Container = styled.div`
   justify-content: flex-start;
   align-items: center;
   padding: 40px;
-  height: 280px;
   width: 367px;
   background: #101010;
   border-radius: 60px;
@@ -100,17 +100,7 @@ const InfoKey = styled.div`
 const InfoValue = styled.div``;
 
 interface Props {
-  position: Position;
-}
-
-function getAccruedTokenB(i: BN, j: BN, twapI: BN, twapJ: BN, dripAmount: BN): BN {
-  if (i.eq(j)) {
-    return new BN(0);
-  }
-  const averagePriveFromStart = twapJ.mul(j).sub(twapI.mul(i)).div(j.sub(i));
-  const drippedSoFar = dripAmount.mul(j.sub(i));
-  const amount = averagePriveFromStart.mul(drippedSoFar);
-  return amount;
+  position: VaultPositionAccountWithPubkey;
 }
 
 function getPercentageDripped(i: BN, j: BN, dripAmount: BN, deposit: BN): Decimal {
@@ -126,11 +116,13 @@ function getAOverBPrice(bOverA: BN, tokenADecimals: number, tokenBDecimals: numb
     .div(new Decimal(2).pow(64))
     .div(new Decimal(10).pow(tokenBDecimals));
 
-  const aOverBDec = new Decimal(1).div(bOverADec);
+  const aOverBDec = new Decimal(1).div(bOverADec).div(new Decimal(10).pow(tokenADecimals));
   return aOverBDec.toSignificantDigits(3).toString();
 }
 
 export const PositionCard: FC<Props> = ({ position }) => {
+  const drip = useDripContext();
+  const toast = useToast();
   const vaultInfo = useVaultInfo(position.vault);
   const tokenA = useTokenMintInfo(vaultInfo?.tokenA);
   const tokenB = useTokenMintInfo(vaultInfo?.tokenB);
@@ -145,7 +137,19 @@ export const PositionCard: FC<Props> = ({ position }) => {
     );
 
     return vaultClient.program.account.vaultPeriod.fetch(vaultPeriod.publicKey);
-  }, [vaultClient]);
+  }, [vaultClient, position]);
+
+  const vaultProtoConfig = useAsyncMemo(async () => {
+    if (!drip || !vaultInfo) {
+      return undefined;
+    }
+
+    const [vaultProtoConfig] = await drip.querier.fetchVaultProtoConfigAccounts(
+      vaultInfo.protoConfig
+    );
+
+    return vaultProtoConfig;
+  }, [drip, vaultInfo]);
 
   const vaultPeriodJ = useAsyncMemo(() => {
     if (!vaultInfo) {
@@ -158,19 +162,19 @@ export const PositionCard: FC<Props> = ({ position }) => {
     );
 
     return vaultClient.program.account.vaultPeriod.fetch(vaultPeriod.publicKey);
-  }, [vaultClient]);
+  }, [vaultClient, vaultInfo, position]);
 
   const accruedTokenB =
-    vaultPeriodI && vaultPeriodJ
-      ? getAccruedTokenB(
+    vaultPeriodI && vaultPeriodJ && position && vaultProtoConfig
+      ? calculateWithdrawTokenBAmount(
           vaultPeriodI.periodId,
           vaultPeriodJ.periodId,
           vaultPeriodI.twap,
           vaultPeriodJ.twap,
-          position.periodicDripAmount
+          position.periodicDripAmount,
+          new BN(vaultProtoConfig.triggerDcaSpread)
         )
       : new BN(0);
-  console.log(accruedTokenB.toString());
 
   const percentageDripped =
     vaultPeriodI && vaultPeriodJ
@@ -180,13 +184,109 @@ export const PositionCard: FC<Props> = ({ position }) => {
           position.periodicDripAmount,
           position.depositedTokenAAmount
         )
-          .toSignificantDigits(3)
+          .toFixed(2)
           .toString()
       : new BN(0);
 
   const depositedTokenAAmountUi = tokenA
-    ? formatTokenAmount(position.depositedTokenAAmount, tokenA?.decimals)
+    ? formatTokenAmount(position.depositedTokenAAmount, tokenA?.decimals, true)
     : '';
+
+  async function withdrawTokenB() {
+    if (!drip) {
+      return;
+    }
+
+    try {
+      const dripPosition = await drip
+        .getPosition(position.pubkey)
+        .catch((e) => console.error('Error 1:', e));
+      if (!dripPosition) {
+        throw new Error('Could not fetch drip position');
+      }
+
+      const tx = await dripPosition.withdrawB().catch((e) => console.error('Error 2:', e));
+      if (!tx) {
+        throw new Error('Could not send withdraw B tx');
+      }
+
+      toast({
+        title: 'Withdrawal successful',
+        description: (
+          <>
+            <Box>
+              <Link href={tx.solscan} isExternal>
+                Solscan
+              </Link>
+            </Box>
+          </>
+        ),
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-right'
+      });
+    } catch (err) {
+      console.error(err);
+      toast({
+        title: 'Withdrawal failed',
+        description: (err as Error).message,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-right'
+      });
+    }
+  }
+
+  async function closePosition() {
+    if (!drip) {
+      return;
+    }
+
+    try {
+      const dripPosition = await drip
+        .getPosition(position.pubkey)
+        .catch((e) => console.error('Error 1:', e));
+      if (!dripPosition) {
+        throw new Error('Could not fetch drip position');
+      }
+
+      const tx = await dripPosition
+        .closePosition()
+        .catch((e) => console.error('Error 2:', e.toString()));
+      if (!tx) {
+        throw new Error('Could not send close position tx');
+      }
+
+      toast({
+        title: 'Close Position successful',
+        description: (
+          <>
+            <Box>
+              <Link href={tx.solscan} isExternal>
+                Solscan
+              </Link>
+            </Box>
+          </>
+        ),
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-right'
+      });
+    } catch (err) {
+      console.error(err);
+      toast({
+        title: 'Close Position failed',
+        description: (err as Error).message,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-right'
+      });
+    }
+  }
 
   const tokenASymbol = vaultConfigs.find(
     (c) => c.tokenAMint == vaultInfo?.tokenA.toString()
@@ -215,7 +315,7 @@ export const PositionCard: FC<Props> = ({ position }) => {
         <InfoField isFlexStart>
           <InfoKey>Accrued {tokenBSymbol}</InfoKey>{' '}
           <InfoValue>
-            {tokenB && formatTokenAmount(accruedTokenB, tokenB?.decimals)} {tokenBSymbol}
+            {tokenB && formatTokenAmount(accruedTokenB, tokenB.decimals, true)} {tokenBSymbol}
           </InfoValue>
         </InfoField>
         <InfoField>
@@ -224,6 +324,7 @@ export const PositionCard: FC<Props> = ({ position }) => {
             {tokenA &&
               tokenB &&
               vaultPeriodJ &&
+              // TODO: Show user THEIR avg price
               getAOverBPrice(vaultPeriodJ.twap, tokenA.decimals, tokenB.decimals)}{' '}
             {tokenASymbol} per {tokenBSymbol}
           </InfoValue>
@@ -244,10 +345,17 @@ export const PositionCard: FC<Props> = ({ position }) => {
         <InfoField>
           <InfoKey>Withdrawn {tokenBSymbol}</InfoKey>
           <InfoValue>
-            {tokenB && formatTokenAmount(position.withdrawnTokenBAmount, tokenB.decimals)}{' '}
+            {tokenB && formatTokenAmount(position.withdrawnTokenBAmount, tokenB.decimals, true)}{' '}
             {tokenBSymbol}
           </InfoValue>
         </InfoField>
+      </Row>
+      <Box my="15px" />
+      <Row>
+        <Button onClick={withdrawTokenB}>Withdraw {tokenBSymbol}</Button>
+        <Button onClick={closePosition} colorScheme="blue">
+          Close
+        </Button>
       </Row>
     </Container>
   );

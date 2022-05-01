@@ -1,6 +1,6 @@
-import { Provider } from '@project-serum/anchor';
+import { ZERO } from '@dcaf-protocol/drip-sdk';
+import { BN, Provider } from '@project-serum/anchor';
 import { Wallet } from '@project-serum/anchor/src/provider';
-import { getAssociatedTokenAddress } from '@solana/spl-token';
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
 import { clusterApiUrl, Connection, PublicKey, Transaction } from '@solana/web3.js';
 import { useMemo } from 'react';
@@ -42,7 +42,7 @@ export function useVaultClient(network?: Network) {
   );
 }
 
-export function useTokenABalance(tokenAMint: string, network?: Network) {
+export function useTokenABalance(tokenAMint?: string, network?: Network) {
   const clusterUrl = clusterApiUrl(network === Network.Mainnet ? 'mainnet-beta' : 'devnet');
   const wallet = useAnchorWallet();
 
@@ -53,5 +53,11 @@ export function useTokenABalance(tokenAMint: string, network?: Network) {
       Provider.defaultOptions()
     )
   );
-  return useAsyncMemo(() => vaultClient.getUserTokenBalance(tokenAMint), [wallet]);
+  return useAsyncMemo(
+    async () =>
+      tokenAMint
+        ? new BN((await vaultClient.getUserTokenBalance(tokenAMint))?.toString() || '0')
+        : ZERO,
+    [wallet, tokenAMint]
+  );
 }
