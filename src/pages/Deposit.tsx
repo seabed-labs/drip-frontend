@@ -1,6 +1,6 @@
 import { Center } from '@chakra-ui/react';
 import { FC } from 'react';
-import { DepositBox } from '../component/DepositBox';
+import { DepositBox } from '../component/DepositBox2';
 
 export const Deposits: FC = () => {
   return (
