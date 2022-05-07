@@ -24,3 +24,13 @@ export function fromENV(env: ENV): Network {
       throw new Error('Testnet not supported');
   }
 }
+
+export function isSupportedENV(env: ENV): boolean {
+  switch (env) {
+    case ENV.MainnetBeta:
+    case ENV.Devnet:
+      return true;
+    default:
+      return false;
+  }
+}

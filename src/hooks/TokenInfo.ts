@@ -1,11 +1,11 @@
 import { TokenInfo } from '@solana/spl-token-registry';
 import { useMemo } from 'react';
+import { useTokenInfoContext } from '../contexts/TokenInfo';
 import { NetworkAddress } from '../models/NetworkAddress';
 import { useRemappedMint } from './MintRemap';
-import { useTokenInfoMap } from './TokenInfoMap';
 
 export function useTokenInfo(mint: NetworkAddress): TokenInfo | undefined {
-  const tokenInfoMap = useTokenInfoMap();
+  const tokenInfoMap = useTokenInfoContext();
   const infoMint = useRemappedMint(mint);
 
   return useMemo(
