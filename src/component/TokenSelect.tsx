@@ -1,4 +1,4 @@
-import { Text, HStack, Image, Select, Spinner, MenuItemOption } from '@chakra-ui/react';
+import { Select, Spinner } from '@chakra-ui/react';
 import { Address } from '@project-serum/anchor';
 import { PublicKey } from '@solana/web3.js';
 import { useNetwork } from '../contexts/NetworkContext';
