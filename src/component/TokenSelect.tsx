@@ -1,12 +1,12 @@
-import { Select } from '@chakra-ui/react';
+import { Select, Spinner } from '@chakra-ui/react';
 import { Address } from '@project-serum/anchor';
 import { PublicKey } from '@solana/web3.js';
 import { toPubkey } from '../utils/pubkey';
 
 export interface TokenSelectorProps {
   onSelectToken(token: PublicKey): unknown;
-  selectedToken: PublicKey;
-  tokens: PublicKey[];
+  selectedToken?: PublicKey;
+  tokens?: PublicKey[];
   placeholder?: string;
 }
 
@@ -24,11 +24,9 @@ export function TokenSelector({
     <Select
       placeholder={placeholder}
       onChange={(e) => handleOnChange(e.target.selectedOptions[0].value)}
-      value={selectedToken.toBase58()}
+      value={selectedToken?.toBase58()}
     >
-      {tokens.map((token) => (
-        <TokenOption token={token} />
-      ))}
+      {tokens ? tokens.map((token) => <TokenOption token={token} />) : <Spinner />}
     </Select>
   );
 }
