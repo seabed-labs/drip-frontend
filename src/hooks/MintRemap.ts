@@ -23,9 +23,9 @@ const MINT_REMAP: Record<Network, Partial<Record<string, NetworkAddress>>> = {
   }
 };
 
-export function useRemappedMint(mint: NetworkAddress): NetworkAddress {
+export function useRemappedMint(mint?: NetworkAddress): NetworkAddress | undefined {
   return useMemo(
-    () => MINT_REMAP[mint.network][mint.address.toBase58()] ?? mint,
-    [mint.toPrimitiveDep()]
+    () => (mint && MINT_REMAP[mint.network][mint.address.toBase58()]) ?? mint,
+    [mint && mint.toPrimitiveDep()]
   );
 }

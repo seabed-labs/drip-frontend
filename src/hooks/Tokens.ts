@@ -1,10 +1,10 @@
+import { Token } from '@dcaf-protocol/drip-sdk';
 import { Address } from '@project-serum/anchor';
-import { PublicKey } from '@solana/web3.js';
 import { useAsyncMemo } from 'use-async-memo';
 import { useDripContext } from '../contexts/DripContext';
 import { toPubkey } from '../utils/pubkey';
 
-export function useTokenAs(forTokenB?: Address): PublicKey[] | undefined {
+export function useTokenAs(forTokenB?: Address): Token[] | undefined {
   const drip = useDripContext();
 
   return useAsyncMemo(async () => {
@@ -14,11 +14,11 @@ export function useTokenAs(forTokenB?: Address): PublicKey[] | undefined {
       forTokenB ? toPubkey(forTokenB) : undefined
     );
 
-    return Object.values(tokenAsRecord).map((tokenA) => tokenA.mint);
+    return Object.values(tokenAsRecord);
   }, [drip, forTokenB]);
 }
 
-export function useTokenBs(forTokenA?: Address): PublicKey[] | undefined {
+export function useTokenBs(forTokenA?: Address): Token[] | undefined {
   const drip = useDripContext();
 
   return useAsyncMemo(async () => {
@@ -28,6 +28,6 @@ export function useTokenBs(forTokenA?: Address): PublicKey[] | undefined {
       forTokenA ? toPubkey(forTokenA) : undefined
     );
 
-    return Object.values(tokenBsRecord).map((tokenB) => tokenB.mint);
+    return Object.values(tokenBsRecord);
   }, [drip, forTokenA]);
 }
