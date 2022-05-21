@@ -1,4 +1,4 @@
-import { Box, Center, Text } from '@chakra-ui/react';
+import { Box, Button, Center, Text } from '@chakra-ui/react';
 import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react';
 import { PublicKey } from '@solana/web3.js';
 import { BN } from 'bn.js';
@@ -8,7 +8,7 @@ import styled from 'styled-components';
 import { useNetworkAddress } from '../hooks/CurrentNetworkAddress';
 import { useTokenBalance } from '../hooks/TokenBalance';
 import { useTokenAs, useTokenBs } from '../hooks/Tokens';
-import { formatTokenAmount } from '../utils/token-amount';
+import { formatTokenAmount, formatTokenAmountStr } from '../utils/token-amount';
 import { TokenAmountInput } from './TokenAmountInput';
 import { TokenSelector } from './TokenSelect';
 
@@ -40,7 +40,6 @@ const StyledSubRowContainer = styled.div`
 export function DepositBox() {
   const [tokenA, setTokenA] = useState<PublicKey>();
   const [tokenB, setTokenB] = useState<PublicKey>();
-  const [isMaximumDeposit, setIsMaximumDeposit] = useState(false);
   const [depositAmountStr, setDepositAmountStr] = useState<string>();
   const wallet = useAnchorWallet();
   const tokenANetworkAddress = useNetworkAddress(tokenA);
@@ -49,12 +48,31 @@ export function DepositBox() {
   const tokenAs = useTokenAs();
   const tokenBs = useTokenBs(tokenA);
 
+  useEffect(() => console.log('Deposit Amount:', depositAmountStr), [depositAmountStr]);
+
   return (
     <StyledContainer>
       <StyledMainRowContainer>
         <StyledSubRowContainer>
           <Text>Drip</Text>
-          <Text>{'[Max Button]'}</Text>
+          {maximumAmount && (
+            <Button
+              h="20px"
+              transition="0.2s ease"
+              color="whiteAlpha.800"
+              variant="unstyled"
+              cursor="pointer"
+              onClick={() => {
+                setDepositAmountStr(
+                  maximumAmount.uiAmountString ??
+                    formatTokenAmountStr(maximumAmount.amount, maximumAmount.decimals)
+                );
+              }}
+              _hover={{ color: 'white', textDecoration: 'underline', transition: '0.2s ease' }}
+            >
+              Max: {formatTokenAmountStr(maximumAmount.amount, maximumAmount.decimals, true)}
+            </Button>
+          )}
         </StyledSubRowContainer>
         <Box h="10px" />
         <StyledSubRowContainer>
@@ -63,22 +81,14 @@ export function DepositBox() {
             placeholder="Select Token A"
             onSelectToken={(token) => {
               setTokenA(token);
-              if (tokenB) {
-                setTokenB(undefined);
-              }
+              setTokenB(undefined);
             }}
             selectedToken={tokenA}
             tokens={tokenAs}
           />
           <TokenAmountInput
-            amount={
-              isMaximumDeposit && maximumAmount
-                ? maximumAmount.uiAmountString ??
-                  formatTokenAmount(new BN(maximumAmount.amount), maximumAmount.decimals)
-                : undefined
-            }
+            amount={depositAmountStr}
             onUpdate={(value) => {
-              setIsMaximumDeposit(false);
               setDepositAmountStr(value);
             }}
             disabled={!tokenA}

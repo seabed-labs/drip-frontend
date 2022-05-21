@@ -138,6 +138,7 @@ export function TokenSelector({
                   }}
                   paddingY="10px"
                   paddingX="20px"
+                  key={token.mint.toBase58()}
                   token={token}
                 />
               )) ?? null}

@@ -8,9 +8,8 @@ interface TokenAmountInputProps {
 
 export function TokenAmountInput({ disabled = false, onUpdate, amount }: TokenAmountInputProps) {
   return (
-    <NumberInput onChange={onUpdate} isDisabled={disabled} ml="20px" w="300px">
+    <NumberInput value={amount} onChange={onUpdate} isDisabled={disabled} ml="20px" w="300px">
       <NumberInputField
-        value={amount}
         fontWeight="medium"
         fontSize="20px"
         type="number"
