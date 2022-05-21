@@ -1,4 +1,20 @@
-import { FormControl, HStack, Text, Spinner, Image } from '@chakra-ui/react';
+import {
+  FormControl,
+  HStack,
+  Text,
+  Spinner,
+  Image,
+  useDisclosure,
+  transition,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  ModalFooter,
+  Button
+} from '@chakra-ui/react';
 import {
   AutoComplete,
   AutoCompleteInput,
@@ -18,30 +34,47 @@ export interface TokenSelectorProps {
   onSelectToken(token: PublicKey | undefined): unknown;
   selectedToken?: PublicKey;
   tokens?: Token[];
-  placeholder?: string;
+  modalTitle?: string;
 }
 
 export function TokenSelector({
   onSelectToken,
   selectedToken,
   tokens,
-  placeholder = 'Select a token'
+  modalTitle = 'Select Token'
 }: TokenSelectorProps) {
   const network = useNetwork();
   const selectedTokenInfo = useTokenInfo(
     selectedToken && NetworkAddress.from(network, selectedToken)
   );
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
-    <HStack
-      cursor="pointer"
-      borderRadius="30px"
-      bgColor="whiteAlpha.100"
-      padding="10px 20px"
-      spacing={!selectedTokenInfo ? '0' : 'auto'}
-    >
-      <Image src={selectedTokenInfo?.logoURI} />
-      <Text>{selectedTokenInfo?.symbol ?? 'Select Token'}</Text>
-    </HStack>
+    <>
+      <HStack
+        cursor="pointer"
+        borderRadius="30px"
+        bgColor="whiteAlpha.100"
+        padding="10px 20px"
+        transition="0.3s ease"
+        onClick={onOpen}
+        spacing={!selectedTokenInfo ? '0' : 'auto'}
+        _hover={{
+          bgColor: 'whiteAlpha.200',
+          transition: '0.3s ease'
+        }}
+      >
+        <Image src={selectedTokenInfo?.logoURI} />
+        <Text>{selectedTokenInfo?.symbol ?? 'Select Token'}</Text>
+      </HStack>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent bgColor="#101010">
+          <ModalHeader>{modalTitle}</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody></ModalBody>
+        </ModalContent>
+      </Modal>
+    </>
   );
 }
