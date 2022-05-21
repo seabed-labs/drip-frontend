@@ -1,14 +1,13 @@
-import { Box, Button, Center, Text } from '@chakra-ui/react';
-import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react';
+import { Box, Button, Center, PropsOf, Text } from '@chakra-ui/react';
+import { useAnchorWallet } from '@solana/wallet-adapter-react';
 import { PublicKey } from '@solana/web3.js';
-import { BN } from 'bn.js';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import styled from 'styled-components';
 import { useNetworkAddress } from '../hooks/CurrentNetworkAddress';
 import { useTokenBalance } from '../hooks/TokenBalance';
 import { useTokenAs, useTokenBs } from '../hooks/Tokens';
-import { formatTokenAmount, formatTokenAmountStr } from '../utils/token-amount';
+import { formatTokenAmountStr } from '../utils/token-amount';
 import { TokenAmountInput } from './TokenAmountInput';
 import { TokenSelector } from './TokenSelect';
 
@@ -37,6 +36,11 @@ const StyledSubRowContainer = styled.div`
   align-items: center;
 `;
 
+const StyledStepHeader = styled(Text)`
+  font-weight: bold;
+  font-size: 22px;
+`;
+
 export function DepositBox() {
   const [tokenA, setTokenA] = useState<PublicKey>();
   const [tokenB, setTokenB] = useState<PublicKey>();
@@ -54,7 +58,7 @@ export function DepositBox() {
     <StyledContainer>
       <StyledMainRowContainer>
         <StyledSubRowContainer>
-          <Text>Drip</Text>
+          <StyledStepHeader>Drip</StyledStepHeader>
           {maximumAmount && (
             <Button
               h="20px"
@@ -97,7 +101,7 @@ export function DepositBox() {
       </StyledMainRowContainer>
       <StyledMainRowContainer>
         <StyledSubRowContainer>
-          <Text>To</Text>
+          <StyledStepHeader>To</StyledStepHeader>
         </StyledSubRowContainer>
         <Box h="10px" />
         <StyledSubRowContainer>
@@ -114,7 +118,7 @@ export function DepositBox() {
       </StyledMainRowContainer>
       <StyledMainRowContainer>
         <StyledSubRowContainer>
-          <Text>Till</Text>
+          <StyledStepHeader>Till</StyledStepHeader>
         </StyledSubRowContainer>
         <StyledSubRowContainer>
           <Center w="100%">
