@@ -65,8 +65,10 @@ export function DepositBox() {
         <StyledSubRowContainer>
           <Text>To</Text>
         </StyledSubRowContainer>
+        <Box h="10px" />
         <StyledSubRowContainer>
           <TokenSelector
+            disabled={!tokenA}
             modalTitle="Select Token B"
             placeholder="Select Token B"
             onSelectToken={setTokenB}

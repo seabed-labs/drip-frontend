@@ -43,6 +43,7 @@ export interface TokenSelectorProps {
   placeholder?: string;
   tokens?: Token[];
   modalTitle?: string;
+  disabled?: boolean;
 }
 
 export function TokenSelector({
@@ -50,7 +51,8 @@ export function TokenSelector({
   selectedToken,
   tokens,
   placeholder = 'Select Token',
-  modalTitle = 'Select Token'
+  modalTitle = 'Select Token',
+  disabled = false
 }: TokenSelectorProps) {
   const network = useNetwork();
   const selectedTokenInfo = useTokenInfo(
@@ -81,7 +83,7 @@ export function TokenSelector({
 
   return (
     <>
-      <HStack
+      <Button
         cursor="pointer"
         borderRadius="50px"
         bgColor="whiteAlpha.100"
@@ -89,13 +91,14 @@ export function TokenSelector({
         padding="10px"
         transition="0.3s ease"
         onClick={onOpen}
+        disabled={disabled}
         _hover={{
           bgColor: 'whiteAlpha.200',
           transition: '0.3s ease'
         }}
       >
         {selectedTokenInfo && (
-          <Image borderRadius="60px" w="28px" src={selectedTokenInfo?.logoURI} />
+          <Image mr="5px" borderRadius="60px" w="28px" src={selectedTokenInfo?.logoURI} />
         )}
         {selectedTokenInfo ? (
           <Text fontSize="18px">{selectedTokenInfo.symbol}</Text>
@@ -104,7 +107,7 @@ export function TokenSelector({
             {placeholder}
           </Text>
         )}
-      </HStack>
+      </Button>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent bgColor="#101010">
