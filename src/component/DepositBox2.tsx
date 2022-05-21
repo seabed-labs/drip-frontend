@@ -1,14 +1,14 @@
-import { Box, Button, Center, PropsOf, Text } from '@chakra-ui/react';
+import { Box, Button, Center, Text } from '@chakra-ui/react';
 import { Granularity } from '@dcaf-protocol/drip-sdk/dist/interfaces/drip-admin/params';
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
 import { PublicKey } from '@solana/web3.js';
-import { useEffect } from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useNetworkAddress } from '../hooks/CurrentNetworkAddress';
 import { useTokenBalance } from '../hooks/TokenBalance';
 import { useTokenAs, useTokenBs } from '../hooks/Tokens';
 import { formatTokenAmountStr } from '../utils/token-amount';
+import { DripEndTimePicker } from './DripEndTimePicker';
 import { GranularitySelect } from './GranularitySelect';
 import { TokenAmountInput } from './TokenAmountInput';
 import { TokenSelector } from './TokenSelect';
@@ -48,6 +48,7 @@ export function DepositBox() {
   const [tokenB, setTokenB] = useState<PublicKey>();
   const [depositAmountStr, setDepositAmountStr] = useState<string>();
   const [granularity, setGranularity] = useState<Granularity>();
+  const [dripUntil, setDripUntil] = useState<Date>();
   const wallet = useAnchorWallet();
   const tokenANetworkAddress = useNetworkAddress(tokenA);
   const maximumAmount = useTokenBalance(wallet?.publicKey, tokenANetworkAddress);
@@ -86,7 +87,10 @@ export function DepositBox() {
             placeholder="Select Token A"
             onSelectToken={(token) => {
               setTokenA(token);
+              setDepositAmountStr(undefined);
+              setGranularity(undefined);
               setTokenB(undefined);
+              setDripUntil(undefined);
             }}
             selectedToken={tokenA}
             tokens={tokenAs}
@@ -121,9 +125,17 @@ export function DepositBox() {
         <StyledSubRowContainer>
           <StyledStepHeader>Till</StyledStepHeader>
         </StyledSubRowContainer>
+        <Box h="10px" />
         <StyledSubRowContainer>
           <Center w="100%">
-            <Text>{'[Date Picker]'}</Text>
+            <DripEndTimePicker
+              enableTimeSelect={Boolean(
+                granularity && [Granularity.Minutely, Granularity.Hourly].includes(granularity)
+              )}
+              value={dripUntil}
+              onUpdate={setDripUntil}
+              disabled={!granularity}
+            />
           </Center>
         </StyledSubRowContainer>
       </StyledMainRowContainer>
