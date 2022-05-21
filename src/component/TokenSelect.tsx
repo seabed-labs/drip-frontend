@@ -116,7 +116,7 @@ export function TokenSelector({
       </Button>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent bgColor="#101010">
+        <ModalContent mt="15rem" bgColor="#101010">
           <ModalHeader>{modalTitle}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
