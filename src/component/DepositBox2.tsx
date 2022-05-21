@@ -2,7 +2,7 @@ import { Box, Button, Center, Text } from '@chakra-ui/react';
 import { Granularity } from '@dcaf-protocol/drip-sdk/dist/interfaces/drip-admin/params';
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
 import { PublicKey } from '@solana/web3.js';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import { useNetworkAddress } from '../hooks/CurrentNetworkAddress';
 import { useTokenBalance } from '../hooks/TokenBalance';

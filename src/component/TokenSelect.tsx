@@ -1,11 +1,8 @@
 import {
-  FormControl,
   HStack,
   Text,
-  Spinner,
   Image,
   useDisclosure,
-  transition,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -16,20 +13,11 @@ import {
   Button,
   Input,
   VStack,
-  Box,
   BoxProps,
   Code,
-  Center,
   Flex
 } from '@chakra-ui/react';
-import {
-  AutoComplete,
-  AutoCompleteInput,
-  AutoCompleteList,
-  AutoCompleteItem
-} from '@choc-ui/chakra-autocomplete';
 import { Token } from '@dcaf-protocol/drip-sdk';
-import { Address } from '@project-serum/anchor';
 import { PublicKey } from '@solana/web3.js';
 import { useMemo, useState } from 'react';
 import { useNetwork } from '../contexts/NetworkContext';
