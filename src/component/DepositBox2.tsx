@@ -8,6 +8,7 @@ import { useNetworkAddress } from '../hooks/CurrentNetworkAddress';
 import { useTokenBalance } from '../hooks/TokenBalance';
 import { useTokenAs, useTokenBs } from '../hooks/Tokens';
 import { formatTokenAmountStr } from '../utils/token-amount';
+import { GranularitySelect } from './GranularitySelect';
 import { TokenAmountInput } from './TokenAmountInput';
 import { TokenSelector } from './TokenSelect';
 
@@ -51,8 +52,6 @@ export function DepositBox() {
 
   const tokenAs = useTokenAs();
   const tokenBs = useTokenBs(tokenA);
-
-  useEffect(() => console.log('Deposit Amount:', depositAmountStr), [depositAmountStr]);
 
   return (
     <StyledContainer>
@@ -113,7 +112,7 @@ export function DepositBox() {
             selectedToken={tokenB}
             tokens={tokenBs}
           />
-          <Text>{'[Granularity Select]'}</Text>
+          <GranularitySelect tokenA={tokenA} tokenB={tokenB} />
         </StyledSubRowContainer>
       </StyledMainRowContainer>
       <StyledMainRowContainer>
