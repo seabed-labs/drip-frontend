@@ -178,6 +178,7 @@ function TokenRow({ token, ...boxProps }: TokenRowProps & BoxProps) {
           textDecoration: 'underline'
         }}
         onClick={() => {
+          if (!tokenNetworkAddr) return;
           window.open(solscanTokenUrl(tokenNetworkAddr), '_blank');
         }}
       >

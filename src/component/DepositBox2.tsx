@@ -1,9 +1,14 @@
 import { Box, Center, Text } from '@chakra-ui/react';
+import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react';
 import { PublicKey } from '@solana/web3.js';
+import { BN } from 'bn.js';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import styled from 'styled-components';
+import { useNetworkAddress } from '../hooks/CurrentNetworkAddress';
+import { useTokenBalance } from '../hooks/TokenBalance';
 import { useTokenAs, useTokenBs } from '../hooks/Tokens';
+import { formatTokenAmount } from '../utils/token-amount';
 import { TokenAmountInput } from './TokenAmountInput';
 import { TokenSelector } from './TokenSelect';
 
@@ -35,7 +40,11 @@ const StyledSubRowContainer = styled.div`
 export function DepositBox() {
   const [tokenA, setTokenA] = useState<PublicKey>();
   const [tokenB, setTokenB] = useState<PublicKey>();
+  const [isMaximumDeposit, setIsMaximumDeposit] = useState(false);
   const [depositAmountStr, setDepositAmountStr] = useState<string>();
+  const wallet = useAnchorWallet();
+  const tokenANetworkAddress = useNetworkAddress(tokenA);
+  const maximumAmount = useTokenBalance(wallet?.publicKey, tokenANetworkAddress);
 
   const tokenAs = useTokenAs();
   const tokenBs = useTokenBs(tokenA);
@@ -61,7 +70,19 @@ export function DepositBox() {
             selectedToken={tokenA}
             tokens={tokenAs}
           />
-          <TokenAmountInput onUpdate={setDepositAmountStr} disabled={!tokenA} />
+          <TokenAmountInput
+            amount={
+              isMaximumDeposit && maximumAmount
+                ? maximumAmount.uiAmountString ??
+                  formatTokenAmount(new BN(maximumAmount.amount), maximumAmount.decimals)
+                : undefined
+            }
+            onUpdate={(value) => {
+              setIsMaximumDeposit(false);
+              setDepositAmountStr(value);
+            }}
+            disabled={!tokenA}
+          />
         </StyledSubRowContainer>
       </StyledMainRowContainer>
       <StyledMainRowContainer>

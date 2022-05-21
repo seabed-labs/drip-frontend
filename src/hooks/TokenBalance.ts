@@ -10,11 +10,11 @@ import { useDripContext } from '../contexts/DripContext';
 import { NetworkAddress } from '../models/NetworkAddress';
 import { toPubkey } from '../utils/pubkey';
 
-export function useTokenBalance(user: Address, token: NetworkAddress): TokenAmount | undefined {
+export function useTokenBalance(user?: Address, token?: NetworkAddress): TokenAmount | undefined {
   const drip = useDripContext();
 
   return useAsyncMemo(async () => {
-    if (!drip) return undefined;
+    if (!drip || !user || !token) return undefined;
 
     const tokenATA = await getAssociatedTokenAddress(
       toPubkey(token.address),
@@ -30,5 +30,5 @@ export function useTokenBalance(user: Address, token: NetworkAddress): TokenAmou
     );
 
     return tokenBalanceResponse.value;
-  }, [user, drip, token.toPrimitiveDep()]);
+  }, [user, drip, token?.toPrimitiveDep()]);
 }
