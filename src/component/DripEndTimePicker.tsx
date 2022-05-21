@@ -7,7 +7,7 @@ interface DripEndTimePickerProps {
   disabled?: boolean;
   enableTimeSelect: boolean;
   value?: Date;
-  onUpdate(newValue: Date): void;
+  onUpdate(newValue?: Date): void;
 }
 
 const StyledContainer = styled(Box)`
@@ -89,6 +89,11 @@ export function DripEndTimePicker({
         minDate={new Date()}
         disableClock
         onChange={(date) => {
+          if (!date) {
+            onUpdate(undefined);
+            return;
+          }
+
           const now = new Date().getTime();
           if (date.getTime() < now) {
             onUpdate(new Date(now + 10 * 60 * 1000));
