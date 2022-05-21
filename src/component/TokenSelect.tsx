@@ -40,6 +40,7 @@ import { displayPubkey, toPubkey } from '../utils/pubkey';
 export interface TokenSelectorProps {
   onSelectToken(token: PublicKey): unknown;
   selectedToken?: PublicKey;
+  placeholder?: string;
   tokens?: Token[];
   modalTitle?: string;
 }
@@ -48,6 +49,7 @@ export function TokenSelector({
   onSelectToken,
   selectedToken,
   tokens,
+  placeholder = 'Select Token',
   modalTitle = 'Select Token'
 }: TokenSelectorProps) {
   const network = useNetwork();
@@ -93,13 +95,13 @@ export function TokenSelector({
         }}
       >
         {selectedTokenInfo && (
-          <Image borderRadius="60px" w="30px" src={selectedTokenInfo?.logoURI} />
+          <Image borderRadius="60px" w="28px" src={selectedTokenInfo?.logoURI} />
         )}
         {selectedTokenInfo ? (
-          <Text fontSize="20px">{selectedTokenInfo.symbol}</Text>
+          <Text fontSize="18px">{selectedTokenInfo.symbol}</Text>
         ) : (
-          <Text paddingX="4px" fontSize="20px">
-            Select Token
+          <Text paddingX="4px" fontSize="18px">
+            {placeholder}
           </Text>
         )}
       </HStack>

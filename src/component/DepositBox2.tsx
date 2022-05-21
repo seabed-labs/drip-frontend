@@ -47,6 +47,7 @@ export function DepositBox() {
         <StyledSubRowContainer>
           <TokenSelector
             modalTitle="Select Token A"
+            placeholder="Select Token A"
             onSelectToken={setTokenA}
             selectedToken={tokenA}
             tokens={tokenAs}
