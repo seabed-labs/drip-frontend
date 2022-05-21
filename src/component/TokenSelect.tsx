@@ -84,6 +84,7 @@ export function TokenSelector({
   return (
     <>
       <Button
+        minW={!selectedTokenInfo ? '180px' : '0'}
         cursor="pointer"
         borderRadius="50px"
         bgColor="whiteAlpha.100"

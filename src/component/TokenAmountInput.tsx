@@ -4,9 +4,9 @@ interface TokenAmountInputProps {
   disabled?: boolean;
 }
 
-export function TokenAmountInput({ disabled }: TokenAmountInputProps) {
+export function TokenAmountInput({ disabled = false }: TokenAmountInputProps) {
   return (
-    <NumberInput w="280px">
+    <NumberInput isDisabled={disabled} ml="20px" w="380px">
       <NumberInputField
         fontWeight="medium"
         type="number"

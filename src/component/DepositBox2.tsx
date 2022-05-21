@@ -8,7 +8,7 @@ import { TokenSelector } from './TokenSelect';
 
 const StyledContainer = styled.div`
   padding: 40px;
-  width: 560px;
+  width: 500px;
   background: #101010;
   border-radius: 60px;
   box-shadow: 0 0 128px 1px rgba(98, 170, 255, 0.15);
@@ -59,7 +59,7 @@ export function DepositBox() {
             selectedToken={tokenA}
             tokens={tokenAs}
           />
-          <TokenAmountInput />
+          <TokenAmountInput disabled={!tokenA} />
         </StyledSubRowContainer>
       </StyledMainRowContainer>
       <StyledMainRowContainer>
