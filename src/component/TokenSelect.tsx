@@ -124,6 +124,7 @@ export function TokenSelector({
                 <TokenRow
                   onClick={() => {
                     onSelectToken(toPubkey(token.mint));
+                    setFilter(undefined);
                     onClose();
                   }}
                   paddingY="10px"

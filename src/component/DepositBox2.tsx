@@ -44,11 +44,17 @@ export function DepositBox() {
           <Text>Drip</Text>
           <Text>{'[Max Button]'}</Text>
         </StyledSubRowContainer>
+        <Box h="10px" />
         <StyledSubRowContainer>
           <TokenSelector
             modalTitle="Select Token A"
             placeholder="Select Token A"
-            onSelectToken={setTokenA}
+            onSelectToken={(token) => {
+              setTokenA(token);
+              if (tokenB) {
+                setTokenB(undefined);
+              }
+            }}
             selectedToken={tokenA}
             tokens={tokenAs}
           />
@@ -60,7 +66,13 @@ export function DepositBox() {
           <Text>To</Text>
         </StyledSubRowContainer>
         <StyledSubRowContainer>
-          <Text>{'[Token Select]'}</Text>
+          <TokenSelector
+            modalTitle="Select Token B"
+            placeholder="Select Token B"
+            onSelectToken={setTokenB}
+            selectedToken={tokenB}
+            tokens={tokenBs}
+          />
           <Text>{'[Granularity Select]'}</Text>
         </StyledSubRowContainer>
       </StyledMainRowContainer>
