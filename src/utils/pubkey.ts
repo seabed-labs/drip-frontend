@@ -12,3 +12,7 @@ export function toPubkey(addr: Address): PublicKey {
 
   return new PublicKey(addr);
 }
+
+export function displayPubkey(addr: Address): string {
+  return `${addr.toString().slice(0, 4)}...${addr.toString().slice(-4)}`;
+}

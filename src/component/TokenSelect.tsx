@@ -14,7 +14,11 @@ import {
   ModalBody,
   ModalFooter,
   Button,
-  Input
+  Input,
+  VStack,
+  Box,
+  BoxProps,
+  Code
 } from '@chakra-ui/react';
 import {
   AutoComplete,
@@ -27,9 +31,11 @@ import { Address } from '@project-serum/anchor';
 import { PublicKey } from '@solana/web3.js';
 import { useMemo, useState } from 'react';
 import { useNetwork } from '../contexts/NetworkContext';
+import { useNetworkAddress } from '../hooks/CurrentNetworkAddress';
 import { useTokenInfo } from '../hooks/TokenInfo';
 import { NetworkAddress } from '../models/NetworkAddress';
-import { toPubkey } from '../utils/pubkey';
+import { solscanTokenUrl } from '../utils/block-explorer';
+import { displayPubkey, toPubkey } from '../utils/pubkey';
 
 export interface TokenSelectorProps {
   onSelectToken(token: PublicKey | undefined): unknown;
@@ -49,6 +55,8 @@ export function TokenSelector({
     selectedToken && NetworkAddress.from(network, selectedToken)
   );
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  console.log('Tokens:', tokens);
 
   return (
     <>
@@ -79,9 +87,50 @@ export function TokenSelector({
               bgColor="whiteAlpha.100"
               placeholder="Enter token mint or symbol to filter"
             />
+            <VStack mt="30px" overflowY="scroll" maxH="400px" w="100%">
+              {tokens?.map((token) => <TokenRow paddingY="5px" token={token} />) ?? null}
+              {tokens?.map((token) => <TokenRow paddingY="5px" token={token} />) ?? null}
+              {tokens?.map((token) => <TokenRow paddingY="5px" token={token} />) ?? null}
+              {tokens?.map((token) => <TokenRow paddingY="5px" token={token} />) ?? null}
+              {tokens?.map((token) => <TokenRow paddingY="5px" token={token} />) ?? null}
+              {tokens?.map((token) => <TokenRow paddingY="5px" token={token} />) ?? null}
+              {tokens?.map((token) => <TokenRow paddingY="5px" token={token} />) ?? null}
+              {tokens?.map((token) => <TokenRow paddingY="5px" token={token} />) ?? null}
+              {tokens?.map((token) => <TokenRow paddingY="5px" token={token} />) ?? null}
+            </VStack>
           </ModalBody>
+          <ModalFooter></ModalFooter>
         </ModalContent>
       </Modal>
     </>
+  );
+}
+
+interface TokenRowProps {
+  token: Token;
+}
+
+function TokenRow({ token, ...boxProps }: TokenRowProps & BoxProps) {
+  const tokenNetworkAddr = useNetworkAddress(token.mint);
+  const tokenInfo = useTokenInfo(tokenNetworkAddr);
+
+  return (
+    <HStack {...boxProps} w="90%" justifyContent="space-between">
+      <HStack>
+        <Image borderRadius="30px" w="30px" src={tokenInfo?.logoURI} />
+        <Text>{token.symbol}</Text>
+      </HStack>
+      <Code
+        cursor="pointer"
+        _hover={{
+          textDecoration: 'underline'
+        }}
+        onClick={() => {
+          window.open(solscanTokenUrl(tokenNetworkAddr), '_blank');
+        }}
+      >
+        {displayPubkey(token.mint)}
+      </Code>
+    </HStack>
   );
 }
