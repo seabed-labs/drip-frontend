@@ -1,6 +1,7 @@
 import { Granularity } from '@dcaf-protocol/drip-sdk/dist/interfaces/drip-admin/params';
 import Decimal from 'decimal.js';
 import { useMemo } from 'react';
+import { formatTokenAmountStr } from '../utils/token-amount';
 
 export function useDripPreviewText(
   tokenA?: string,
@@ -19,8 +20,12 @@ export function useDripPreviewText(
     const numCycles = Math.ceil(dripDuration / granularity);
     const dripAmount = new Decimal(amount).div(numCycles);
 
-    return `${numCycles} drips of ${dripAmount.toSignificantDigits(
-      4
+    return `${formatTokenAmountStr(
+      numCycles.toString(),
+      0,
+      true
+    )} drips of ${dripAmount.toSignificantDigits(
+      3
     )} ${tokenA} to ${tokenB} every ${displayGranularity(granularity)}`;
   }, [tokenA, tokenB, amount, granularity, endDate]);
 }

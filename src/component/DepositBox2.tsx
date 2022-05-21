@@ -1,9 +1,14 @@
 import { Box, Button, Center, Text } from '@chakra-ui/react';
+import { findVaultPubkey } from '@dcaf-protocol/drip-sdk';
 import { Granularity } from '@dcaf-protocol/drip-sdk/dist/interfaces/drip-admin/params';
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
 import { PublicKey } from '@solana/web3.js';
-import { useState } from 'react';
+import BN from 'bn.js';
+import Decimal from 'decimal.js';
+import { useCallback, useState } from 'react';
 import styled from 'styled-components';
+import { useDripContext } from '../contexts/DripContext';
+import { useNetwork } from '../contexts/NetworkContext';
 import { useNetworkAddress } from '../hooks/CurrentNetworkAddress';
 import { useDripPreviewText } from '../hooks/DripPreview';
 import { useTokenBalance } from '../hooks/TokenBalance';
@@ -74,6 +79,48 @@ export function DepositBox() {
   const readyToDeposit = Boolean(
     tokenA && tokenB && depositAmountStr && Number(depositAmountStr) > 0 && granularity && dripUntil
   );
+
+  const drip = useDripContext();
+  const network = useNetwork();
+  const deposit = useCallback(async () => {
+    if (!drip) throw new Error('Drip SDK is undefined');
+    if (!tokenA) throw new Error('Token A is undefined');
+    if (!tokenB) throw new Error('Token B is undefined');
+    if (!granularity) throw new Error('Granularity/Velocity is undefined');
+    if (!tokenAInfo) throw new Error('Token A info is undefined');
+    if (!depositAmountStr) throw new Error('Deposit Amount is undefined');
+    if (!dripUntil) throw new Error('Drip end date is undefined');
+
+    const vaultProtoConfigs = await drip.querier.getSupportedVaultProtoConfigsForPair(
+      tokenA,
+      tokenB
+    );
+
+    const vaultProtoConfig = vaultProtoConfigs.find((config) => config.granularity === granularity);
+
+    if (!vaultProtoConfig) {
+      throw new Error(`Could not find matching proto config for granularity ${granularity}`);
+    }
+
+    const vaultPubkey = findVaultPubkey(drip.getProgramId(network), {
+      protoConfig: vaultProtoConfig.pubkey,
+      tokenAMint: tokenA,
+      tokenBMint: tokenB
+    });
+
+    const dripVault = await drip.getVault(vaultPubkey);
+
+    const depositAmountRaw = new BN(
+      new Decimal(depositAmountStr).mul(new Decimal(10).pow(tokenAInfo.decimals)).round().toString()
+    );
+
+    return await dripVault.deposit({
+      amount: depositAmountRaw,
+      dcaParams: {
+        expiry: dripUntil
+      }
+    });
+  }, [drip, tokenA, tokenB, granularity, tokenAInfo, depositAmountStr, dripUntil, network]);
 
   return (
     <StyledContainer>
@@ -171,6 +218,7 @@ export function DepositBox() {
               disabled={!readyToDeposit}
               text={readyToDeposit ? undefined : 'Enter details to deposit'}
               mt="10px"
+              deposit={deposit}
             />
           </Center>
         </StyledSubRowContainer>
