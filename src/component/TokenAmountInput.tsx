@@ -9,6 +9,7 @@ export function TokenAmountInput({ disabled = false }: TokenAmountInputProps) {
     <NumberInput isDisabled={disabled} ml="20px" w="300px">
       <NumberInputField
         fontWeight="medium"
+        fontSize="20px"
         type="number"
         bgColor="whiteAlpha.100"
         placeholder="Enter Amount"

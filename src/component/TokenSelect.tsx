@@ -91,7 +91,8 @@ export function TokenSelector({
         borderRadius="50px"
         bgColor="whiteAlpha.100"
         justifyContent="space-between"
-        padding="10px"
+        padding="14px"
+        h="50px"
         transition="0.3s ease"
         onClick={onOpen}
         disabled={disabled}
