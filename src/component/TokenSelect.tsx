@@ -38,7 +38,7 @@ import { solscanTokenUrl } from '../utils/block-explorer';
 import { displayPubkey, toPubkey } from '../utils/pubkey';
 
 export interface TokenSelectorProps {
-  onSelectToken(token: PublicKey | undefined): unknown;
+  onSelectToken(token: PublicKey): unknown;
   selectedToken?: PublicKey;
   tokens?: Token[];
   modalTitle?: string;
@@ -83,16 +83,18 @@ export function TokenSelector({
         cursor="pointer"
         borderRadius="30px"
         bgColor="whiteAlpha.100"
-        padding="10px 20px"
+        justifyContent="space-between"
+        padding="10px 14px"
         transition="0.3s ease"
         onClick={onOpen}
-        spacing={!selectedTokenInfo ? '0' : 'auto'}
         _hover={{
           bgColor: 'whiteAlpha.200',
           transition: '0.3s ease'
         }}
       >
-        <Image src={selectedTokenInfo?.logoURI} />
+        {selectedTokenInfo && (
+          <Image borderRadius="30px" w="30px" src={selectedTokenInfo?.logoURI} />
+        )}
         <Text>{selectedTokenInfo?.symbol ?? 'Select Token'}</Text>
       </HStack>
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -111,7 +113,15 @@ export function TokenSelector({
             />
             <VStack mt="30px" overflowY="scroll" maxH="400px" w="100%">
               {filteredTokens?.map((token) => (
-                <TokenRow paddingY="10px" paddingX="20px" token={token} />
+                <TokenRow
+                  onClick={() => {
+                    onSelectToken(toPubkey(token.mint));
+                    onClose();
+                  }}
+                  paddingY="10px"
+                  paddingX="20px"
+                  token={token}
+                />
               )) ?? null}
             </VStack>
           </ModalBody>
