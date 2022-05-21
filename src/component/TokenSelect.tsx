@@ -13,7 +13,8 @@ import {
   ModalCloseButton,
   ModalBody,
   ModalFooter,
-  Button
+  Button,
+  Input
 } from '@chakra-ui/react';
 import {
   AutoComplete,
@@ -72,7 +73,13 @@ export function TokenSelector({
         <ModalContent bgColor="#101010">
           <ModalHeader>{modalTitle}</ModalHeader>
           <ModalCloseButton />
-          <ModalBody></ModalBody>
+          <ModalBody>
+            <Input
+              border="none"
+              bgColor="whiteAlpha.100"
+              placeholder="Enter token mint or symbol to filter"
+            />
+          </ModalBody>
         </ModalContent>
       </Modal>
     </>
