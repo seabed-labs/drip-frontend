@@ -6,7 +6,7 @@ interface TokenAmountInputProps {
 
 export function TokenAmountInput({ disabled = false }: TokenAmountInputProps) {
   return (
-    <NumberInput isDisabled={disabled} ml="20px" w="380px">
+    <NumberInput isDisabled={disabled} ml="20px" w="300px">
       <NumberInputField
         fontWeight="medium"
         type="number"

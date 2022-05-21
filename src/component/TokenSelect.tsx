@@ -18,7 +18,9 @@ import {
   VStack,
   Box,
   BoxProps,
-  Code
+  Code,
+  Center,
+  Flex
 } from '@chakra-ui/react';
 import {
   AutoComplete,
@@ -84,11 +86,11 @@ export function TokenSelector({
   return (
     <>
       <Button
-        minW={!selectedTokenInfo ? '180px' : '0'}
+        minW={!selectedTokenInfo ? '180px' : 'auto'}
         cursor="pointer"
         borderRadius="50px"
         bgColor="whiteAlpha.100"
-        justifyContent="space-around"
+        justifyContent="space-between"
         padding="10px"
         transition="0.3s ease"
         onClick={onOpen}
@@ -99,10 +101,12 @@ export function TokenSelector({
         }}
       >
         {selectedTokenInfo && (
-          <Image mr="5px" borderRadius="60px" w="28px" src={selectedTokenInfo?.logoURI} />
+          <Image mr="5px" borderRadius="60px" w="28px" src={selectedTokenInfo.logoURI} />
         )}
         {selectedTokenInfo ? (
-          <Text fontSize="18px">{selectedTokenInfo.symbol}</Text>
+          <Flex ml="2px" flex-direction="row" w="100%" justify-content="flex-start">
+            <Text fontSize="18px">{selectedTokenInfo.symbol}</Text>
+          </Flex>
         ) : (
           <Text paddingX="4px" fontSize="18px">
             {placeholder}
