@@ -54,9 +54,28 @@ export function TokenSelector({
   const selectedTokenInfo = useTokenInfo(
     selectedToken && NetworkAddress.from(network, selectedToken)
   );
+  const [filter, setFilter] = useState<string>();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  console.log('Tokens:', tokens);
+  function onFilterChange(newFilter: string) {
+    if (newFilter.trim() === '') {
+      setFilter(undefined);
+      return;
+    }
+
+    setFilter(newFilter);
+  }
+
+  const filteredTokens = useMemo(() => {
+    if (!tokens) return [];
+    if (!filter) return tokens;
+
+    return tokens.filter(
+      (token) =>
+        token.symbol.toLowerCase().includes(filter.toLowerCase()) ||
+        token.mint.toBase58().includes(filter)
+    );
+  }, [tokens, filter]);
 
   return (
     <>
@@ -86,17 +105,14 @@ export function TokenSelector({
               border="none"
               bgColor="whiteAlpha.100"
               placeholder="Enter token mint or symbol to filter"
+              onChange={(e) => {
+                onFilterChange(e.target.value);
+              }}
             />
             <VStack mt="30px" overflowY="scroll" maxH="400px" w="100%">
-              {tokens?.map((token) => <TokenRow paddingY="5px" token={token} />) ?? null}
-              {tokens?.map((token) => <TokenRow paddingY="5px" token={token} />) ?? null}
-              {tokens?.map((token) => <TokenRow paddingY="5px" token={token} />) ?? null}
-              {tokens?.map((token) => <TokenRow paddingY="5px" token={token} />) ?? null}
-              {tokens?.map((token) => <TokenRow paddingY="5px" token={token} />) ?? null}
-              {tokens?.map((token) => <TokenRow paddingY="5px" token={token} />) ?? null}
-              {tokens?.map((token) => <TokenRow paddingY="5px" token={token} />) ?? null}
-              {tokens?.map((token) => <TokenRow paddingY="5px" token={token} />) ?? null}
-              {tokens?.map((token) => <TokenRow paddingY="5px" token={token} />) ?? null}
+              {filteredTokens?.map((token) => (
+                <TokenRow paddingY="10px" paddingX="20px" token={token} />
+              )) ?? null}
             </VStack>
           </ModalBody>
           <ModalFooter></ModalFooter>
@@ -115,7 +131,15 @@ function TokenRow({ token, ...boxProps }: TokenRowProps & BoxProps) {
   const tokenInfo = useTokenInfo(tokenNetworkAddr);
 
   return (
-    <HStack {...boxProps} w="90%" justifyContent="space-between">
+    <HStack
+      {...boxProps}
+      cursor="pointer"
+      _hover={{
+        bgColor: 'whiteAlpha.100'
+      }}
+      w="100%"
+      justifyContent="space-between"
+    >
       <HStack>
         <Image borderRadius="30px" w="30px" src={tokenInfo?.logoURI} />
         <Text>{token.symbol}</Text>
