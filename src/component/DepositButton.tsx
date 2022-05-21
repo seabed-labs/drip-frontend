@@ -15,13 +15,15 @@ export function DepositButton({
       variant="unstyled"
       bgColor="#62aaff"
       _hover={{
-        bgColor: '#60a0ff'
+        bgColor: '#60a0ff',
+        transition: '0.2s ease'
       }}
       color="white"
       h="50px"
       borderRadius="50px"
       w="100%"
       disabled={disabled}
+      transition="0.2s ease"
       {...buttonProps}
     >
       {text ?? 'Deposit'}
