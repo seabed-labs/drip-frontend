@@ -13,9 +13,13 @@ interface DripEndTimePickerProps {
 const StyledContainer = styled(Box)`
   .date-time-picker {
     border-radius: 50px;
-    padding: 12px;
+    padding: 10px 12px;
     background-color: rgba(255, 255, 255, 0.06);
     width: 440px;
+
+    .react-datetime-picker__inputGroup {
+      font-size: 20px;
+    }
 
     .react-datetime-picker__wrapper {
       border: none;
