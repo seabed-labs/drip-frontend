@@ -26,7 +26,7 @@ export function GranularitySelect({ tokenA, tokenB, onUpdate }: GranularitySelec
       cursor="pointer"
       h="50px"
       bgColor="whiteAlpha.100"
-      maxW="295.08px"
+      maxW="300px"
       ml="20px"
       fontSize="18px"
       fontWeight="medium"
