@@ -5,7 +5,7 @@ import { useAnchorWallet } from '@solana/wallet-adapter-react';
 import { clusterApiUrl, Connection, PublicKey, Transaction } from '@solana/web3.js';
 import { useMemo } from 'react';
 import { useAsyncMemo } from 'use-async-memo';
-import { Network } from '../models/network';
+import { Network } from '../models/Network';
 import { VaultClient } from '../vault-client';
 
 // TODO: move this elsewhere
