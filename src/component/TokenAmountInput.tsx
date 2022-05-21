@@ -1,12 +1,13 @@
-import { Input, NumberInput, NumberInputField } from '@chakra-ui/react';
+import { NumberInput, NumberInputField } from '@chakra-ui/react';
 
 interface TokenAmountInputProps {
   disabled?: boolean;
+  onUpdate(amount: string): void;
 }
 
-export function TokenAmountInput({ disabled = false }: TokenAmountInputProps) {
+export function TokenAmountInput({ disabled = false, onUpdate }: TokenAmountInputProps) {
   return (
-    <NumberInput isDisabled={disabled} ml="20px" w="300px">
+    <NumberInput onChange={onUpdate} isDisabled={disabled} ml="20px" w="300px">
       <NumberInputField
         fontWeight="medium"
         fontSize="20px"

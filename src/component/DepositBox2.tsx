@@ -1,5 +1,6 @@
 import { Box, Center, Text } from '@chakra-ui/react';
 import { PublicKey } from '@solana/web3.js';
+import { useEffect } from 'react';
 import { useState } from 'react';
 import styled from 'styled-components';
 import { useTokenAs, useTokenBs } from '../hooks/Tokens';
@@ -34,6 +35,7 @@ const StyledSubRowContainer = styled.div`
 export function DepositBox() {
   const [tokenA, setTokenA] = useState<PublicKey>();
   const [tokenB, setTokenB] = useState<PublicKey>();
+  const [depositAmountStr, setDepositAmountStr] = useState<string>();
 
   const tokenAs = useTokenAs();
   const tokenBs = useTokenBs(tokenA);
@@ -59,7 +61,7 @@ export function DepositBox() {
             selectedToken={tokenA}
             tokens={tokenAs}
           />
-          <TokenAmountInput disabled={!tokenA} />
+          <TokenAmountInput onUpdate={setDepositAmountStr} disabled={!tokenA} />
         </StyledSubRowContainer>
       </StyledMainRowContainer>
       <StyledMainRowContainer>
