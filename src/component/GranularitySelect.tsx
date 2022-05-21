@@ -7,9 +7,11 @@ import { useDripContext } from '../contexts/DripContext';
 interface GranularitySelectProps {
   tokenA?: PublicKey;
   tokenB?: PublicKey;
+  granularity?: Granularity;
+  onUpdate(newGranularity?: Granularity): void;
 }
 
-export function GranularitySelect({ tokenA, tokenB }: GranularitySelectProps) {
+export function GranularitySelect({ tokenA, tokenB, onUpdate }: GranularitySelectProps) {
   const drip = useDripContext();
   const vaultProtoConfigsForPair = useAsyncMemo(async () => {
     if (!drip || !tokenA || !tokenB) return undefined;
@@ -34,10 +36,22 @@ export function GranularitySelect({ tokenA, tokenB }: GranularitySelectProps) {
       borderRadius="50px"
       placeholder="Choose velocity"
       defaultValue={undefined}
+      onChange={(e) => {
+        if (e.target.selectedIndex === 0) {
+          // Selected placeholder
+          onUpdate(undefined);
+          return;
+        }
+
+        const selectedConfig = vaultProtoConfigsForPair?.[e.target.selectedIndex - 1]; // -1 since placeholder is also an index
+        if (selectedConfig) {
+          onUpdate(selectedConfig.granularity);
+        }
+      }}
       disabled={isDisabled}
     >
       {vaultProtoConfigsForPair?.map((protoConfig) => (
-        <option value={protoConfig.granularity}>
+        <option key={protoConfig.pubkey.toBase58()} value={protoConfig.granularity}>
           {displayGranularity(protoConfig.granularity)}
         </option>
       ))}

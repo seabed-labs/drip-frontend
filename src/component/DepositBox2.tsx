@@ -1,4 +1,5 @@
 import { Box, Button, Center, PropsOf, Text } from '@chakra-ui/react';
+import { Granularity } from '@dcaf-protocol/drip-sdk/dist/interfaces/drip-admin/params';
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
 import { PublicKey } from '@solana/web3.js';
 import { useEffect } from 'react';
@@ -46,6 +47,7 @@ export function DepositBox() {
   const [tokenA, setTokenA] = useState<PublicKey>();
   const [tokenB, setTokenB] = useState<PublicKey>();
   const [depositAmountStr, setDepositAmountStr] = useState<string>();
+  const [granularity, setGranularity] = useState<Granularity>();
   const wallet = useAnchorWallet();
   const tokenANetworkAddress = useNetworkAddress(tokenA);
   const maximumAmount = useTokenBalance(wallet?.publicKey, tokenANetworkAddress);
@@ -112,7 +114,7 @@ export function DepositBox() {
             selectedToken={tokenB}
             tokens={tokenBs}
           />
-          <GranularitySelect tokenA={tokenA} tokenB={tokenB} />
+          <GranularitySelect onUpdate={setGranularity} tokenA={tokenA} tokenB={tokenB} />
         </StyledSubRowContainer>
       </StyledMainRowContainer>
       <StyledMainRowContainer>
