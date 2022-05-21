@@ -81,10 +81,10 @@ export function TokenSelector({
     <>
       <HStack
         cursor="pointer"
-        borderRadius="30px"
+        borderRadius="50px"
         bgColor="whiteAlpha.100"
-        justifyContent="space-between"
-        padding="10px 14px"
+        justifyContent="space-around"
+        padding="10px"
         transition="0.3s ease"
         onClick={onOpen}
         _hover={{
@@ -93,9 +93,15 @@ export function TokenSelector({
         }}
       >
         {selectedTokenInfo && (
-          <Image borderRadius="30px" w="30px" src={selectedTokenInfo?.logoURI} />
+          <Image borderRadius="60px" w="30px" src={selectedTokenInfo?.logoURI} />
         )}
-        <Text>{selectedTokenInfo?.symbol ?? 'Select Token'}</Text>
+        {selectedTokenInfo ? (
+          <Text fontSize="20px">{selectedTokenInfo.symbol}</Text>
+        ) : (
+          <Text paddingX="4px" fontSize="20px">
+            Select Token
+          </Text>
+        )}
       </HStack>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
