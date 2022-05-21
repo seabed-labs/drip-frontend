@@ -15,7 +15,7 @@ const StyledContainer = styled(Box)`
     border-radius: 50px;
     padding: 12px;
     background-color: rgba(255, 255, 255, 0.06);
-    width: 420px;
+    width: 440px;
 
     .react-datetime-picker__wrapper {
       border: none;
@@ -84,7 +84,15 @@ export function DripEndTimePicker({
         })}
         minDate={new Date()}
         disableClock
-        onChange={onUpdate}
+        onChange={(date) => {
+          const now = new Date().getTime();
+          if (date.getTime() < now) {
+            onUpdate(new Date(now + 10 * 60 * 1000));
+            return;
+          }
+
+          onUpdate(date);
+        }}
         value={value}
       />
     </StyledContainer>

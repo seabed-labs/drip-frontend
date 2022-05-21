@@ -5,7 +5,9 @@ import { PublicKey } from '@solana/web3.js';
 import { useState } from 'react';
 import styled from 'styled-components';
 import { useNetworkAddress } from '../hooks/CurrentNetworkAddress';
+import { useDripPreviewText } from '../hooks/DripPreview';
 import { useTokenBalance } from '../hooks/TokenBalance';
+import { useTokenInfo } from '../hooks/TokenInfo';
 import { useTokenAs, useTokenBs } from '../hooks/Tokens';
 import { formatTokenAmountStr } from '../utils/token-amount';
 import { DripEndTimePicker } from './DripEndTimePicker';
@@ -15,7 +17,7 @@ import { TokenSelector } from './TokenSelect';
 
 const StyledContainer = styled.div`
   padding: 40px;
-  width: 500px;
+  width: 520px;
   background: #101010;
   border-radius: 60px;
   box-shadow: 0 0 128px 1px rgba(98, 170, 255, 0.15);
@@ -55,6 +57,18 @@ export function DepositBox() {
 
   const tokenAs = useTokenAs();
   const tokenBs = useTokenBs(tokenA);
+  const tokenAAddr = useNetworkAddress(tokenA);
+  const tokenBAddr = useNetworkAddress(tokenB);
+  const tokenAInfo = useTokenInfo(tokenAAddr);
+  const tokenBInfo = useTokenInfo(tokenBAddr);
+
+  const dripPreviewText = useDripPreviewText(
+    tokenAInfo?.symbol,
+    tokenBInfo?.symbol,
+    depositAmountStr,
+    granularity,
+    dripUntil
+  );
 
   return (
     <StyledContainer>
@@ -143,7 +157,7 @@ export function DepositBox() {
       <StyledMainRowContainer>
         <StyledSubRowContainer>
           <Center w="100%">
-            <Text>{'[DCA Preview]'}</Text>
+            <Text>{dripPreviewText}</Text>
           </Center>
         </StyledSubRowContainer>
         <StyledSubRowContainer>
