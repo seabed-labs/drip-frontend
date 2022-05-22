@@ -1,4 +1,4 @@
-import { Text, Box, HStack, Image, Skeleton } from '@chakra-ui/react';
+import { Text, Box, HStack, Image, Skeleton, Progress } from '@chakra-ui/react';
 import { BN } from '@project-serum/anchor';
 import { useMemo } from 'react';
 import styled from 'styled-components';
@@ -26,6 +26,18 @@ export function PositionCard({ position }: PositionCardProps) {
   const tokenBAddr = useNetworkAddress(vault?.tokenBMint);
   const tokenAInfo = useTokenInfo(tokenAAddr);
   const tokenBInfo = useTokenInfo(tokenBAddr);
+
+  const dripProgress = useMemo(() => {
+    if (!vault) return undefined;
+
+    const totalDrips = position.numberOfSwaps;
+    const completedDrips = BN.min(
+      vault.lastDcaPeriod.sub(position.dcaPeriodIdBeforeDeposit),
+      totalDrips
+    );
+
+    return completedDrips.muln(100).div(totalDrips);
+  }, [vault, position]);
 
   const estimatedEndDate = useMemo(() => {
     if (!vault || !protoConfig) return undefined;
@@ -111,6 +123,23 @@ export function PositionCard({ position }: PositionCardProps) {
           )}
         </StyledDataRow>
       </StyledBodyContainer>
+      <StyledFooterContainer>
+        <Progress
+          colorScheme="gray"
+          isAnimated
+          isIndeterminate={!dripProgress}
+          borderRadius="50px"
+          w="100%"
+          value={dripProgress?.toNumber()}
+        />
+        {dripProgress ? (
+          <StyledFooterRow>{dripProgress.toNumber()}% dripped</StyledFooterRow>
+        ) : (
+          <StyledFooterRow>
+            <Skeleton mt="5px" w="33%" h="12px" />
+          </StyledFooterRow>
+        )}
+      </StyledFooterContainer>
     </StyledContainer>
   );
 }
@@ -168,4 +197,30 @@ const StyledDataRow = styled(Box)`
 const StyledDataKey = styled(Text)`
   font-weight: bold;
   color: #62aaff;
+`;
+
+const StyledFooterContainer = styled(Box)`
+  margin-top: 30px;
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+const StyledFooterRow = styled(Box)`
+  margin-top: 5px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items;
+  width: 100%;
+  font-weight: 600;
+  font-size: 12px;
+`;
+
+const StyledTokenAAmount = styled(Text)``;
+
+const StyledTokenBAmount = styled(Text)`
+  opacity: 0.5;
 `;

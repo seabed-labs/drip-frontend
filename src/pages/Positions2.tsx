@@ -42,9 +42,9 @@ export const Positions: FC = () => {
   }
 
   return (
-    <Grid templateColumns="repeat(3, 1fr)" gap="80px">
+    <Grid templateColumns="repeat(3, 1fr)" gap="80px" mt="80px">
       {positions.map((position) => (
-        <GridItem key={position.pubkey.toBase58()} mt="80px">
+        <GridItem key={position.pubkey.toBase58()}>
           <PositionCard position={position} />
         </GridItem>
       ))}
