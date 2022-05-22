@@ -92,7 +92,8 @@ export function PositionCard({ position }: PositionCardProps) {
           <StyledDataKey>Deposit</StyledDataKey>
           {tokenAInfo ? (
             <Text>
-              {formatTokenAmount(position.depositedTokenAAmount, tokenAInfo?.decimals, true)} USDC
+              {formatTokenAmount(position.depositedTokenAAmount, tokenAInfo.decimals, true)}{' '}
+              {tokenAInfo.symbol}
             </Text>
           ) : (
             <Skeleton h="20px" w="100px" />
