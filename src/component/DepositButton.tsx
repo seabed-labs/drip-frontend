@@ -33,6 +33,8 @@ export function DepositButton({
 
   return (
     <Button
+      display="flex"
+      flexDir="row"
       variant="unstyled"
       bgColor="#62aaff"
       _hover={{

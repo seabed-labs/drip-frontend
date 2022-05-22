@@ -226,9 +226,3 @@ const StyledFooterRow = styled(Box)`
   font-weight: 600;
   font-size: 12px;
 `;
-
-const StyledTokenAAmount = styled(Text)``;
-
-const StyledTokenBAmount = styled(Text)`
-  opacity: 0.5;
-`;
