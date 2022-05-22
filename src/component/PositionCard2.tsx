@@ -129,6 +129,7 @@ export function PositionCard({ position }: PositionCardProps) {
           isAnimated
           isIndeterminate={!dripProgress}
           borderRadius="50px"
+          size="sm"
           w="100%"
           value={dripProgress?.toNumber()}
         />
