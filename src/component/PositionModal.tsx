@@ -10,7 +10,8 @@ import {
   HStack,
   ModalCloseButton,
   ModalBody,
-  ModalFooter
+  ModalFooter,
+  Button
 } from '@chakra-ui/react';
 import {
   VaultAccount,
@@ -89,7 +90,7 @@ export function PositionModal({
         </ModalHeader>
         <ModalBody>
           <StyledModalGrid>
-            <StyledModalCol>
+            <StyledModalCol h="300px">
               <StyledModalField>
                 <StyledModalFieldHeader>Initial Deposit</StyledModalFieldHeader>
                 <StyledModalFieldValue>10,000 USDC</StyledModalFieldValue>
@@ -107,7 +108,7 @@ export function PositionModal({
                 <StyledModalFieldValue>100 USDC per SOL</StyledModalFieldValue>
               </StyledModalField>
             </StyledModalCol>
-            <StyledModalCol>
+            <StyledModalCol h="300px">
               <StyledModalField>
                 <StyledModalFieldHeader>Open Date</StyledModalFieldHeader>
                 <StyledModalFieldValue>24th April 2022</StyledModalFieldValue>
@@ -127,7 +128,46 @@ export function PositionModal({
             </StyledModalCol>
           </StyledModalGrid>
         </ModalBody>
-        <ModalFooter></ModalFooter>
+        <ModalFooter>
+          <StyledModalGrid mt="20px">
+            <StyledModalCol>
+              <Button
+                variant="unstyled"
+                height="46px"
+                color="white"
+                bgColor="#62AAFF"
+                transition="0.2s ease"
+                _hover={{
+                  bgColor: '#60a0ff',
+                  transition: '0.2s ease'
+                }}
+                borderRadius="50px"
+                w="100%"
+              >
+                Close Position
+              </Button>
+            </StyledModalCol>
+            <StyledModalCol>
+              <Button
+                variant="unstyled"
+                border="2px solid #62AAFF"
+                height="46px"
+                color="#62AAFF"
+                bgColor="transparent"
+                transition="0.2s ease"
+                _hover={{
+                  color: '#60a0ff',
+                  border: '2px solid #60a0ff',
+                  transition: '0.2s ease'
+                }}
+                borderRadius="50px"
+                w="100%"
+              >
+                Withdraw SOL
+              </Button>
+            </StyledModalCol>
+          </StyledModalGrid>
+        </ModalFooter>
       </ModalContent>
     </Modal>
   );
@@ -167,8 +207,7 @@ const StyledModalGrid = styled(Box)`
 `;
 
 const StyledModalCol = styled(Box)`
-  width: 50%;
-  height: 300px;
+  width: 45%;
   display: flex;
   flex-direction: column;
   align-items: start;
@@ -190,4 +229,12 @@ const StyledModalFieldHeader = styled(Text)`
 
 const StyledModalFieldValue = styled(Text)`
   font-size: 18px;
+`;
+
+const StyledFooterContainer = styled(Box)`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 `;
