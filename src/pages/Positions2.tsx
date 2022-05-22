@@ -1,7 +1,7 @@
 import { Center, Grid, GridItem, Spinner, Text, VStack } from '@chakra-ui/react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { FC } from 'react';
-import { PositionCard } from '../component/PositionCard';
+import { PositionCard } from '../component/PositionCard2';
 import { usePositions } from '../hooks/Positions';
 
 export const Positions: FC = () => {
