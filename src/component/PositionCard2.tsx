@@ -160,6 +160,12 @@ const StyledContainer = styled(Box)`
   background: #101010;
   border-radius: 30px;
   box-shadow: 0 0 30px 1px rgba(49, 85, 128, 0.15);
+  transition: 0.3s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    transition: 0.3s ease;
+  }
 `;
 
 const StyledHeaderContainer = styled(Box)`
