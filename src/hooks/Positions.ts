@@ -63,7 +63,7 @@ function comparePosition(
   positionB: VaultPositionAccountWithPubkey
 ): number {
   if (!positionA.isClosed && !positionB.isClosed) {
-    return positionA.depositTimestamp.toNumber() - positionB.depositTimestamp.toNumber();
+    return positionB.depositTimestamp.toNumber() - positionA.depositTimestamp.toNumber();
   } else if (positionA.isClosed && !positionB.isClosed) {
     // A > B
     return 1;
