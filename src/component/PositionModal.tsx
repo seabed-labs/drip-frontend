@@ -8,7 +8,9 @@ import {
   Skeleton,
   Text,
   HStack,
-  ModalCloseButton
+  ModalCloseButton,
+  ModalBody,
+  ModalFooter
 } from '@chakra-ui/react';
 import {
   VaultAccount,
@@ -43,7 +45,7 @@ export function PositionModal({
   return (
     <Modal size="xl" isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
-      <ModalContent borderRadius="20px" bgColor="#101010">
+      <ModalContent padding="20px" borderRadius="20px" bgColor="#101010">
         <ModalHeader>
           <StyledHeaderContainer>
             <StyledDripHeader>
@@ -85,6 +87,47 @@ export function PositionModal({
             )}
           </StyledHeaderContainer>
         </ModalHeader>
+        <ModalBody>
+          <StyledModalGrid>
+            <StyledModalCol>
+              <StyledModalField>
+                <StyledModalFieldHeader>Initial Deposit</StyledModalFieldHeader>
+                <StyledModalFieldValue>10,000 USDC</StyledModalFieldValue>
+              </StyledModalField>
+              <StyledModalField>
+                <StyledModalFieldHeader>Remaining USDC</StyledModalFieldHeader>
+                <StyledModalFieldValue>8,000 USDC</StyledModalFieldValue>
+              </StyledModalField>
+              <StyledModalField>
+                <StyledModalFieldHeader>Est. End Date</StyledModalFieldHeader>
+                <StyledModalFieldValue>10,000 USDC</StyledModalFieldValue>
+              </StyledModalField>
+              <StyledModalField>
+                <StyledModalFieldHeader>Avg. Drip Price</StyledModalFieldHeader>
+                <StyledModalFieldValue>100 USDC per SOL</StyledModalFieldValue>
+              </StyledModalField>
+            </StyledModalCol>
+            <StyledModalCol>
+              <StyledModalField>
+                <StyledModalFieldHeader>Open Date</StyledModalFieldHeader>
+                <StyledModalFieldValue>24th April 2022</StyledModalFieldValue>
+              </StyledModalField>
+              <StyledModalField>
+                <StyledModalFieldHeader>Accrued SOL</StyledModalFieldHeader>
+                <StyledModalFieldValue>2 SOL</StyledModalFieldValue>
+              </StyledModalField>
+              <StyledModalField>
+                <StyledModalFieldHeader>Total Drips</StyledModalFieldHeader>
+                <StyledModalFieldValue>30</StyledModalFieldValue>
+              </StyledModalField>
+              <StyledModalField>
+                <StyledModalFieldHeader>Withdrawn SOL</StyledModalFieldHeader>
+                <StyledModalFieldValue>1 SOL</StyledModalFieldValue>
+              </StyledModalField>
+            </StyledModalCol>
+          </StyledModalGrid>
+        </ModalBody>
+        <ModalFooter></ModalFooter>
       </ModalContent>
     </Modal>
   );
@@ -97,6 +140,7 @@ const StyledHeaderContainer = styled(Box)`
   display: flex;
   flex-direction: row;
   align-items: center;
+  margin-bottom: -24px;
   justify-content: space-between;
 `;
 
@@ -111,4 +155,39 @@ const StyledDripHeader = styled(Box)`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+`;
+
+const StyledModalGrid = styled(Box)`
+  width: 100%;
+  margin-top: 40px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const StyledModalCol = styled(Box)`
+  width: 50%;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: space-between;
+`;
+
+const StyledModalField = styled(Box)`
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: center;
+`;
+
+const StyledModalFieldHeader = styled(Text)`
+  font-weight: 600;
+  font-size: 18px;
+  color: #62aaff;
+`;
+
+const StyledModalFieldValue = styled(Text)`
+  font-size: 18px;
 `;
