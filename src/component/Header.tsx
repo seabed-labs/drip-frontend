@@ -39,11 +39,11 @@ const StyledRightContainer = styled.div`
 `;
 
 const StyledLogo = styled(Image)`
-  height: 100px;
+  height: 80px;
 `;
 
 const StyledDrip = styled(Image)`
-  height: 100px;
+  height: 80px;
   transform: translateY(-10px);
 `;
 

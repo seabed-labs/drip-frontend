@@ -10,7 +10,7 @@ export const Positions: FC = () => {
 
   if (!connected) {
     return (
-      <Center h="calc(100vh - 177px)">
+      <Center h="calc(100vh - 180px)">
         <Text fontSize="26px" fontWeight="medium">
           Connect your wallet to see your positions
         </Text>
@@ -20,7 +20,7 @@ export const Positions: FC = () => {
 
   if (isPositionsLoading && positions.length === 0) {
     return (
-      <Center h="calc(100vh - 177px)">
+      <Center h="calc(100vh - 180px)">
         <VStack spacing="20px">
           <Spinner thickness="4px" speed="0.65s" emptyColor="gray.200" color="#62aaff" size="xl" />
           <Center w="100%">
