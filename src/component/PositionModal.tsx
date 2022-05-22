@@ -8,7 +8,6 @@ import {
   Skeleton,
   Text,
   HStack,
-  ModalCloseButton,
   ModalBody,
   ModalFooter,
   Button
@@ -229,12 +228,4 @@ const StyledModalFieldHeader = styled(Text)`
 
 const StyledModalFieldValue = styled(Text)`
   font-size: 18px;
-`;
-
-const StyledFooterContainer = styled(Box)`
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
 `;
