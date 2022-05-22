@@ -164,6 +164,7 @@ const StyledContainer = styled(Box)`
 
   &:hover {
     transform: translateY(-4px);
+    box-shadow: 0 0 40px 3px rgba(49, 85, 128, 0.18);
     transition: 0.3s ease;
   }
 `;
