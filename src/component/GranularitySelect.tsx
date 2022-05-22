@@ -59,7 +59,7 @@ export function GranularitySelect({ tokenA, tokenB, onUpdate }: GranularitySelec
   );
 }
 
-function displayGranularity(granularity: Granularity) {
+export function displayGranularity(granularity: Granularity) {
   switch (granularity) {
     case Granularity.Minutely:
       return 'Minutely';

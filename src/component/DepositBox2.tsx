@@ -209,7 +209,7 @@ export function DepositBox() {
       <StyledMainRowContainer>
         <StyledSubRowContainer>
           <Center w="100%">
-            <Text>{dripPreviewText}</Text>
+            <Text overflow="hidden">{dripPreviewText}</Text>
           </Center>
         </StyledSubRowContainer>
         <StyledSubRowContainer>

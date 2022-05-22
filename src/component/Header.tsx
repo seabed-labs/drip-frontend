@@ -4,6 +4,7 @@ import { FC } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import Logo from '../assets/logo.svg';
+import Drip from '../assets/drip.svg';
 
 const StyledContainer = styled.div`
   width: 100%;
@@ -38,7 +39,12 @@ const StyledRightContainer = styled.div`
 `;
 
 const StyledLogo = styled(Image)`
-  width: 120px;
+  height: 80px;
+`;
+
+const StyledDrip = styled(Image)`
+  height: 80px;
+  transform: translateY(-10px);
 `;
 
 const StyledNavButton = styled(Button)<{ selected: boolean }>`
@@ -61,6 +67,7 @@ export const Header: FC = () => {
     <StyledContainer>
       <StyledLeftContainer>
         <StyledLogo src={Logo} />
+        <StyledDrip src={Drip} />
       </StyledLeftContainer>
       <StyledMiddleContainer>
         <Link to="/deposit">

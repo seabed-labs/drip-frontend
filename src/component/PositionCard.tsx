@@ -8,7 +8,7 @@ import { useNetwork } from '../contexts/NetworkContext';
 import { useTokenMintInfo } from '../hooks/TokenMintInfo';
 import { useVaultClient } from '../hooks/VaultClient';
 import { useVaultInfo } from '../hooks/VaultInfo';
-import { VaultPositionAccountWithPubkey } from '../pages';
+import { VaultPositionAccountWithPubkey } from '../hooks/Positions';
 import { formatTokenAmount } from '../utils/token-amount';
 import { getVaultPeriodPDA } from '../vault-client';
 
