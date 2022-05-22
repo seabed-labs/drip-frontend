@@ -21,12 +21,12 @@ export function PositionCard({ position }: PositionCardProps) {
     <StyledContainer>
       <StyledHeaderContainer>
         <HStack>
-          <Image w="32px" src={tokenAInfo?.logoURI} />
+          <StyledTokenIcon src={tokenAInfo?.logoURI} />
           <Text>{tokenAInfo?.symbol}</Text>
         </HStack>
         <Text>→</Text>
         <HStack>
-          <Image w="32px" src={tokenBInfo?.logoURI} />
+          <StyledTokenIcon src={tokenBInfo?.logoURI} />
           <Text>{tokenBInfo?.symbol}</Text>
         </HStack>
       </StyledHeaderContainer>
@@ -58,4 +58,9 @@ const StyledHeaderContainer = styled(Box)`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+`;
+
+const StyledTokenIcon = styled(Image)`
+  width: 32px;
+  border-radius: 50px;
 `;
