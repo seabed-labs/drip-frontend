@@ -1,5 +1,4 @@
 import { Text, Box, HStack, Image, Skeleton } from '@chakra-ui/react';
-import { Granularity } from '@dcaf-protocol/drip-sdk/dist/interfaces/drip-admin/params';
 import { BN } from '@project-serum/anchor';
 import { useMemo } from 'react';
 import styled from 'styled-components';
