@@ -86,7 +86,7 @@ export function DepositBox() {
     if (!drip) throw new Error('Drip SDK is undefined');
     if (!tokenA) throw new Error('Token A is undefined');
     if (!tokenB) throw new Error('Token B is undefined');
-    if (!granularity) throw new Error('Granularity/Velocity is undefined');
+    if (!granularity) throw new Error('Drip Frequency is undefined');
     if (!tokenAInfo) throw new Error('Token A info is undefined');
     if (!depositAmountStr) throw new Error('Deposit Amount is undefined');
     if (!dripUntil) throw new Error('Drip end date is undefined');

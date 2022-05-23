@@ -34,7 +34,7 @@ export function GranularitySelect({ tokenA, tokenB, onUpdate }: GranularitySelec
       // border="1px solid white"
       border="none"
       borderRadius="50px"
-      placeholder="Choose velocity"
+      placeholder="Choose frequency"
       defaultValue={undefined}
       onChange={(e) => {
         if (e.target.selectedIndex === 0) {
