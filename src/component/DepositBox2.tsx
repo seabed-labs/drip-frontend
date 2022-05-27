@@ -1,6 +1,6 @@
 import { Box, Button, Center, Text } from '@chakra-ui/react';
-import { findVaultPubkey } from '@dcaf-protocol/drip-sdk';
-import { Granularity } from '@dcaf-protocol/drip-sdk/dist/interfaces/drip-admin/params';
+import { findVaultPubkey } from '@dcaf-labs/drip-sdk';
+import { Granularity } from '@dcaf-labs/drip-sdk/dist/interfaces/drip-admin/params';
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
 import { PublicKey } from '@solana/web3.js';
 import BN from 'bn.js';

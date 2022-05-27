@@ -1,4 +1,4 @@
-import { Token } from '@dcaf-protocol/drip-sdk';
+import { Token } from '@dcaf-labs/drip-sdk';
 import { Address } from '@project-serum/anchor';
 import { useAsyncMemo } from 'use-async-memo';
 import { useDripContext } from '../contexts/DripContext';

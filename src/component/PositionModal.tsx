@@ -16,10 +16,14 @@ import {
 import {
   VaultAccount,
   VaultProtoConfigAccount
-} from '@dcaf-protocol/drip-sdk/dist/interfaces/drip-querier/results';
+} from '@dcaf-labs/drip-sdk/dist/interfaces/drip-querier/results';
 import { TokenInfo } from '@solana/spl-token-registry';
+import { useEffect } from 'react';
 import styled from 'styled-components';
+import { useAsyncMemo } from 'use-async-memo';
+import { useDripContext } from '../contexts/DripContext';
 import { VaultPositionAccountWithPubkey } from '../hooks/Positions';
+import { formatTokenAmount } from '../utils/token-amount';
 import { displayGranularity } from './GranularitySelect';
 
 interface PositionModalProps {
@@ -43,6 +47,16 @@ export function PositionModal({
   isOpen,
   onClose
 }: PositionModalProps) {
+  const drip = useDripContext();
+  const dripPosition = useAsyncMemo(
+    async () => drip?.getPosition(position.pubkey),
+    [drip, position]
+  );
+  const closePositionPreview = useAsyncMemo(
+    async () => dripPosition?.getClosePositionPreview(),
+    [dripPosition]
+  );
+
   return (
     <Modal size="xl" isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -84,7 +98,7 @@ export function PositionModal({
                 {displayGranularity(vaultProtoConfig.granularity.toNumber())}
               </Text>
             ) : (
-              <Skeleton h="20px" w="100px" />
+              <Skeleton h="40px" w="80px" />
             )}
           </StyledHeaderContainer>
         </ModalHeader>
@@ -93,11 +107,31 @@ export function PositionModal({
             <StyledModalCol h="300px">
               <StyledModalField>
                 <StyledModalFieldHeader>Initial Deposit</StyledModalFieldHeader>
-                <StyledModalFieldValue>10,000 USDC</StyledModalFieldValue>
+                <StyledModalFieldValue>
+                  {tokenAInfo ? (
+                    `${formatTokenAmount(
+                      position.depositedTokenAAmount,
+                      tokenAInfo.decimals,
+                      true
+                    )} ${tokenAInfo?.symbol}`
+                  ) : (
+                    <Skeleton mt="7px" w="120px" h="20px" />
+                  )}
+                </StyledModalFieldValue>
               </StyledModalField>
               <StyledModalField>
-                <StyledModalFieldHeader>Remaining USDC</StyledModalFieldHeader>
-                <StyledModalFieldValue>8,000 USDC</StyledModalFieldValue>
+                <StyledModalFieldHeader>Remaining {tokenAInfo?.symbol}</StyledModalFieldHeader>
+                <StyledModalFieldValue>
+                  {tokenAInfo && closePositionPreview ? (
+                    `${formatTokenAmount(
+                      closePositionPreview.tokenAAmountBeingWithdrawn,
+                      tokenAInfo.decimals,
+                      true
+                    )} ${tokenAInfo?.symbol}`
+                  ) : (
+                    <Skeleton mt="7px" w="120px" h="20px" />
+                  )}
+                </StyledModalFieldValue>
               </StyledModalField>
               <StyledModalField>
                 <StyledModalFieldHeader>Est. End Date</StyledModalFieldHeader>

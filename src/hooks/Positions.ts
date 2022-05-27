@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from 'react';
-import { VaultPositionAccount } from '@dcaf-protocol/drip-sdk/dist/interfaces/drip-querier/results';
+import { VaultPositionAccount } from '@dcaf-labs/drip-sdk/dist/interfaces/drip-querier/results';
 import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react';
 import { useDripContext } from '../contexts/DripContext';
 import { PublicKey } from '@solana/web3.js';

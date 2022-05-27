@@ -8,11 +8,11 @@
 yarn
 ```
 
-### Link local @dcaf-protocol/drip-sdk (optional)
+### Link local @dcaf-labs/drip-sdk (optional)
 
-1. Run this in the root directory of the @dcaf-protocol/drip-sdk package
+1. Run this in the root directory of the @dcaf-labs/drip-sdk package
 
-### Link remote @dcaf-protocol/drip-sdk
+### Link remote @dcaf-labs/drip-sdk
 
 1. Create a personal access token on github
 2. Add the following to your `.zshrc`
@@ -30,7 +30,7 @@ yarn link
 2. Run this in the root directory
 
 ```bash
-yarn link @dcaf-protocol/drip-sdk
+yarn link @dcaf-labs/drip-sdk
 ```
 
 ### Run the app

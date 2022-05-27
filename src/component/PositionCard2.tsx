@@ -147,16 +147,18 @@ export function PositionCard({ position }: PositionCardProps) {
           )}
         </StyledFooterContainer>
       </StyledContainer>
-      <PositionModal
-        tokenAInfo={tokenAInfo}
-        tokenBInfo={tokenBInfo}
-        vault={vault ?? undefined}
-        vaultProtoConfig={protoConfig ?? undefined}
-        estimatedEndDate={estimatedEndDate}
-        position={position}
-        isOpen={isOpen}
-        onClose={onClose}
-      />
+      {isOpen && (
+        <PositionModal
+          tokenAInfo={tokenAInfo}
+          tokenBInfo={tokenBInfo}
+          vault={vault ?? undefined}
+          vaultProtoConfig={protoConfig ?? undefined}
+          estimatedEndDate={estimatedEndDate}
+          position={position}
+          isOpen={isOpen}
+          onClose={onClose}
+        />
+      )}
     </>
   );
 }

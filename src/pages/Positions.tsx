@@ -1,5 +1,5 @@
 import { Grid, GridItem } from '@chakra-ui/react';
-import { VaultPositionAccount } from '@dcaf-protocol/drip-sdk/dist/interfaces/drip-querier/results';
+import { VaultPositionAccount } from '@dcaf-labs/drip-sdk/dist/interfaces/drip-querier/results';
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
 import { PublicKey } from '@solana/web3.js';
 import BN from 'bn.js';
