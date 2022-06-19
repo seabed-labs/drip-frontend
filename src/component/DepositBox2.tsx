@@ -129,17 +129,17 @@ export function DepositBox() {
       <StyledMainRowContainer>
         <StyledSubRowContainer>
           <StyledStepHeader>Drip</StyledStepHeader>
-          {maximumAmount && (
-            <>
-              {/* TODO(Mocha): How do I attach the icon to the left side of the max text... */}
-              {network === Network.Devnet && tokenA && tokenAInfo && wallet && (
-                <MintButton
-                  mint={tokenA.toBase58()}
-                  tokenName={tokenAInfo.name}
-                  wallet={wallet.publicKey.toBase58()}
-                  amount={'500'}
-                />
-              )}
+          <div>
+            {network === Network.Devnet && tokenA && tokenAInfo && wallet && (
+              <MintButton
+                marginRight={'20px'}
+                mint={tokenA.toBase58()}
+                tokenName={tokenAInfo.name}
+                wallet={wallet.publicKey.toBase58()}
+                amount={'500'}
+              />
+            )}
+            {maximumAmount && (
               <Button
                 h="20px"
                 transition="0.2s ease"
@@ -156,8 +156,8 @@ export function DepositBox() {
               >
                 Max: {formatTokenAmountStr(maximumAmount.amount, maximumAmount.decimals, true)}
               </Button>
-            </>
-          )}
+            )}
+          </div>
         </StyledSubRowContainer>
         <Box h="10px" />
         <StyledSubRowContainer>
