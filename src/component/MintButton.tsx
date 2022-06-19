@@ -36,20 +36,19 @@ export function MintButton({
     };
     try {
       setLoading(true);
-      fetch('https://devnet.api.drip.dcaf.so/mint', requestOptions)
-        .then((response) => response.text())
-        .then((result) => console.log(result))
-        .catch((error) => console.log('error', error));
-      //   const response = JSON.parse(
-      //     await (await fetch('https://devnet.api.drip.dcaf.so/mint', requestOptions)).text()
-      //   );
-      //   txToast.success({
-      //     id: '',
-      //     solscan: response?.txHash,
-      //     metadata: undefined
-      //   });
+      const response = await fetch('https://devnet.api.drip.dcaf.so/mint', requestOptions);
+      const responseJSON = JSON.parse(await response.text());
+      if (responseJSON.txHash) {
+        txToast.success({
+          id: '',
+          solscan: `https://solscan.io/tx/${responseJSON?.txHash}?cluster=devnet`,
+          metadata: undefined
+        });
+      } else {
+        throw new Error(responseJSON);
+      }
     } catch (err) {
-      console.error(`Error during deposit: ${err}`);
+      console.error(`Error during mint: ${err}`);
       txToast.failure(err as Error);
     } finally {
       setLoading(false);
