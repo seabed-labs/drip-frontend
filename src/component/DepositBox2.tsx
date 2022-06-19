@@ -45,7 +45,7 @@ const StyledSubRowContainer = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  // align-items: center;
+  align-items: center;
 `;
 
 const StyledStepHeader = styled(Text)`
