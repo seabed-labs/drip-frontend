@@ -56,7 +56,7 @@ export function MintButton({
   }
 
   return (
-    <Tooltip label={`Mint 500 ${tokenName}`}>
+    <Tooltip label={`Mint ${amount} ${tokenName}`}>
       <IconButton
         disabled={disabled || loading}
         {...buttonProps}
