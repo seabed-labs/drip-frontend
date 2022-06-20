@@ -7,6 +7,7 @@ import { PublicKey } from '@solana/web3.js';
 import BN from 'bn.js';
 import Decimal from 'decimal.js';
 import { useCallback, useState } from 'react';
+import GoogleLogin, { GoogleLogout } from 'react-google-login';
 import styled from 'styled-components';
 import { useDripContext } from '../contexts/DripContext';
 import { useNetwork } from '../contexts/NetworkContext';
@@ -233,6 +234,18 @@ export function DepositBox() {
               mt="10px"
               deposit={deposit}
             />
+            <GoogleLogin
+              clientId="540992596258-sa2h4lmtelo44tonpu9htsauk5uabdon.apps.googleusercontent.com"
+              buttonText="Login"
+              onSuccess={(res) => console.log(res)}
+              onFailure={(res) => console.log(res)}
+              cookiePolicy={'single_host_origin'}
+            />
+            <GoogleLogout
+              clientId="658977310896-knrl3gka66fldh83dao2rhgbblmd4un9.apps.googleusercontent.com"
+              buttonText="Logout"
+              onLogoutSuccess={() => console.log('logged out')}
+            ></GoogleLogout>
           </Center>
         </StyledSubRowContainer>
       </StyledMainRowContainer>
