@@ -1,14 +1,5 @@
 import { ArrowRightIcon } from '@chakra-ui/icons';
-import {
-  Text,
-  Box,
-  HStack,
-  Image,
-  Skeleton,
-  Progress,
-  useDisclosure,
-  Flex
-} from '@chakra-ui/react';
+import { Text, Box, HStack, Image, Skeleton, Progress, useDisclosure } from '@chakra-ui/react';
 import { BN } from '@project-serum/anchor';
 import { useMemo } from 'react';
 import styled from 'styled-components';

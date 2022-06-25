@@ -18,7 +18,7 @@ import {
   VaultProtoConfigAccount
 } from '@dcaf-labs/drip-sdk/dist/interfaces/drip-querier/results';
 import { TokenInfo } from '@solana/spl-token-registry';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { useAsyncMemo } from 'use-async-memo';
 import { useDripContext } from '../contexts/DripContext';
@@ -166,8 +166,18 @@ export function PositionModal({
                 <StyledModalFieldValue>{position.numberOfSwaps.toString()}</StyledModalFieldValue>
               </StyledModalField>
               <StyledModalField>
-                <StyledModalFieldHeader>Withdrawn SOL</StyledModalFieldHeader>
-                <StyledModalFieldValue>1 SOL</StyledModalFieldValue>
+                <StyledModalFieldHeader>Withdrawn {tokenBInfo?.symbol}</StyledModalFieldHeader>
+                <StyledModalFieldValue>
+                  {tokenBInfo ? (
+                    `${formatTokenAmount(
+                      position.withdrawnTokenBAmount,
+                      tokenBInfo.decimals,
+                      true
+                    )} ${tokenBInfo?.symbol}`
+                  ) : (
+                    <Skeleton mt="7px" w="120px" h="20px" />
+                  )}
+                </StyledModalFieldValue>
               </StyledModalField>
             </StyledModalCol>
           </StyledModalGrid>
