@@ -1,4 +1,14 @@
-import { Text, Box, HStack, Image, Skeleton, Progress, useDisclosure } from '@chakra-ui/react';
+import { ArrowRightIcon } from '@chakra-ui/icons';
+import {
+  Text,
+  Box,
+  HStack,
+  Image,
+  Skeleton,
+  Progress,
+  useDisclosure,
+  Flex
+} from '@chakra-ui/react';
 import { BN } from '@project-serum/anchor';
 import { useMemo } from 'react';
 import styled from 'styled-components';
@@ -76,7 +86,7 @@ export function PositionCard({ position }: PositionCardProps) {
               <Skeleton h="40px" w="120px" />
             )}
           </HStack>
-          <Text>→</Text>
+          <ArrowRightIcon w="20px" />
           <HStack>
             {tokenBInfo ? (
               <>
@@ -194,6 +204,7 @@ const StyledHeaderContainer = styled(Box)`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
 `;
 
 const StyledTokenIcon = styled(Image)`
