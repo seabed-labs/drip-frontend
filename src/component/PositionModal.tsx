@@ -135,7 +135,13 @@ export function PositionModal({
               </StyledModalField>
               <StyledModalField>
                 <StyledModalFieldHeader>Est. End Date</StyledModalFieldHeader>
-                <StyledModalFieldValue>10,000 USDC</StyledModalFieldValue>
+                <StyledModalFieldValue>
+                  {estimatedEndDate ? (
+                    estimatedEndDate.toDateString()
+                  ) : (
+                    <Skeleton mt="7px" w="120px" h="20px" />
+                  )}
+                </StyledModalFieldValue>
               </StyledModalField>
               <StyledModalField>
                 <StyledModalFieldHeader>Avg. Drip Price</StyledModalFieldHeader>
@@ -145,7 +151,9 @@ export function PositionModal({
             <StyledModalCol h="300px">
               <StyledModalField>
                 <StyledModalFieldHeader>Open Date</StyledModalFieldHeader>
-                <StyledModalFieldValue>24th April 2022</StyledModalFieldValue>
+                <StyledModalFieldValue>
+                  {new Date(position.depositTimestamp.muln(1e3).toNumber()).toDateString()}
+                </StyledModalFieldValue>
               </StyledModalField>
               <StyledModalField>
                 <StyledModalFieldHeader>Accrued SOL</StyledModalFieldHeader>

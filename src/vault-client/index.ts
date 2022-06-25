@@ -386,7 +386,7 @@ export class VaultClient {
   //   );
   // }
 
-  public async getUserTokenBalance(tokenMint: string): Promise<BigInt | undefined> {
+  public async getUserTokenBalance(tokenMint: string): Promise<bigint | undefined> {
     assertWalletConnected(this.program.provider.wallet);
 
     const userPublicKey = this.program.provider.wallet.publicKey;
