@@ -139,7 +139,7 @@ export function PositionModal({
                   {estimatedEndDate ? (
                     estimatedEndDate.toDateString()
                   ) : (
-                    <Skeleton mt="7px" w="120px" h="20px" />
+                    <Skeleton mt="7px" w="170px" h="20px" />
                   )}
                 </StyledModalFieldValue>
               </StyledModalField>
