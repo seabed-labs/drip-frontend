@@ -144,6 +144,7 @@ export function PositionModal({
                 </StyledModalFieldValue>
               </StyledModalField>
               <StyledModalField>
+                {/* TODO(matcha): Compute average drip price and render here */}
                 <StyledModalFieldHeader>Avg. Drip Price</StyledModalFieldHeader>
                 <StyledModalFieldValue>100 USDC per SOL</StyledModalFieldValue>
               </StyledModalField>
