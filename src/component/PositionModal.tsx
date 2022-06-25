@@ -217,7 +217,7 @@ export function PositionModal({
                 borderRadius="50px"
                 w="100%"
               >
-                Withdraw SOL
+                Withdraw {tokenBInfo?.symbol}
               </Button>
             </StyledModalCol>
           </StyledModalGrid>
