@@ -158,7 +158,7 @@ export function PositionModal({
               </StyledModalField>
               <StyledModalField>
                 {/* TODO(matcha): Compute max B amount to withdraw and render here */}
-                <StyledModalFieldHeader>Accrued SOL</StyledModalFieldHeader>
+                <StyledModalFieldHeader>Accrued {tokenBInfo?.symbol}</StyledModalFieldHeader>
                 <StyledModalFieldValue>2 SOL</StyledModalFieldValue>
               </StyledModalField>
               <StyledModalField>
