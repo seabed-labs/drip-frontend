@@ -23,7 +23,7 @@ import styled from 'styled-components';
 import { useAsyncMemo } from 'use-async-memo';
 import { useDripContext } from '../contexts/DripContext';
 import { VaultPositionAccountWithPubkey } from '../hooks/Positions';
-import { formatTokenAmount } from '../utils/token-amount';
+import { formatTokenAmount, formatTokenAmountStr } from '../utils/token-amount';
 import { displayGranularity } from './GranularitySelect';
 
 interface PositionModalProps {
@@ -157,12 +157,13 @@ export function PositionModal({
                 </StyledModalFieldValue>
               </StyledModalField>
               <StyledModalField>
+                {/* TODO(matcha): Compute max B amount to withdraw and render here */}
                 <StyledModalFieldHeader>Accrued SOL</StyledModalFieldHeader>
                 <StyledModalFieldValue>2 SOL</StyledModalFieldValue>
               </StyledModalField>
               <StyledModalField>
                 <StyledModalFieldHeader>Total Drips</StyledModalFieldHeader>
-                <StyledModalFieldValue>30</StyledModalFieldValue>
+                <StyledModalFieldValue>{position.numberOfSwaps.toString()}</StyledModalFieldValue>
               </StyledModalField>
               <StyledModalField>
                 <StyledModalFieldHeader>Withdrawn SOL</StyledModalFieldHeader>
