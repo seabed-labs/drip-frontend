@@ -71,7 +71,7 @@ function toPublicKey(address: Address): PublicKey {
 
 export class VaultClient {
   // TODO: Move this to an env var
-  public static readonly ProgramID = 'AahZjZGD5Lv9HGPYUXZRS5GpeFFF13Wvx1fAFgwUxxDR';
+  public static readonly ProgramID = 'GizNF1qvjrTwZy1sFpq5L9cnov2ZB19DAoLKEYCYapwH';
   public readonly program: Program<DcaVault>;
 
   public constructor(provider: Provider) {
