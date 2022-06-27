@@ -18,6 +18,7 @@ import {
   VaultProtoConfigAccount
 } from '@dcaf-labs/drip-sdk/dist/interfaces/drip-querier/results';
 import { TokenInfo } from '@solana/spl-token-registry';
+import { BN } from 'bn.js';
 import { useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { useAsyncMemo } from 'use-async-memo';
@@ -56,6 +57,24 @@ export function PositionModal({
     async () => dripPosition?.getClosePositionPreview(),
     [dripPosition]
   );
+
+  const remainingTokenAToDrip = useMemo(() => {
+    if (!vault) {
+      return undefined;
+    }
+
+    if (position.isClosed) {
+      return new BN(0);
+    }
+
+    const initialDeposit = position.depositedTokenAAmount;
+    const i = position.dcaPeriodIdBeforeDeposit;
+    const j = BN.min(vault.lastDcaPeriod, position.numberOfSwaps);
+    const dripAmount = position.periodicDripAmount;
+    const periodsDripped = j.sub(i);
+
+    return initialDeposit.sub(dripAmount.mul(periodsDripped));
+  }, [position]);
 
   return (
     <Modal size="xl" isOpen={isOpen} onClose={onClose}>
@@ -122,12 +141,10 @@ export function PositionModal({
               <StyledModalField>
                 <StyledModalFieldHeader>Remaining {tokenAInfo?.symbol}</StyledModalFieldHeader>
                 <StyledModalFieldValue>
-                  {tokenAInfo && closePositionPreview ? (
-                    `${formatTokenAmount(
-                      closePositionPreview.tokenAAmountBeingWithdrawn,
-                      tokenAInfo.decimals,
-                      true
-                    )} ${tokenAInfo?.symbol}`
+                  {tokenAInfo && remainingTokenAToDrip ? (
+                    `${formatTokenAmount(remainingTokenAToDrip, tokenAInfo.decimals, true)} ${
+                      tokenAInfo.symbol
+                    }`
                   ) : (
                     <Skeleton mt="7px" w="120px" h="20px" />
                   )}
