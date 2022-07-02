@@ -21,7 +21,7 @@ import { assertWalletConnected } from '../utils/wallet';
 import { findProgramAddressSync } from '@project-serum/anchor/dist/cjs/utils/pubkey';
 
 const CONSTANT_SEEDS = {
-  vault: 'dca-vault-v1',
+  vault: 'drip-v1',
   tokenAAccount: 'token_a_account',
   tokenBAccount: 'token_b_account',
   vaultPeriod: 'vault_period',
