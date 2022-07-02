@@ -48,6 +48,7 @@ export function TokenSelector({
   const selectedTokenInfo = useTokenInfo(
     selectedToken && NetworkAddress.from(network, selectedToken)
   );
+  console.log(selectedToken, selectedTokenInfo);
   const [filter, setFilter] = useState<string>();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
