@@ -17,7 +17,7 @@ import {
   Code,
   Flex
 } from '@chakra-ui/react';
-import { Token } from '@dcaf-protocol/drip-sdk';
+import { Token } from '@dcaf-labs/drip-sdk';
 import { PublicKey } from '@solana/web3.js';
 import { useMemo, useState } from 'react';
 import { useNetwork } from '../contexts/NetworkContext';

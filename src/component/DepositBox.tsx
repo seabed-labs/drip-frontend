@@ -21,10 +21,10 @@ import { BN } from '@project-serum/anchor';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useTokenMintInfo } from '../hooks/TokenMintInfo';
 import { formatTokenAmount, parseTokenAmount } from '../utils/token-amount';
-import { Configs, Token, Vault, ZERO } from '@dcaf-protocol/drip-sdk';
+import { Configs, Token, Vault, ZERO } from '@dcaf-labs/drip-sdk';
 import { useDripContext } from '../contexts/DripContext';
 import { useStateRefresh } from '../hooks/StateRefresh';
-import { BroadcastTransactionWithMetadata } from '@dcaf-protocol/drip-sdk/dist/types';
+import { BroadcastTransactionWithMetadata } from '@dcaf-labs/drip-sdk/dist/types';
 import { Keypair, PublicKey } from '@solana/web3.js';
 
 // TODO: Finalize the border-shadow on this

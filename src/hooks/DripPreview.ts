@@ -1,4 +1,4 @@
-import { Granularity } from '@dcaf-protocol/drip-sdk/dist/interfaces/drip-admin/params';
+import { Granularity } from '@dcaf-labs/drip-sdk/dist/interfaces/drip-admin/params';
 import Decimal from 'decimal.js';
 import numeral from 'numeral';
 import { useMemo } from 'react';

@@ -1,5 +1,5 @@
 import { Box, Link, useToast } from '@chakra-ui/react';
-import { BroadcastTransactionWithMetadata } from '@dcaf-protocol/drip-sdk/dist/types';
+import { BroadcastTransactionWithMetadata } from '@dcaf-labs/drip-sdk/dist/types';
 import { useMemo } from 'react';
 
 interface TxToast {

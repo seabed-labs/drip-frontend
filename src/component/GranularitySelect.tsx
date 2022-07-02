@@ -1,5 +1,5 @@
 import { Select } from '@chakra-ui/react';
-import { Granularity } from '@dcaf-protocol/drip-sdk/dist/interfaces/drip-admin/params';
+import { Granularity } from '@dcaf-labs/drip-sdk/dist/interfaces/drip-admin/params';
 import { PublicKey } from '@solana/web3.js';
 import { useAsyncMemo } from 'use-async-memo';
 import { useDripContext } from '../contexts/DripContext';
