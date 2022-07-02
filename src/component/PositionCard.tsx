@@ -1,5 +1,5 @@
 import { Box, Button, Link, Progress, useToast } from '@chakra-ui/react';
-import { calculateWithdrawTokenBAmount } from '@dcaf-protocol/drip-sdk';
+import { calculateWithdrawTokenBAmount } from '@dcaf-labs/drip-sdk';
 import { BN } from '@project-serum/anchor';
 import { FC } from 'react';
 import styled from 'styled-components';

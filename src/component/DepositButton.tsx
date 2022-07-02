@@ -1,5 +1,5 @@
 import { Button, ButtonProps, Spinner } from '@chakra-ui/react';
-import { BroadcastTransactionWithMetadata } from '@dcaf-protocol/drip-sdk/dist/types';
+import { BroadcastTransactionWithMetadata } from '@dcaf-labs/drip-sdk/dist/types';
 import { useState } from 'react';
 import { useTxToast } from '../hooks/TxToast';
 
