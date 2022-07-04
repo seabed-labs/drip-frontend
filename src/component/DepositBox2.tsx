@@ -165,7 +165,6 @@ export function DepositBox() {
             modalTitle="Select Token A"
             placeholder="Select Token A"
             onSelectToken={(token) => {
-              console.log(tokenA?.toBase58());
               setTokenA(token);
               setDepositAmountStr(undefined);
               setGranularity(undefined);
