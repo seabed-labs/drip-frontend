@@ -17,8 +17,8 @@ export function useTxToast(): TxToast {
           title: 'Transaction successful',
           description: (
             <Box>
-              <Link href={txInfo.solscan} isExternal textDecoration="underline">
-                Solscan
+              <Link href={txInfo.explorer} isExternal textDecoration="underline">
+                Explorer
               </Link>
             </Box>
           ),

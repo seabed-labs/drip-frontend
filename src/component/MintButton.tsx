@@ -41,7 +41,7 @@ export function MintButton({
       if (responseJSON.txHash) {
         txToast.success({
           id: '',
-          solscan: `https://solscan.io/tx/${responseJSON?.txHash}?cluster=devnet`,
+          explorer: `https://explorer.solana.com/tx/${responseJSON?.txHash}?cluster=devnet`,
           metadata: undefined
         });
       } else {
