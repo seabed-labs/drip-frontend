@@ -83,7 +83,7 @@ export const Vault: FC = () => {
       }
     }
     setIsLoading(false);
-  }, [drip, network]);
+  }, [tokenBMint, drip, network]);
 
   const deployVault = useCallback(async () => {
     if (!drip) throw new Error('Drip SDK is undefined');
@@ -94,7 +94,7 @@ export const Vault: FC = () => {
     setIsLoading(true);
 
     const initVaultTx = await drip.admin.getInitVaultTx({
-      protoConfig: protoConfig,
+      protoConfig,
       tokenAMint,
       tokenBMint,
       tokenBFeeTreasury: treasuryAccount
@@ -111,8 +111,8 @@ export const Vault: FC = () => {
     } catch (err) {
       txToast.failure(err as Error);
     }
-    setIsLoading(true);
-  }, [tokenAMint, tokenBMint, protoConfig, drip, network]);
+    setIsLoading(false);
+  }, [tokenAMint, tokenBMint, treasuryAccount, protoConfig, drip, network]);
 
   return (
     <Center>
@@ -169,8 +169,8 @@ export const Vault: FC = () => {
                 try {
                   setTokenBMint(new PublicKey((e.target as HTMLInputElement).value));
                 } catch (e) {
-                  setTokenBMint(undefined);
                   console.error(e);
+                  setTokenBMint(undefined);
                 }
               }}
               value={tokenBMint?.toBase58() || ''}
@@ -180,12 +180,13 @@ export const Vault: FC = () => {
 
             <Box mt="10px" />
 
-            <FormLabel htmlFor="treasuryAccount">Vault Proto Config</FormLabel>
+            <FormLabel htmlFor="treasuryAccount">Vault Token B Treasury</FormLabel>
             <InputGroup>
               <Input
                 disabled={isLoading}
                 id="treasuryAccount"
                 onChange={(e: React.FormEvent<HTMLInputElement>) => {
+                  console.log((e.target as HTMLInputElement).value);
                   try {
                     setTreasuryAccount(new PublicKey((e.target as HTMLInputElement).value));
                   } catch (e) {
