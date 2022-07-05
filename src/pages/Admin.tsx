@@ -1,8 +1,8 @@
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 import { FC, useState } from 'react';
 import GoogleLogin, { GoogleLogout, GoogleLoginResponse } from 'react-google-login';
-import { Vault } from '../component/Vault';
-import { VaultProtoConfig } from '../component/VaultProtoConfig';
+import { InitVault } from '../component/InitVault';
+import { InitVaultProtoConfig } from '../component/InitVaultProtoConfig';
 import { AuthContext, AuthContextProps } from '../contexts/AdminAuth';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -57,10 +57,10 @@ export const Admin: FC = () => {
           </TabList>
           <TabPanels w="100%">
             <TabPanel w="100%">
-              <VaultProtoConfig />
+              <InitVaultProtoConfig />
             </TabPanel>
             <TabPanel>
-              <Vault />
+              <InitVault />
             </TabPanel>
           </TabPanels>
         </Tabs>

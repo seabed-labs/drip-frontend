@@ -23,7 +23,7 @@ import { useDripContext } from '../contexts/DripContext';
 import { useNetwork } from '../contexts/NetworkContext';
 import { useTxToast } from '../hooks/TxToast';
 
-export const Vault: FC = () => {
+export const InitVault: FC = () => {
   const [tokenAMint, setTokenAMint] = useState<PublicKey>();
   const [tokenBMint, setTokenBMint] = useState<PublicKey>();
   const [treasuryAccount, setTreasuryAccount] = useState<PublicKey>();

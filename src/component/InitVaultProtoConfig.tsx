@@ -5,7 +5,7 @@ import { useDripContext } from '../contexts/DripContext';
 import { useNetwork } from '../contexts/NetworkContext';
 import { useTxToast } from '../hooks/TxToast';
 
-export const VaultProtoConfig: FC = () => {
+export const InitVaultProtoConfig: FC = () => {
   const [granularity, setGranularity] = useState<BN | undefined>(undefined);
   const [triggerDcaSpread, setTriggerDcaSpread] = useState<number | undefined>(undefined);
   const [baseWithdrawalSpread, setBaseWithdrawalSpread] = useState<number | undefined>(undefined);
