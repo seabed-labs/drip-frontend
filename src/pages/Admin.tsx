@@ -1,6 +1,7 @@
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 import { FC, useState } from 'react';
 import GoogleLogin, { GoogleLogout, GoogleLoginResponse } from 'react-google-login';
+import { Vault } from '../component/Vault';
 import { VaultProtoConfig } from '../component/VaultProtoConfig';
 import { AuthContext, AuthContextProps } from '../contexts/AdminAuth';
 
@@ -57,9 +58,9 @@ export const Admin: FC = () => {
             <TabPanel w="100%">
               <VaultProtoConfig />
             </TabPanel>
-            {/* <TabPanel>
-      <Vault />
-    </TabPanel> */}
+            <TabPanel>
+              <Vault />
+            </TabPanel>
           </TabPanels>
         </Tabs>
       )}
