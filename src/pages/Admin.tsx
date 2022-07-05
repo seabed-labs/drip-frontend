@@ -5,7 +5,8 @@ import { Vault } from '../component/Vault';
 import { VaultProtoConfig } from '../component/VaultProtoConfig';
 import { AuthContext, AuthContextProps } from '../contexts/AdminAuth';
 
-function isGoogleLoginResponse(obj: unknown | undefined): obj is GoogleLoginResponse {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function isGoogleLoginResponse(obj: any | undefined): obj is GoogleLoginResponse {
   return obj !== null && obj !== undefined && 'googleId' in obj && 'tokenObj' in obj;
 }
 
