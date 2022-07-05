@@ -92,46 +92,13 @@ export const Vault: FC = () => {
       throw new Error('undefined inputs');
     }
     setIsLoading(true);
-    // let treasuryTokenBAccount: PublicKey;
-    // if (treasuryAccount) {
-    //   treasuryTokenBAccount = treasuryAccount;
-    // } else {
-    //   console.log('using wallet for treasury token b account');
-    //   treasuryTokenBAccount = await getAssociatedTokenAddress(
-    //     tokenBMint,
-    //     drip.provider.wallet.publicKey
-    //   );
-    // }
+
     const initVaultTx = await drip.admin.getInitVaultTx({
       protoConfig: protoConfig,
       tokenAMint,
       tokenBMint,
       tokenBFeeTreasury: treasuryAccount
     });
-
-    // // Get treasury account or create ATA
-    // try {
-    //   // Account exists
-    //   await getAccount(drip.provider.connection, treasuryTokenBAccount);
-    // } catch (error: unknown) {
-    //   if (
-    //     error instanceof TokenAccountNotFoundError ||
-    //     error instanceof TokenInvalidAccountOwnerError
-    //   ) {
-    //     // Account doesn't exist, create an ATA
-    //     const createATAIx = createAssociatedTokenAccountInstruction(
-    //       drip.provider.wallet.publicKey,
-    //       treasuryTokenBAccount,
-    //       drip.provider.wallet.publicKey,
-    //       tokenBMint
-    //     );
-    //     // Create ATA before initVaultIx
-    //     initVaultTx.tx.instructions.unshift(createATAIx);
-    //   } else {
-    //     txToast.failure(error as Error);
-    //     return;
-    //   }
-    // }
 
     try {
       const txHash = await drip.provider.sendAndConfirm(initVaultTx.tx, undefined);
@@ -146,44 +113,6 @@ export const Vault: FC = () => {
     }
     setIsLoading(true);
   }, [tokenAMint, tokenBMint, protoConfig, drip, network]);
-
-  // async function handleInitVault() {
-  //   if (!tokenAMint || !tokenBMint || !protoConfig) {
-  //     return;
-  //   }
-
-  //   try {
-  //     const result = await vaultClient.initVault(tokenAMint, tokenBMint, protoConfig);
-  //     toast({
-  //       title: 'Vault created',
-  //       description: (
-  //         <>
-  //           <Box>
-  //             <Code colorScheme="black">{result.publicKey.toBase58()}</Code>
-  //           </Box>
-  //           <Box>
-  //             <Link href={solscanTxUrl(result.txHash, network)} isExternal>
-  //               Solscan
-  //             </Link>
-  //           </Box>
-  //         </>
-  //       ),
-  //       status: 'success',
-  //       duration: 9000,
-  //       isClosable: true,
-  //       position: 'top-right'
-  //     });
-  //   } catch (err) {
-  //     toast({
-  //       title: 'Vault creation failed',
-  //       description: (err as Error).message,
-  //       status: 'error',
-  //       duration: 9000,
-  //       isClosable: true,
-  //       position: 'top-right'
-  //     });
-  //   }
-  // }
 
   return (
     <Center>
@@ -236,6 +165,7 @@ export const Vault: FC = () => {
               required
               id="tokenBMint"
               onChange={(e: React.FormEvent<HTMLInputElement>) => {
+                console.log((e.target as HTMLInputElement).value);
                 try {
                   setTokenBMint(new PublicKey((e.target as HTMLInputElement).value));
                 } catch (e) {
@@ -257,9 +187,9 @@ export const Vault: FC = () => {
                 id="treasuryAccount"
                 onChange={(e: React.FormEvent<HTMLInputElement>) => {
                   try {
-                    setProtoConfig(new PublicKey((e.target as HTMLInputElement).value));
+                    setTreasuryAccount(new PublicKey((e.target as HTMLInputElement).value));
                   } catch (e) {
-                    setProtoConfig(undefined);
+                    setTreasuryAccount(undefined);
                     console.error(e);
                   }
                 }}
