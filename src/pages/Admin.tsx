@@ -5,8 +5,8 @@ import { Vault } from '../component/Vault';
 import { VaultProtoConfig } from '../component/VaultProtoConfig';
 import { AuthContext, AuthContextProps } from '../contexts/AdminAuth';
 
-function isGoogleLoginResponse(obj: any | undefined): obj is GoogleLoginResponse {
-  return obj && 'googleId' in obj && 'tokenObj' in obj;
+function isGoogleLoginResponse(obj: unknown | undefined): obj is GoogleLoginResponse {
+  return obj !== null && obj !== undefined && 'googleId' in obj && 'tokenObj' in obj;
 }
 
 const clientId = '540992596258-sa2h4lmtelo44tonpu9htsauk5uabdon.apps.googleusercontent.com';

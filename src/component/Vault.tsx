@@ -195,9 +195,9 @@ export const Vault: FC = () => {
               disabled={isLoading}
               required
               id="vaultProtoConfig"
-              onChange={(e: any) => {
+              onChange={(e: React.FormEvent<HTMLInputElement>) => {
                 try {
-                  setProtoConfig(new PublicKey(e.target.value));
+                  setProtoConfig(new PublicKey((e.target as HTMLInputElement).value));
                 } catch (e) {
                   setProtoConfig(undefined);
                   console.error(e);
@@ -215,9 +215,9 @@ export const Vault: FC = () => {
               disabled={isLoading}
               required
               id="tokenAMint"
-              onChange={(e: any) => {
+              onChange={(e: React.FormEvent<HTMLInputElement>) => {
                 try {
-                  setTokenAMint(new PublicKey(e.target.value));
+                  setTokenAMint(new PublicKey((e.target as HTMLInputElement).value));
                 } catch (e) {
                   setTokenAMint(undefined);
                   console.error(e);
@@ -235,9 +235,9 @@ export const Vault: FC = () => {
               disabled={isLoading}
               required
               id="tokenBMint"
-              onChange={(e: any) => {
+              onChange={(e: React.FormEvent<HTMLInputElement>) => {
                 try {
-                  setTokenBMint(new PublicKey(e.target.value));
+                  setTokenBMint(new PublicKey((e.target as HTMLInputElement).value));
                 } catch (e) {
                   setTokenBMint(undefined);
                   console.error(e);
@@ -255,9 +255,9 @@ export const Vault: FC = () => {
               <Input
                 disabled={isLoading}
                 id="treasuryAccount"
-                onChange={(e: any) => {
+                onChange={(e: React.FormEvent<HTMLInputElement>) => {
                   try {
-                    setProtoConfig(new PublicKey(e.target.value));
+                    setProtoConfig(new PublicKey((e.target as HTMLInputElement).value));
                   } catch (e) {
                     setProtoConfig(undefined);
                     console.error(e);
