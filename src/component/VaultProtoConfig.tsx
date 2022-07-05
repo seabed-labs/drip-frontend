@@ -1,47 +1,9 @@
-import {
-  Box,
-  Button,
-  Center,
-  Code,
-  Link,
-  NumberInput,
-  NumberInputField,
-  Select,
-  useToast
-} from '@chakra-ui/react';
+import { Box, Button, Center, NumberInput, NumberInputField } from '@chakra-ui/react';
 import BN from 'bn.js';
-import { ChangeEvent, FC, useCallback, useState } from 'react';
+import { FC, useCallback, useState } from 'react';
 import { useDripContext } from '../contexts/DripContext';
 import { useNetwork } from '../contexts/NetworkContext';
-import { useDrip } from '../hooks/Drip';
 import { useTxToast } from '../hooks/TxToast';
-import { solscanTxUrl } from '../utils/block-explorer';
-import { DcaGranularity } from '../vault-client/types';
-
-// function renderGranularity(granularity: DcaGranularity): string {
-//   switch (granularity) {
-//     case DcaGranularity.EveryFiveSeconds:
-//       return 'Every 5 seconds';
-//     case DcaGranularity.Hourly:
-//       return 'Hourly';
-//     case DcaGranularity.Daily:
-//       return 'Daily';
-//     case DcaGranularity.Weekly:
-//       return 'Weekly';
-//     case DcaGranularity.Monthly:
-//       return 'Monthly';
-//     default:
-//       return 'Unknown';
-//   }
-// }
-
-// const GRANULARITIES = [
-//   DcaGranularity.EveryFiveSeconds,
-//   DcaGranularity.Hourly,
-//   DcaGranularity.Daily,
-//   DcaGranularity.Weekly,
-//   DcaGranularity.Monthly
-// ];
 
 export const VaultProtoConfig: FC = () => {
   const [granularity, setGranularity] = useState<BN | undefined>(undefined);
@@ -50,18 +12,7 @@ export const VaultProtoConfig: FC = () => {
   const txToast = useTxToast();
   const drip = useDripContext();
   const network = useNetwork();
-  /**
-    //  * DCA granularity in seconds
-    //  */
-  //    granularity: Granularity | BN;
-  //    /**
-  //     * Trigger DCA spread in basis points
-  //     */
-  //    triggerDcaSpread: number;
-  //    /**
-  //     * Withdrawal spread in basis points
-  //     */
-  //    baseWithdrawalSpread: number;
+
   const deployVaultProtoConfig = useCallback(async () => {
     if (!drip) throw new Error('Drip SDK is undefined');
     console.log(granularity, triggerDcaSpread, baseWithdrawalSpread);
@@ -95,30 +46,6 @@ export const VaultProtoConfig: FC = () => {
     setBaseWithdrawalSpread(amount ? amount : undefined);
   }
 
-  // async function handleInitVaultProtoConfig() {
-
-  //   const blah = await drip?.admin.
-  //   const result = await vaultClient.initVaultProtoConfig(granularity);
-  //   toast({
-  //     title: 'Vault Proto Config created',
-  //     description: (
-  //       <>
-  //         <Box>
-  //           <Code colorScheme="black">{result.publicKey.toBase58()}</Code>
-  //         </Box>
-  //         <Box>
-  //           <Link href={solscanTxUrl(result.txHash, network)} isExternal>
-  //             Solscan
-  //           </Link>
-  //         </Box>
-  //       </>
-  //     ),
-  //     status: 'success',
-  //     duration: 9000,
-  //     isClosable: true,
-  //     position: 'top-right'
-  //   });
-  // }
   return (
     <Center>
       <Box w="100%">

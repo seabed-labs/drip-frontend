@@ -1,11 +1,13 @@
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 import { FC, useState } from 'react';
 import GoogleLogin, { GoogleLogout, GoogleLoginResponse } from 'react-google-login';
+import { Vault } from '../component/Vault';
 import { VaultProtoConfig } from '../component/VaultProtoConfig';
 import { AuthContext, AuthContextProps } from '../contexts/AdminAuth';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function isGoogleLoginResponse(obj: any | undefined): obj is GoogleLoginResponse {
-  return obj && 'googleId' in obj && 'tokenObj' in obj;
+  return obj !== null && obj !== undefined && 'googleId' in obj && 'tokenObj' in obj;
 }
 
 const clientId = '540992596258-sa2h4lmtelo44tonpu9htsauk5uabdon.apps.googleusercontent.com';
@@ -57,9 +59,9 @@ export const Admin: FC = () => {
             <TabPanel w="100%">
               <VaultProtoConfig />
             </TabPanel>
-            {/* <TabPanel>
-      <Vault />
-    </TabPanel> */}
+            <TabPanel>
+              <Vault />
+            </TabPanel>
           </TabPanels>
         </Tabs>
       )}
