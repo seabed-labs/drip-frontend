@@ -1,9 +1,10 @@
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import GoogleLogin, { GoogleLogout, GoogleLoginResponse } from 'react-google-login';
 import { Vault } from '../component/Vault';
 import { VaultProtoConfig } from '../component/VaultProtoConfig';
 import { AuthContext, AuthContextProps } from '../contexts/AdminAuth';
+import { gapi } from 'gapi-script';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function isGoogleLoginResponse(obj: any | undefined): obj is GoogleLoginResponse {
@@ -20,6 +21,16 @@ export const Admin: FC = () => {
         token: authToken
       }
     : undefined;
+
+  useEffect(() => {
+    function start() {
+      gapi.auth2.init({
+        client_id: clientId
+      });
+    }
+    gapi.load('client:auth2', start);
+  });
+
   return (
     <AuthContext.Provider value={authContext}>
       {/* TODO(Mocha): Fix the styling here */}
