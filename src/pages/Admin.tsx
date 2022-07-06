@@ -11,11 +11,12 @@ function isGoogleLoginResponse(obj: any | undefined): obj is GoogleLoginResponse
   return obj !== null && obj !== undefined && 'googleId' in obj && 'tokenObj' in obj;
 }
 
-const clientId = '540992596258-sa2h4lmtelo44tonpu9htsauk5uabdon.apps.googleusercontent.com';
+const clientId =
+  process.env.REACT_APP_GOOGLE_CLIENT_ID ??
+  '540992596258-sa2h4lmtelo44tonpu9htsauk5uabdon.apps.googleusercontent.com';
 
 export const Admin: FC = () => {
-  // TODO(Mocha): Remove 'blah'
-  const [authToken, setAuthToken] = useState<string | undefined>('blah');
+  const [authToken, setAuthToken] = useState<string | undefined>();
   const authContext: AuthContextProps | undefined = authToken
     ? {
         token: authToken
@@ -40,8 +41,9 @@ export const Admin: FC = () => {
           buttonText="Login"
           onSuccess={(res) => {
             console.log('login success');
+            console.log(res);
             if (isGoogleLoginResponse(res)) {
-              setAuthToken(res.accessToken);
+              setAuthToken(res.tokenId);
             } else {
               console.log(res.code);
             }
