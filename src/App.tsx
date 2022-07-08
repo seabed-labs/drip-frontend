@@ -8,7 +8,6 @@ import { TokenInfoContext } from './contexts/TokenInfo';
 import { useDrip } from './hooks/Drip';
 import { useTokenInfoMap } from './hooks/TokenInfoMap';
 import { Deposits, Positions } from './pages';
-import { Admin } from './pages/Admin';
 import { theme } from './theme';
 
 require('./App.css');
@@ -36,8 +35,6 @@ const App: FC = () => {
             <Routes>
               <Route path="/deposit" element={<Deposits />} />
               <Route path="/positions" element={<Positions />} />
-              {/* TODO: Remove this when deploying */}
-              <Route path="/admin" element={<Admin />} />
               <Route path="*" element={<Navigate to="/deposit" />} />
             </Routes>
           </StyledAppContainer>
