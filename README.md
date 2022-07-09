@@ -1,6 +1,7 @@
 # Dcaf Protocol Frontend
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/f1eefc24-2172-41cb-9a87-0250762c0848/deploy-status)](https://app.netlify.com/sites/devnet-drip/deploys)
+[![Maintainability](https://api.codeclimate.com/v1/badges/652ca31a64079f1ebc00/maintainability)](https://codeclimate.com/repos/62c90637d150fe5a9a00007f/maintainability)
 
 ## Getting Started
 
