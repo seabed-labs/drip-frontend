@@ -1,6 +1,7 @@
 import { Box, Button, Center, Text } from '@chakra-ui/react';
 import { findVaultPubkey } from '@dcaf-labs/drip-sdk';
 import { Granularity } from '@dcaf-labs/drip-sdk/dist/interfaces/drip-admin/params';
+import { Network } from '@dcaf-labs/drip-sdk/dist/models';
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
 import { PublicKey } from '@solana/web3.js';
 import BN from 'bn.js';
@@ -18,6 +19,7 @@ import { formatTokenAmountStr } from '../utils/token-amount';
 import { DepositButton } from './DepositButton';
 import { DripEndTimePicker } from './DripEndTimePicker';
 import { GranularitySelect } from './GranularitySelect';
+import { MintButton } from './MintButton';
 import { TokenAmountInput } from './TokenAmountInput';
 import { TokenSelector } from './TokenSelect';
 
@@ -127,24 +129,35 @@ export function DepositBox() {
       <StyledMainRowContainer>
         <StyledSubRowContainer>
           <StyledStepHeader>Drip</StyledStepHeader>
-          {maximumAmount && (
-            <Button
-              h="20px"
-              transition="0.2s ease"
-              color="whiteAlpha.800"
-              variant="unstyled"
-              cursor="pointer"
-              onClick={() => {
-                setDepositAmountStr(
-                  maximumAmount.uiAmountString ??
-                    formatTokenAmountStr(maximumAmount.amount, maximumAmount.decimals)
-                );
-              }}
-              _hover={{ color: 'white', textDecoration: 'underline', transition: '0.2s ease' }}
-            >
-              Max: {formatTokenAmountStr(maximumAmount.amount, maximumAmount.decimals, true)}
-            </Button>
-          )}
+          <div>
+            {network === Network.Devnet && tokenA && tokenAInfo && wallet && (
+              <MintButton
+                marginRight={'20px'}
+                mint={tokenA.toBase58()}
+                tokenName={tokenAInfo.name}
+                wallet={wallet.publicKey.toBase58()}
+                amount={'500'}
+              />
+            )}
+            {maximumAmount && (
+              <Button
+                h="20px"
+                transition="0.2s ease"
+                color="whiteAlpha.800"
+                variant="unstyled"
+                cursor="pointer"
+                onClick={() => {
+                  setDepositAmountStr(
+                    maximumAmount.uiAmountString ??
+                      formatTokenAmountStr(maximumAmount.amount, maximumAmount.decimals)
+                  );
+                }}
+                _hover={{ color: 'white', textDecoration: 'underline', transition: '0.2s ease' }}
+              >
+                Max: {formatTokenAmountStr(maximumAmount.amount, maximumAmount.decimals, true)}
+              </Button>
+            )}
+          </div>
         </StyledSubRowContainer>
         <Box h="10px" />
         <StyledSubRowContainer>

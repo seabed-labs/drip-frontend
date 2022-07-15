@@ -23,12 +23,15 @@ export function useTokenBalance(user?: Address, token?: NetworkAddress): TokenAm
       TOKEN_PROGRAM_ID,
       ASSOCIATED_TOKEN_PROGRAM_ID
     );
-
-    const tokenBalanceResponse = await drip.provider.connection.getTokenAccountBalance(
-      tokenATA,
-      drip.provider.connection.commitment
-    );
-
-    return tokenBalanceResponse.value;
+    try {
+      // Will throw an error if ATA doesn't exist on the wallet
+      const tokenBalanceResponse = await drip.provider.connection.getTokenAccountBalance(
+        tokenATA,
+        drip.provider.connection.commitment
+      );
+      return tokenBalanceResponse.value;
+    } catch (e) {
+      return undefined;
+    }
   }, [user, drip, token?.toPrimitiveDep()]);
 }
