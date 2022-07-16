@@ -1,6 +1,6 @@
-export type DcaVault = {
+export type Drip = {
   version: '0.1.0';
-  name: 'dca_vault';
+  name: 'drip';
   instructions: [
     {
       name: 'initVaultProtoConfig';
@@ -94,7 +94,14 @@ export type DcaVault = {
           isSigner: false;
         }
       ];
-      args: [];
+      args: [
+        {
+          name: 'params';
+          type: {
+            defined: 'InitializeVaultParams';
+          };
+        }
+      ];
     },
     {
       name: 'initVaultPeriod';
@@ -513,6 +520,10 @@ export type DcaVault = {
         kind: 'struct';
         fields: [
           {
+            name: 'vault';
+            type: 'publicKey';
+          },
+          {
             name: 'positionAuthority';
             type: 'publicKey';
           },
@@ -523,10 +534,6 @@ export type DcaVault = {
           {
             name: 'withdrawnTokenBAmount';
             type: 'u64';
-          },
-          {
-            name: 'vault';
-            type: 'publicKey';
           },
           {
             name: 'depositTimestamp';
@@ -569,12 +576,16 @@ export type DcaVault = {
             type: 'u64';
           },
           {
+            name: 'dar';
+            type: 'u64';
+          },
+          {
             name: 'twap';
             type: 'u128';
           },
           {
-            name: 'dar';
-            type: 'u64';
+            name: 'dcaTimestamp';
+            type: 'i64';
           },
           {
             name: 'bump';
@@ -599,6 +610,10 @@ export type DcaVault = {
           {
             name: 'baseWithdrawalSpread';
             type: 'u16';
+          },
+          {
+            name: 'admin';
+            type: 'publicKey';
           }
         ];
       };
@@ -633,6 +648,12 @@ export type DcaVault = {
             type: 'publicKey';
           },
           {
+            name: 'whitelistedSwaps';
+            type: {
+              array: ['publicKey', 5];
+            };
+          },
+          {
             name: 'lastDcaPeriod';
             type: 'u64';
           },
@@ -647,6 +668,10 @@ export type DcaVault = {
           {
             name: 'bump';
             type: 'u8';
+          },
+          {
+            name: 'limitSwaps';
+            type: 'bool';
           }
         ];
       };
@@ -697,9 +722,46 @@ export type DcaVault = {
           {
             name: 'baseWithdrawalSpread';
             type: 'u16';
+          },
+          {
+            name: 'admin';
+            type: 'publicKey';
           }
         ];
       };
+    },
+    {
+      name: 'InitializeVaultParams';
+      type: {
+        kind: 'struct';
+        fields: [
+          {
+            name: 'whitelistedSwaps';
+            type: {
+              vec: 'publicKey';
+            };
+          }
+        ];
+      };
+    }
+  ];
+  events: [
+    {
+      name: 'Log';
+      fields: [
+        {
+          name: 'data';
+          type: {
+            option: 'u64';
+          };
+          index: false;
+        },
+        {
+          name: 'message';
+          type: 'string';
+          index: true;
+        }
+      ];
     }
   ];
   errors: [
@@ -745,30 +807,60 @@ export type DcaVault = {
     },
     {
       code: 6008;
+      name: 'InvalidSwapAccount';
+      msg: 'Token Swap is Not Whitelisted';
+    },
+    {
+      code: 6009;
+      name: 'InvalidNumSwaps';
+      msg: 'A Vault May Limit to a Maximum of 5 Token Swaps';
+    },
+    {
+      code: 6010;
+      name: 'InvalidVaultProtoConfigReference';
+      msg: 'Provided account references the wrong vault-proto-config';
+    },
+    {
+      code: 6011;
       name: 'InvalidSwapAuthorityAccount';
       msg: 'Invalid swap authority account';
     },
     {
-      code: 6009;
+      code: 6012;
       name: 'InvalidSwapFeeAccount';
       msg: 'Invalid swap fee account';
     },
     {
-      code: 6010;
+      code: 6013;
+      name: 'InvalidVaultPeriod';
+      msg: 'Invalid vault-period';
+    },
+    {
+      code: 6014;
+      name: 'InvalidVaultReference';
+      msg: 'Provided account references the wrong vault';
+    },
+    {
+      code: 6015;
       name: 'PeriodicDripAmountIsZero';
       msg: 'Periodic drip amount == 0';
     },
     {
-      code: 6011;
+      code: 6016;
+      name: 'PositionAlreadyClosed';
+      msg: 'Position is already closed';
+    },
+    {
+      code: 6017;
       name: 'WithdrawableAmountIsZero';
       msg: 'Withdrawable amount is zero';
     }
   ];
 };
 
-export const IDL: DcaVault = {
+export const IDL: Drip = {
   version: '0.1.0',
-  name: 'dca_vault',
+  name: 'drip',
   instructions: [
     {
       name: 'initVaultProtoConfig',
@@ -862,7 +954,14 @@ export const IDL: DcaVault = {
           isSigner: false
         }
       ],
-      args: []
+      args: [
+        {
+          name: 'params',
+          type: {
+            defined: 'InitializeVaultParams'
+          }
+        }
+      ]
     },
     {
       name: 'initVaultPeriod',
@@ -1281,6 +1380,10 @@ export const IDL: DcaVault = {
         kind: 'struct',
         fields: [
           {
+            name: 'vault',
+            type: 'publicKey'
+          },
+          {
             name: 'positionAuthority',
             type: 'publicKey'
           },
@@ -1291,10 +1394,6 @@ export const IDL: DcaVault = {
           {
             name: 'withdrawnTokenBAmount',
             type: 'u64'
-          },
-          {
-            name: 'vault',
-            type: 'publicKey'
           },
           {
             name: 'depositTimestamp',
@@ -1337,12 +1436,16 @@ export const IDL: DcaVault = {
             type: 'u64'
           },
           {
+            name: 'dar',
+            type: 'u64'
+          },
+          {
             name: 'twap',
             type: 'u128'
           },
           {
-            name: 'dar',
-            type: 'u64'
+            name: 'dcaTimestamp',
+            type: 'i64'
           },
           {
             name: 'bump',
@@ -1367,6 +1470,10 @@ export const IDL: DcaVault = {
           {
             name: 'baseWithdrawalSpread',
             type: 'u16'
+          },
+          {
+            name: 'admin',
+            type: 'publicKey'
           }
         ]
       }
@@ -1401,6 +1508,12 @@ export const IDL: DcaVault = {
             type: 'publicKey'
           },
           {
+            name: 'whitelistedSwaps',
+            type: {
+              array: ['publicKey', 5]
+            }
+          },
+          {
             name: 'lastDcaPeriod',
             type: 'u64'
           },
@@ -1415,6 +1528,10 @@ export const IDL: DcaVault = {
           {
             name: 'bump',
             type: 'u8'
+          },
+          {
+            name: 'limitSwaps',
+            type: 'bool'
           }
         ]
       }
@@ -1465,9 +1582,46 @@ export const IDL: DcaVault = {
           {
             name: 'baseWithdrawalSpread',
             type: 'u16'
+          },
+          {
+            name: 'admin',
+            type: 'publicKey'
           }
         ]
       }
+    },
+    {
+      name: 'InitializeVaultParams',
+      type: {
+        kind: 'struct',
+        fields: [
+          {
+            name: 'whitelistedSwaps',
+            type: {
+              vec: 'publicKey'
+            }
+          }
+        ]
+      }
+    }
+  ],
+  events: [
+    {
+      name: 'Log',
+      fields: [
+        {
+          name: 'data',
+          type: {
+            option: 'u64'
+          },
+          index: false
+        },
+        {
+          name: 'message',
+          type: 'string',
+          index: true
+        }
+      ]
     }
   ],
   errors: [
@@ -1513,21 +1667,51 @@ export const IDL: DcaVault = {
     },
     {
       code: 6008,
+      name: 'InvalidSwapAccount',
+      msg: 'Token Swap is Not Whitelisted'
+    },
+    {
+      code: 6009,
+      name: 'InvalidNumSwaps',
+      msg: 'A Vault May Limit to a Maximum of 5 Token Swaps'
+    },
+    {
+      code: 6010,
+      name: 'InvalidVaultProtoConfigReference',
+      msg: 'Provided account references the wrong vault-proto-config'
+    },
+    {
+      code: 6011,
       name: 'InvalidSwapAuthorityAccount',
       msg: 'Invalid swap authority account'
     },
     {
-      code: 6009,
+      code: 6012,
       name: 'InvalidSwapFeeAccount',
       msg: 'Invalid swap fee account'
     },
     {
-      code: 6010,
+      code: 6013,
+      name: 'InvalidVaultPeriod',
+      msg: 'Invalid vault-period'
+    },
+    {
+      code: 6014,
+      name: 'InvalidVaultReference',
+      msg: 'Provided account references the wrong vault'
+    },
+    {
+      code: 6015,
       name: 'PeriodicDripAmountIsZero',
       msg: 'Periodic drip amount == 0'
     },
     {
-      code: 6011,
+      code: 6016,
+      name: 'PositionAlreadyClosed',
+      msg: 'Position is already closed'
+    },
+    {
+      code: 6017,
       name: 'WithdrawableAmountIsZero',
       msg: 'Withdrawable amount is zero'
     }
