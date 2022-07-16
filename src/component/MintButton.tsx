@@ -55,7 +55,6 @@ export function MintButton({
     } finally {
       setLoading(false);
     }
-    console.log('forcing refresh');
     refreshContext.forceRefresh();
   }
 
