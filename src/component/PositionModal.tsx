@@ -13,6 +13,7 @@ import {
   ModalFooter,
   Button
 } from '@chakra-ui/react';
+import { QuoteToken } from '@dcaf-labs/drip-sdk';
 import {
   VaultAccount,
   VaultProtoConfigAccount
@@ -24,7 +25,11 @@ import styled from 'styled-components';
 import { useAsyncMemo } from 'use-async-memo';
 import { useDripContext } from '../contexts/DripContext';
 import { VaultPositionAccountWithPubkey } from '../hooks/Positions';
-import { formatTokenAmount, formatTokenAmountStr } from '../utils/token-amount';
+import {
+  formatDecimalTokenAmount,
+  formatTokenAmount,
+  formatTokenAmountStr
+} from '../utils/token-amount';
 import { displayGranularity } from './GranularitySelect';
 
 interface PositionModalProps {
@@ -58,6 +63,11 @@ export function PositionModal({
     [dripPosition]
   );
 
+  const averagePrice = useAsyncMemo(
+    () => drip?.querier.getAveragePrice(position.pubkey, QuoteToken.TokenA),
+    [drip, position]
+  );
+
   const remainingTokenAToDrip = useMemo(() => {
     if (!vault) {
       return undefined;
@@ -69,7 +79,10 @@ export function PositionModal({
 
     const initialDeposit = position.depositedTokenAAmount;
     const i = position.dcaPeriodIdBeforeDeposit;
-    const j = BN.min(vault.lastDcaPeriod, position.numberOfSwaps);
+    const j = BN.min(
+      vault.lastDcaPeriod,
+      position.dcaPeriodIdBeforeDeposit.add(position.numberOfSwaps)
+    );
     const dripAmount = position.periodicDripAmount;
     const periodsDripped = j.sub(i);
 
@@ -161,9 +174,16 @@ export function PositionModal({
                 </StyledModalFieldValue>
               </StyledModalField>
               <StyledModalField>
-                {/* TODO(matcha): Compute average drip price and render here */}
                 <StyledModalFieldHeader>Avg. Drip Price</StyledModalFieldHeader>
-                <StyledModalFieldValue>100 USDC per SOL</StyledModalFieldValue>
+                <StyledModalFieldValue>
+                  {averagePrice && tokenAInfo && tokenBInfo ? (
+                    `${formatDecimalTokenAmount(averagePrice)} ${tokenAInfo.symbol} per ${
+                      tokenBInfo.symbol
+                    }`
+                  ) : (
+                    <Skeleton mt="7px" w="170px" h="20px" />
+                  )}
+                </StyledModalFieldValue>
               </StyledModalField>
             </StyledModalCol>
             <StyledModalCol h="300px">
