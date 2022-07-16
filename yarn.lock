@@ -1766,10 +1766,10 @@
   resolved "https://registry.yarnpkg.com/@ctrl/tinycolor/-/tinycolor-3.4.1.tgz#75b4c27948c81e88ccd3a8902047bcd797f38d32"
   integrity sha512-ej5oVy6lykXsvieQtqZxCOaLT+xD4+QNarq78cIYISHmZXshCvROLudpQN3lfL8G0NL7plMSSK+zlyvCaIJ4Iw==
 
-"@dcaf-labs/drip-sdk@0.0.0-alpha.35":
-  version "0.0.0-alpha.35"
-  resolved "https://npm.pkg.github.com/download/@dcaf-labs/drip-sdk/0.0.0-alpha.35/c3c32f402414ffbc29457bbab4050784da020cf6e078bceb5af6693446d89409#d119a0ff0d48fe1469891771f02ad44fc7646251"
-  integrity sha512-LErH/d4HVGfusM1A/CaVC3/d0zOaHRYr2lkUwpl/jN4nOlKU9EzSm48Irj1zgxq6ylF5X7i9LFTqHZqHhkp2dg==
+"@dcaf-labs/drip-sdk@0.0.0-alpha.36":
+  version "0.0.0-alpha.36"
+  resolved "https://npm.pkg.github.com/download/@dcaf-labs/drip-sdk/0.0.0-alpha.36/5727ccc6a4322fdba29af1b69236f0531ba381d10c56ef7373af0e2eff27cca2#36602643b5975a131902e4b713085813a4861d7a"
+  integrity sha512-wvX+05kLKvIaBEoDTg/wZa5qYhXleW2b8atssKhNNolPuwOlJqnK5Q1jfStK9MiTA1Lpg7u6a1aeiV4tXHuYvQ==
   dependencies:
     "@project-serum/anchor" "^0.24.2"
     "@solana/spl-token" "^0.2.0"
