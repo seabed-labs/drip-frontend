@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { ArrowRightIcon } from '@chakra-ui/icons';
 import {
   Box,
   Modal,
@@ -162,7 +163,7 @@ export function PositionModal({
               ) : (
                 <Skeleton h="40px" w="120px" />
               )}
-              <Text>→</Text>
+              <ArrowRightIcon w="20px" />
               {tokenBInfo ? (
                 <HStack>
                   <StyledTokenIcon
