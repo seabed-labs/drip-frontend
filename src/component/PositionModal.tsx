@@ -88,6 +88,14 @@ export function PositionModal({
     return j.sub(i);
   }, [position, vault]);
 
+  const withdrawnTokenBAmountAfterSpread = useMemo(() => {
+    if (!position || !vaultProtoConfig) return undefined;
+
+    return position.withdrawnTokenBAmount
+      .muln(1e4 - vaultProtoConfig.baseWithdrawalSpread)
+      .divn(1e4);
+  }, [position, vaultProtoConfig]);
+
   const remainingTokenAToDrip = useMemo(() => {
     if (!vault) {
       return undefined;
@@ -230,9 +238,9 @@ export function PositionModal({
               <StyledModalField>
                 <StyledModalFieldHeader>Accrued {tokenBInfo?.symbol}</StyledModalFieldHeader>
                 <StyledModalFieldValue>
-                  {tokenBInfo && closePositionPreview ? (
+                  {tokenBInfo && closePositionPreview && withdrawnTokenBAmountAfterSpread ? (
                     `${formatTokenAmount(
-                      position.withdrawnTokenBAmount.add(
+                      withdrawnTokenBAmountAfterSpread.add(
                         closePositionPreview.tokenBAmountBeingWithdrawn
                       ),
                       tokenBInfo.decimals,
