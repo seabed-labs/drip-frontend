@@ -16,7 +16,7 @@ export function formatTokenAmount(amount: BN, decimals: number, pretty = false):
 }
 
 export function formatDecimalTokenAmount(amount: Decimal): string {
-  return numeral(amount.toString()).format('0.[00000]a');
+  return numeral(amount.toString()).format('0.[00]a');
 }
 
 export function parseTokenAmount(amount: string, decimals: number): BN {

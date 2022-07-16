@@ -58,6 +58,11 @@ export function PositionModal({
     async () => drip?.getPosition(position.pubkey),
     [drip, position]
   );
+
+  useEffect(() => {
+    console.log('Position:', position.pubkey.toBase58());
+  }, [position]);
+
   const closePositionPreview = useAsyncMemo(
     async () => dripPosition?.getClosePositionPreview(),
     [dripPosition]
@@ -194,7 +199,6 @@ export function PositionModal({
                 </StyledModalFieldValue>
               </StyledModalField>
               <StyledModalField>
-                {/* TODO(matcha): Compute max B amount to withdraw and render here */}
                 <StyledModalFieldHeader>Accrued {tokenBInfo?.symbol}</StyledModalFieldHeader>
                 <StyledModalFieldValue>
                   {tokenBInfo && closePositionPreview ? (
