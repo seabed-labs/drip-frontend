@@ -24,6 +24,7 @@ import { useCallback, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { useAsyncMemo } from 'use-async-memo';
 import { useDripContext } from '../contexts/DripContext';
+import { useRefreshContext } from '../contexts/Refresh';
 import { VaultPositionAccountWithPubkey } from '../hooks/Positions';
 import {
   formatDecimalTokenAmount,
@@ -55,6 +56,8 @@ export function PositionModal({
   onClose
 }: PositionModalProps) {
   const drip = useDripContext();
+  const refreshContext = useRefreshContext();
+
   const dripPosition = useAsyncMemo(
     async () => drip?.getPosition(position.pubkey),
     [drip, position]
@@ -128,6 +131,7 @@ export function PositionModal({
 
     const txHash = await dripPosition.closePosition();
     onClose();
+    refreshContext.forceRefresh();
     return txHash;
   }, [dripPosition]);
 

@@ -1,6 +1,7 @@
 import { InfoIcon } from '@chakra-ui/icons';
 import { ButtonProps, IconButton, Spinner, Tooltip } from '@chakra-ui/react';
 import { useState } from 'react';
+import { useRefreshContext } from '../contexts/Refresh';
 import { useTxToast } from '../hooks/TxToast';
 
 interface MintButtonProps {
@@ -20,6 +21,7 @@ export function MintButton({
 }: MintButtonProps & ButtonProps) {
   const [loading, setLoading] = useState(false);
   const txToast = useTxToast();
+  const refreshContext = useRefreshContext();
 
   async function handleMint() {
     const requestOptions = {
@@ -53,6 +55,8 @@ export function MintButton({
     } finally {
       setLoading(false);
     }
+    console.log('forcing refresh');
+    refreshContext.forceRefresh();
   }
 
   return (

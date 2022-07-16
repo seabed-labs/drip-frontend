@@ -22,6 +22,7 @@ import { GranularitySelect } from './GranularitySelect';
 import { MintButton } from './MintButton';
 import { TokenAmountInput } from './TokenAmountInput';
 import { TokenSelector } from './TokenSelect';
+import { useRefreshContext } from '../contexts/Refresh';
 
 const StyledContainer = styled.div`
   padding: 40px;
@@ -54,11 +55,13 @@ const StyledStepHeader = styled(Text)`
 `;
 
 export function DepositBox() {
+  const refreshContext = useRefreshContext();
   const [tokenA, setTokenA] = useState<PublicKey>();
   const [tokenB, setTokenB] = useState<PublicKey>();
   const [depositAmountStr, setDepositAmountStr] = useState<string>();
   const [granularity, setGranularity] = useState<Granularity>();
   const [dripUntil, setDripUntil] = useState<Date>();
+
   const wallet = useAnchorWallet();
   const tokenANetworkAddress = useNetworkAddress(tokenA);
   const maximumAmount = useTokenBalance(wallet?.publicKey, tokenANetworkAddress);
@@ -69,7 +72,6 @@ export function DepositBox() {
   const tokenBAddr = useNetworkAddress(tokenB);
   const tokenAInfo = useTokenInfo(tokenAAddr);
   const tokenBInfo = useTokenInfo(tokenBAddr);
-
   const dripPreviewText = useDripPreviewText(
     tokenAInfo?.symbol,
     tokenBInfo?.symbol,
@@ -122,7 +124,17 @@ export function DepositBox() {
         expiry: dripUntil
       }
     });
-  }, [drip, tokenA, tokenB, granularity, tokenAInfo, depositAmountStr, dripUntil, network]);
+  }, [
+    drip,
+    tokenA,
+    tokenB,
+    granularity,
+    tokenAInfo,
+    depositAmountStr,
+    dripUntil,
+    network,
+    refreshContext.refreshTrigger
+  ]);
 
   return (
     <StyledContainer>
