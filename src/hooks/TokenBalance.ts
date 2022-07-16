@@ -16,8 +16,6 @@ export function useTokenBalance(user?: Address, token?: NetworkAddress): TokenAm
   const refreshContext = useRefreshContext();
 
   return useAsyncMemo(async () => {
-    console.log('fetching');
-
     if (!drip || !user || !token) return undefined;
 
     const tokenATA = await getAssociatedTokenAddress(
