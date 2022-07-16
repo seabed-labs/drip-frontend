@@ -58,6 +58,10 @@ export function PositionModal({
   const drip = useDripContext();
   const refreshContext = useRefreshContext();
 
+  useEffect(() => {
+    console.log('position modal refresh', refreshContext.refreshTrigger);
+  }, [refreshContext.refreshTrigger]);
+
   const dripPosition = useAsyncMemo(
     async () => drip?.getPosition(position.pubkey),
     [drip, position]
@@ -122,18 +126,18 @@ export function PositionModal({
 
   const withdrawTokenB = useCallback(async () => {
     if (!dripPosition) throw new Error('Drip position is undefined');
-
+    const txInfo = await dripPosition.withdrawB();
     refreshContext.forceRefresh();
-    return await dripPosition.withdrawB();
+    return txInfo;
   }, [dripPosition]);
 
   const closePosition = useCallback(async () => {
     if (!dripPosition) throw new Error('Drip position is undefined');
 
-    const txHash = await dripPosition.closePosition();
-    onClose();
+    const txInfo = await dripPosition.closePosition();
     refreshContext.forceRefresh();
-    return txHash;
+    onClose();
+    return txInfo;
   }, [dripPosition]);
 
   const accruedTokenB = useMemo(
