@@ -123,6 +123,7 @@ export function PositionModal({
   const withdrawTokenB = useCallback(async () => {
     if (!dripPosition) throw new Error('Drip position is undefined');
 
+    refreshContext.forceRefresh();
     return await dripPosition.withdrawB();
   }, [dripPosition]);
 
