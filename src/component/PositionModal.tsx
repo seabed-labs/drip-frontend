@@ -118,7 +118,9 @@ export function PositionModal({
   const closePosition = useCallback(async () => {
     if (!dripPosition) throw new Error('Drip position is undefined');
 
-    return await dripPosition.closePosition();
+    const txHash = await dripPosition.closePosition();
+    onClose();
+    return txHash;
   }, [dripPosition]);
 
   return (
