@@ -1,4 +1,4 @@
-import { Granularity } from '@dcaf-labs/drip-sdk/dist/interfaces/drip-admin/params';
+import { Granularity, expiryToDcaCycles } from '@dcaf-labs/drip-sdk';
 import Decimal from 'decimal.js';
 import numeral from 'numeral';
 import { useMemo } from 'react';
@@ -16,9 +16,7 @@ export function useDripPreviewText(
       return undefined;
     }
 
-    const now = new Date();
-    const dripDuration = Math.floor((endDate.getTime() - now.getTime()) / 1e3);
-    const numCycles = Math.ceil(dripDuration / granularity);
+    const numCycles = expiryToDcaCycles(endDate, granularity);
     const dripAmount = new Decimal(amount).div(numCycles);
 
     return `${formatTokenAmountStr(numCycles.toString(), 0, true)} drips of ${numeral(

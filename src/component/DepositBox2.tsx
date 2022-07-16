@@ -6,7 +6,7 @@ import { useAnchorWallet } from '@solana/wallet-adapter-react';
 import { PublicKey } from '@solana/web3.js';
 import BN from 'bn.js';
 import Decimal from 'decimal.js';
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { useDripContext } from '../contexts/DripContext';
 import { useNetwork } from '../contexts/NetworkContext';
@@ -80,8 +80,23 @@ export function DepositBox() {
     dripUntil
   );
 
+  const isValidDate = useMemo(() => {
+    if (!dripUntil || !granularity) return false;
+
+    const now = new Date();
+    const diff = dripUntil.getTime() / 1e3 - now.getTime() / 1e3;
+
+    return diff >= granularity;
+  }, [dripUntil]);
+
   const readyToDeposit = Boolean(
-    tokenA && tokenB && depositAmountStr && Number(depositAmountStr) > 0 && granularity && dripUntil
+    tokenA &&
+      tokenB &&
+      depositAmountStr &&
+      Number(depositAmountStr) > 0 &&
+      granularity &&
+      dripUntil &&
+      isValidDate
   );
 
   const drip = useDripContext();
@@ -246,7 +261,13 @@ export function DepositBox() {
           <Center w="100%">
             <TransactionButton
               disabled={!readyToDeposit}
-              text={readyToDeposit ? 'Deposit' : 'Enter details to deposit'}
+              text={
+                readyToDeposit
+                  ? 'Deposit'
+                  : !dripUntil || isValidDate
+                  ? 'Enter details to deposit'
+                  : 'Invalid Date'
+              }
               mt="10px"
               sendTx={deposit}
             />

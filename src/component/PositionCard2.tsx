@@ -8,6 +8,7 @@ import { useDripContext } from '../contexts/DripContext';
 import { useNetworkAddress } from '../hooks/CurrentNetworkAddress';
 import { VaultPositionAccountWithPubkey } from '../hooks/Positions';
 import { useTokenInfo } from '../hooks/TokenInfo';
+import { formatDate } from '../utils/date';
 import { formatTokenAmount } from '../utils/token-amount';
 import { displayGranularity } from './GranularitySelect';
 import { PositionModal } from './PositionModal';
@@ -44,7 +45,7 @@ export function PositionCard({ position }: PositionCardProps) {
   const estimatedEndDate = useMemo(() => {
     if (!vault || !protoConfig) return undefined;
 
-    const positionStartDate = new Date(position.depositTimestamp.toNumber() * 1e3);
+    const now = new Date();
     const totalDrips = position.numberOfSwaps;
     const completedDrips = BN.min(
       vault.lastDcaPeriod.sub(position.dcaPeriodIdBeforeDeposit),
@@ -52,9 +53,12 @@ export function PositionCard({ position }: PositionCardProps) {
     );
     const remainingDrips = totalDrips.sub(completedDrips);
 
+    if (remainingDrips.eqn(0)) {
+      return '-';
+    }
+
     return new Date(
-      positionStartDate.getTime() +
-        remainingDrips.toNumber() * protoConfig.granularity.toNumber() * 1e3
+      now.getTime() + remainingDrips.toNumber() * protoConfig.granularity.toNumber() * 1e3
     );
   }, [position, vault, protoConfig]);
 
@@ -107,7 +111,7 @@ export function PositionCard({ position }: PositionCardProps) {
           <StyledDataRow>
             <StyledDataKey>Open Date</StyledDataKey>
             {tokenAInfo ? (
-              <Text>{new Date(position.depositTimestamp.muln(1e3).toNumber()).toDateString()}</Text>
+              <Text>{formatDate(new Date(position.depositTimestamp.muln(1e3).toNumber()))}</Text>
             ) : (
               <Skeleton h="20px" w="100px" />
             )}
@@ -121,9 +125,9 @@ export function PositionCard({ position }: PositionCardProps) {
             )}
           </StyledDataRow>
           <StyledDataRow>
-            <StyledDataKey>End Date</StyledDataKey>
+            <StyledDataKey>{'Est. End Date'}</StyledDataKey>
             {estimatedEndDate ? (
-              <Text>{estimatedEndDate.toDateString()}</Text>
+              <Text>{estimatedEndDate !== '-' ? formatDate(estimatedEndDate) : '-'}</Text>
             ) : (
               <Skeleton h="20px" w="100px" />
             )}

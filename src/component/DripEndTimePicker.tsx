@@ -94,12 +94,6 @@ export function DripEndTimePicker({
             return;
           }
 
-          const now = new Date().getTime();
-          if (date.getTime() < now) {
-            onUpdate(new Date(now + 10 * 60 * 1000));
-            return;
-          }
-
           onUpdate(date);
         }}
         value={value}

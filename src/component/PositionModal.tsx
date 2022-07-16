@@ -27,6 +27,8 @@ import { useAsyncMemo } from 'use-async-memo';
 import { useDripContext } from '../contexts/DripContext';
 import { useRefreshContext } from '../contexts/Refresh';
 import { VaultPositionAccountWithPubkey } from '../hooks/Positions';
+import { formatDate } from '../utils/date';
+import { delay } from '../utils/time';
 import {
   formatDecimalTokenAmount,
   formatTokenAmount,
@@ -41,7 +43,7 @@ interface PositionModalProps {
   vaultProtoConfig?: VaultProtoConfigAccount;
   tokenAInfo?: TokenInfo;
   tokenBInfo?: TokenInfo;
-  estimatedEndDate?: Date;
+  estimatedEndDate?: Date | '-';
   isOpen: boolean;
   onClose(): void;
 }
@@ -64,10 +66,9 @@ export function PositionModal({
     [drip, position]
   );
 
-  const closePositionPreview = useAsyncMemo(
-    async () => dripPosition?.getClosePositionPreview(),
-    [dripPosition]
-  );
+  const closePositionPreview = useAsyncMemo(async () => {
+    return dripPosition?.getClosePositionPreview();
+  }, [dripPosition]);
 
   const averagePrice = useAsyncMemo(
     () => drip?.querier.getAveragePrice(position.pubkey, QuoteToken.TokenA),
@@ -124,6 +125,7 @@ export function PositionModal({
   const withdrawTokenB = useCallback(async () => {
     if (!dripPosition) throw new Error('Drip position is undefined');
     const txInfo = await dripPosition.withdrawB();
+    await delay(1500);
     refreshContext.forceRefresh();
     return txInfo;
   }, [dripPosition, refreshContext.forceRefresh]);
@@ -132,6 +134,7 @@ export function PositionModal({
     if (!dripPosition) throw new Error('Drip position is undefined');
 
     const txInfo = await dripPosition.closePosition();
+    await delay(1500);
     refreshContext.forceRefresh();
     onClose();
     return txInfo;
@@ -223,7 +226,11 @@ export function PositionModal({
                 <StyledModalFieldHeader>Est. End Date</StyledModalFieldHeader>
                 <StyledModalFieldValue>
                   {estimatedEndDate ? (
-                    estimatedEndDate.toDateString()
+                    estimatedEndDate !== '-' ? (
+                      formatDate(estimatedEndDate)
+                    ) : (
+                      '-'
+                    )
                   ) : (
                     <Skeleton mt="7px" w="170px" h="20px" />
                   )}
@@ -248,7 +255,7 @@ export function PositionModal({
               <StyledModalField>
                 <StyledModalFieldHeader>Open Date</StyledModalFieldHeader>
                 <StyledModalFieldValue>
-                  {new Date(position.depositTimestamp.muln(1e3).toNumber()).toDateString()}
+                  {formatDate(new Date(position.depositTimestamp.muln(1e3).toNumber()))}
                 </StyledModalFieldValue>
               </StyledModalField>
               <StyledModalField>
