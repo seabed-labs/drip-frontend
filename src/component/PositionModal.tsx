@@ -20,7 +20,7 @@ import {
 } from '@dcaf-labs/drip-sdk/dist/interfaces/drip-querier/results';
 import { TokenInfo } from '@solana/spl-token-registry';
 import { BN } from 'bn.js';
-import { useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { useAsyncMemo } from 'use-async-memo';
 import { useDripContext } from '../contexts/DripContext';
@@ -31,6 +31,7 @@ import {
   formatTokenAmountStr
 } from '../utils/token-amount';
 import { displayGranularity } from './GranularitySelect';
+import { TransactionButton } from './TransactionButton';
 
 interface PositionModalProps {
   position: VaultPositionAccountWithPubkey;
@@ -59,10 +60,6 @@ export function PositionModal({
     [drip, position]
   );
 
-  useEffect(() => {
-    console.log('Position:', position.pubkey.toBase58());
-  }, [position]);
-
   const closePositionPreview = useAsyncMemo(
     async () => dripPosition?.getClosePositionPreview(),
     [dripPosition]
@@ -72,6 +69,24 @@ export function PositionModal({
     () => drip?.querier.getAveragePrice(position.pubkey, QuoteToken.TokenA),
     [drip, position]
   );
+
+  const numberOfDripsCompleted = useMemo(() => {
+    if (!vault) {
+      return undefined;
+    }
+
+    if (position.isClosed) {
+      return new BN(0);
+    }
+
+    const i = position.dcaPeriodIdBeforeDeposit;
+    const j = BN.min(
+      vault.lastDcaPeriod,
+      position.dcaPeriodIdBeforeDeposit.add(position.numberOfSwaps)
+    );
+
+    return j.sub(i);
+  }, [position, vault]);
 
   const remainingTokenAToDrip = useMemo(() => {
     if (!vault) {
@@ -92,7 +107,19 @@ export function PositionModal({
     const periodsDripped = j.sub(i);
 
     return initialDeposit.sub(dripAmount.mul(periodsDripped));
-  }, [position]);
+  }, [position, vault]);
+
+  const withdrawTokenB = useCallback(async () => {
+    if (!dripPosition) throw new Error('Drip position is undefined');
+
+    return await dripPosition.withdrawB();
+  }, [dripPosition]);
+
+  const closePosition = useCallback(async () => {
+    if (!dripPosition) throw new Error('Drip position is undefined');
+
+    return await dripPosition.closePosition();
+  }, [dripPosition]);
 
   return (
     <Modal size="xl" isOpen={isOpen} onClose={onClose}>
@@ -215,8 +242,10 @@ export function PositionModal({
                 </StyledModalFieldValue>
               </StyledModalField>
               <StyledModalField>
-                <StyledModalFieldHeader>Total Drips</StyledModalFieldHeader>
-                <StyledModalFieldValue>{position.numberOfSwaps.toString()}</StyledModalFieldValue>
+                <StyledModalFieldHeader>Drips Completed</StyledModalFieldHeader>
+                <StyledModalFieldValue>
+                  {numberOfDripsCompleted?.toString()} out of {position.numberOfSwaps.toString()}
+                </StyledModalFieldValue>
               </StyledModalField>
               <StyledModalField>
                 <StyledModalFieldHeader>Withdrawn {tokenBInfo?.symbol}</StyledModalFieldHeader>
@@ -238,7 +267,7 @@ export function PositionModal({
         <ModalFooter>
           <StyledModalGrid mt="20px">
             <StyledModalCol>
-              <Button
+              <TransactionButton
                 variant="unstyled"
                 height="46px"
                 color="white"
@@ -250,12 +279,12 @@ export function PositionModal({
                 }}
                 borderRadius="50px"
                 w="100%"
-              >
-                Close Position
-              </Button>
+                sendTx={closePosition}
+                text="Close Position"
+              />
             </StyledModalCol>
             <StyledModalCol>
-              <Button
+              <TransactionButton
                 variant="unstyled"
                 border="2px solid #62AAFF"
                 height="46px"
@@ -269,9 +298,9 @@ export function PositionModal({
                 }}
                 borderRadius="50px"
                 w="100%"
-              >
-                Withdraw {tokenBInfo?.symbol}
-              </Button>
+                sendTx={withdrawTokenB}
+                text={`Withdraw ${tokenBInfo?.symbol}`}
+              />
             </StyledModalCol>
           </StyledModalGrid>
         </ModalFooter>

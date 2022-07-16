@@ -3,28 +3,28 @@ import { BroadcastTransactionWithMetadata } from '@dcaf-labs/drip-sdk/dist/types
 import { useState } from 'react';
 import { useTxToast } from '../hooks/TxToast';
 
-interface DepositButtonProps {
-  text?: string;
+interface TransactionButtonProps {
+  text: string;
   disabled?: boolean;
-  deposit: () => Promise<BroadcastTransactionWithMetadata<unknown>>;
+  sendTx: () => Promise<BroadcastTransactionWithMetadata<unknown>>;
 }
 
-export function DepositButton({
+export function TransactionButton({
   disabled,
   text,
-  deposit,
+  sendTx,
   ...buttonProps
-}: DepositButtonProps & ButtonProps) {
+}: TransactionButtonProps & ButtonProps) {
   const [loading, setLoading] = useState(false);
   const txToast = useTxToast();
 
-  async function handleDeposit() {
+  async function handleTx() {
     try {
       setLoading(true);
-      const txInfo = await deposit();
+      const txInfo = await sendTx();
       txToast.success(txInfo);
     } catch (err) {
-      console.error(`Error during deposit: ${err}`);
+      console.error(`Error during ${text}: ${err}`);
       txToast.failure(err as Error);
     } finally {
       setLoading(false);
@@ -42,7 +42,7 @@ export function DepositButton({
         transition: '0.2s ease'
       }}
       color="white"
-      onClick={handleDeposit}
+      onClick={handleTx}
       h="50px"
       borderRadius="50px"
       w="100%"
@@ -50,7 +50,7 @@ export function DepositButton({
       transition="0.2s ease"
       {...buttonProps}
     >
-      {loading ? <Spinner /> : text ?? 'Deposit'}
+      {loading ? <Spinner /> : text}
     </Button>
   );
 }

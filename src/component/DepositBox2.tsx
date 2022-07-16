@@ -16,7 +16,7 @@ import { useTokenBalance } from '../hooks/TokenBalance';
 import { useTokenInfo } from '../hooks/TokenInfo';
 import { useTokenAs, useTokenBs } from '../hooks/Tokens';
 import { formatTokenAmountStr } from '../utils/token-amount';
-import { DepositButton } from './DepositButton';
+import { TransactionButton } from './TransactionButton';
 import { DripEndTimePicker } from './DripEndTimePicker';
 import { GranularitySelect } from './GranularitySelect';
 import { MintButton } from './MintButton';
@@ -227,11 +227,11 @@ export function DepositBox() {
         </StyledSubRowContainer>
         <StyledSubRowContainer>
           <Center w="100%">
-            <DepositButton
+            <TransactionButton
               disabled={!readyToDeposit}
-              text={readyToDeposit ? undefined : 'Enter details to deposit'}
+              text={readyToDeposit ? 'Deposit' : 'Enter details to deposit'}
               mt="10px"
-              deposit={deposit}
+              sendTx={deposit}
             />
           </Center>
         </StyledSubRowContainer>
