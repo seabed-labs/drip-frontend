@@ -13,7 +13,7 @@ export function useTokenInfo(mint?: NetworkAddress): TokenInfo | undefined {
   const drip = useDripContext();
   const actualMint = useAsyncMemo(
     async () => drip && mint && getMint(drip?.provider.connection, mint.address),
-    [mint, drip]
+    [mint?.toPrimitiveDep(), drip]
   );
 
   return useMemo(() => {
