@@ -3,6 +3,7 @@ import { ButtonProps, IconButton, Spinner, Tooltip } from '@chakra-ui/react';
 import { useState } from 'react';
 import { useRefreshContext } from '../contexts/Refresh';
 import { useTxToast } from '../hooks/TxToast';
+import { delay } from '../utils/time';
 
 interface MintButtonProps {
   mint: string;
@@ -41,6 +42,7 @@ export function MintButton({
       const response = await fetch('https://devnet.api.drip.dcaf.so/mint', requestOptions);
       const responseJSON = JSON.parse(await response.text());
       if (responseJSON.txHash) {
+        await delay(1500);
         txToast.success({
           id: '',
           explorer: `https://explorer.solana.com/tx/${responseJSON?.txHash}?cluster=devnet`,

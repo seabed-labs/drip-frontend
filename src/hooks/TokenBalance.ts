@@ -33,6 +33,7 @@ export function useTokenBalance(user?: Address, token?: NetworkAddress): TokenAm
       );
       return tokenBalanceResponse.value;
     } catch (e) {
+      console.log('error', e);
       return undefined;
     }
   }, [user, drip, token?.toPrimitiveDep(), refreshContext.refreshTrigger]);
