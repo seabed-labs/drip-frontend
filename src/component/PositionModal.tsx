@@ -131,13 +131,13 @@ export function PositionModal({
     return txHash;
   }, [dripPosition]);
 
-  useEffect(() => {
-    console.log('Withdrawn B After Spread:', withdrawnTokenBAmountAfterSpread?.toString());
-    console.log(
-      'Withdrawable B After Spread:',
-      closePositionPreview?.tokenBAmountBeingWithdrawn.toString()
-    );
-  }, [withdrawnTokenBAmountAfterSpread, closePositionPreview]);
+  const accruedTokenB = useMemo(
+    () =>
+      withdrawnTokenBAmountAfterSpread &&
+      closePositionPreview &&
+      withdrawnTokenBAmountAfterSpread.add(closePositionPreview.tokenBAmountBeingWithdrawn),
+    [withdrawnTokenBAmountAfterSpread, closePositionPreview]
+  );
 
   return (
     <Modal size="xl" isOpen={isOpen} onClose={onClose}>
@@ -230,6 +230,8 @@ export function PositionModal({
                     `${formatDecimalTokenAmount(averagePrice)} ${tokenAInfo.symbol} per ${
                       tokenBInfo.symbol
                     }`
+                  ) : accruedTokenB?.eqn(0) ? (
+                    '-'
                   ) : (
                     <Skeleton mt="7px" w="170px" h="20px" />
                   )}
@@ -246,14 +248,10 @@ export function PositionModal({
               <StyledModalField>
                 <StyledModalFieldHeader>Accrued {tokenBInfo?.symbol}</StyledModalFieldHeader>
                 <StyledModalFieldValue>
-                  {tokenBInfo && closePositionPreview && withdrawnTokenBAmountAfterSpread ? (
-                    `${formatTokenAmount(
-                      withdrawnTokenBAmountAfterSpread.add(
-                        closePositionPreview.tokenBAmountBeingWithdrawn
-                      ),
-                      tokenBInfo.decimals,
-                      true
-                    )} ${tokenBInfo?.symbol}`
+                  {accruedTokenB && tokenBInfo ? (
+                    `${formatTokenAmount(accruedTokenB, tokenBInfo.decimals, true)} ${
+                      tokenBInfo.symbol
+                    }`
                   ) : (
                     <Skeleton mt="7px" w="120px" h="20px" />
                   )}
@@ -262,7 +260,11 @@ export function PositionModal({
               <StyledModalField>
                 <StyledModalFieldHeader>Drips Completed</StyledModalFieldHeader>
                 <StyledModalFieldValue>
-                  {numberOfDripsCompleted?.toString()} out of {position.numberOfSwaps.toString()}
+                  {numberOfDripsCompleted ? (
+                    `${numberOfDripsCompleted?.toString()} out of ${position.numberOfSwaps.toString()}`
+                  ) : (
+                    <Skeleton mt="7px" w="120px" h="20px" />
+                  )}
                 </StyledModalFieldValue>
               </StyledModalField>
               <StyledModalField>
