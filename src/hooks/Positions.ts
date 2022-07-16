@@ -4,7 +4,7 @@ import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react';
 import { useDripContext } from '../contexts/DripContext';
 import { PublicKey } from '@solana/web3.js';
 import BN from 'bn.js';
-import { useStateRefresh } from './StateRefresh';
+import { useRefreshContext } from '../contexts/Refresh';
 
 export interface Position {
   vault: PublicKey;
@@ -22,12 +22,13 @@ export interface Position {
 export type VaultPositionAccountWithPubkey = VaultPositionAccount & { pubkey: PublicKey };
 
 export function usePositions(): [positions: VaultPositionAccountWithPubkey[], loading: boolean] {
-  const [loading, setLoading] = useState(true);
+  const refreshContext = useRefreshContext();
   const drip = useDripContext();
+
+  const [loading, setLoading] = useState(true);
   const wallet = useAnchorWallet();
   const [positionsRecord, setPositionsRecord] = useState<Record<string, VaultPositionAccount>>();
   const { connected } = useWallet();
-  const refreshTrigger = useStateRefresh();
 
   useEffect(() => {
     if (!connected) {
@@ -45,7 +46,7 @@ export function usePositions(): [positions: VaultPositionAccountWithPubkey[], lo
       setPositionsRecord(await drip.querier.getAllPositions(wallet.publicKey));
       setLoading(false);
     })();
-  }, [drip, wallet, refreshTrigger]);
+  }, [drip, wallet, refreshContext.refreshTrigger]);
 
   const positions = useMemo(
     () =>

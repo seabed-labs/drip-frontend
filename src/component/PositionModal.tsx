@@ -24,6 +24,7 @@ import { useCallback, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { useAsyncMemo } from 'use-async-memo';
 import { useDripContext } from '../contexts/DripContext';
+import { useRefreshContext } from '../contexts/Refresh';
 import { VaultPositionAccountWithPubkey } from '../hooks/Positions';
 import {
   formatDecimalTokenAmount,
@@ -55,6 +56,8 @@ export function PositionModal({
   onClose
 }: PositionModalProps) {
   const drip = useDripContext();
+  const refreshContext = useRefreshContext();
+
   const dripPosition = useAsyncMemo(
     async () => drip?.getPosition(position.pubkey),
     [drip, position]
@@ -119,17 +122,19 @@ export function PositionModal({
 
   const withdrawTokenB = useCallback(async () => {
     if (!dripPosition) throw new Error('Drip position is undefined');
-
-    return await dripPosition.withdrawB();
-  }, [dripPosition]);
+    const txInfo = await dripPosition.withdrawB();
+    refreshContext.forceRefresh();
+    return txInfo;
+  }, [dripPosition, refreshContext.forceRefresh]);
 
   const closePosition = useCallback(async () => {
     if (!dripPosition) throw new Error('Drip position is undefined');
 
-    const txHash = await dripPosition.closePosition();
+    const txInfo = await dripPosition.closePosition();
+    refreshContext.forceRefresh();
     onClose();
-    return txHash;
-  }, [dripPosition]);
+    return txInfo;
+  }, [dripPosition, refreshContext.forceRefresh]);
 
   const accruedTokenB = useMemo(
     () =>

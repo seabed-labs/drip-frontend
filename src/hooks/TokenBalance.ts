@@ -7,11 +7,13 @@ import {
 import { TokenAmount } from '@solana/web3.js';
 import { useAsyncMemo } from 'use-async-memo';
 import { useDripContext } from '../contexts/DripContext';
+import { useRefreshContext } from '../contexts/Refresh';
 import { NetworkAddress } from '../models/NetworkAddress';
 import { toPubkey } from '../utils/pubkey';
 
 export function useTokenBalance(user?: Address, token?: NetworkAddress): TokenAmount | undefined {
   const drip = useDripContext();
+  const refreshContext = useRefreshContext();
 
   return useAsyncMemo(async () => {
     if (!drip || !user || !token) return undefined;
@@ -33,5 +35,5 @@ export function useTokenBalance(user?: Address, token?: NetworkAddress): TokenAm
     } catch (e) {
       return undefined;
     }
-  }, [user, drip, token?.toPrimitiveDep()]);
+  }, [user, drip, token?.toPrimitiveDep(), refreshContext.refreshTrigger]);
 }
