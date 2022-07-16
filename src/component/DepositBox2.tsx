@@ -118,12 +118,17 @@ export function DepositBox() {
       new Decimal(depositAmountStr).mul(new Decimal(10).pow(tokenAInfo.decimals)).round().toString()
     );
 
-    return await dripVault.deposit({
+    const txInfo = await dripVault.deposit({
       amount: depositAmountRaw,
       dcaParams: {
         expiry: dripUntil
       }
     });
+    refreshContext.forceRefresh();
+    setDripUntil(undefined);
+    setGranularity(undefined);
+    setDepositAmountStr(undefined);
+    return txInfo;
   }, [
     drip,
     tokenA,
@@ -133,7 +138,7 @@ export function DepositBox() {
     depositAmountStr,
     dripUntil,
     network,
-    refreshContext.refreshTrigger
+    refreshContext.forceRefresh
   ]);
 
   return (
