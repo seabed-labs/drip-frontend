@@ -125,7 +125,7 @@ export function PositionModal({
     const txInfo = await dripPosition.withdrawB();
     refreshContext.forceRefresh();
     return txInfo;
-  }, [dripPosition]);
+  }, [dripPosition, refreshContext.forceRefresh]);
 
   const closePosition = useCallback(async () => {
     if (!dripPosition) throw new Error('Drip position is undefined');
@@ -134,7 +134,7 @@ export function PositionModal({
     refreshContext.forceRefresh();
     onClose();
     return txInfo;
-  }, [dripPosition]);
+  }, [dripPosition, refreshContext.forceRefresh]);
 
   const accruedTokenB = useMemo(
     () =>

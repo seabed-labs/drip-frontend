@@ -15,7 +15,7 @@ export function useStateRefresh(): [refreshTrigger: boolean, forceRefresh: () =>
 
   const forceRefresh = useCallback(() => {
     setRefreshTrigger((x) => !x);
-  }, [setRefreshTrigger, refreshTrigger]);
+  }, [setRefreshTrigger]);
 
   return [refreshTrigger, forceRefresh];
 }
