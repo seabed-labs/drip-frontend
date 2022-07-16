@@ -16,7 +16,7 @@ import { useTokenBalance } from '../hooks/TokenBalance';
 import { useTokenInfo } from '../hooks/TokenInfo';
 import { useTokenAs, useTokenBs } from '../hooks/Tokens';
 import { formatTokenAmountStr } from '../utils/token-amount';
-import { DepositButton } from './DepositButton';
+import { TransactionButton } from './TransactionButton';
 import { DripEndTimePicker } from './DripEndTimePicker';
 import { GranularitySelect } from './GranularitySelect';
 import { MintButton } from './MintButton';
@@ -88,7 +88,7 @@ export function DepositBox() {
     if (!drip) throw new Error('Drip SDK is undefined');
     if (!tokenA) throw new Error('Token A is undefined');
     if (!tokenB) throw new Error('Token B is undefined');
-    if (!granularity) throw new Error('Granularity/Velocity is undefined');
+    if (!granularity) throw new Error('Drip Frequency is undefined');
     if (!tokenAInfo) throw new Error('Token A info is undefined');
     if (!depositAmountStr) throw new Error('Deposit Amount is undefined');
     if (!dripUntil) throw new Error('Drip end date is undefined');
@@ -227,11 +227,11 @@ export function DepositBox() {
         </StyledSubRowContainer>
         <StyledSubRowContainer>
           <Center w="100%">
-            <DepositButton
+            <TransactionButton
               disabled={!readyToDeposit}
-              text={readyToDeposit ? undefined : 'Enter details to deposit'}
+              text={readyToDeposit ? 'Deposit' : 'Enter details to deposit'}
               mt="10px"
-              deposit={deposit}
+              sendTx={deposit}
             />
           </Center>
         </StyledSubRowContainer>

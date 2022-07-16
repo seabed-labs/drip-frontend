@@ -1,4 +1,5 @@
-import { Text, Box, HStack, Image, Skeleton, Progress } from '@chakra-ui/react';
+import { ArrowRightIcon } from '@chakra-ui/icons';
+import { Text, Box, HStack, Image, Skeleton, Progress, useDisclosure } from '@chakra-ui/react';
 import { BN } from '@project-serum/anchor';
 import { useMemo } from 'react';
 import styled from 'styled-components';
@@ -9,6 +10,7 @@ import { VaultPositionAccountWithPubkey } from '../hooks/Positions';
 import { useTokenInfo } from '../hooks/TokenInfo';
 import { formatTokenAmount } from '../utils/token-amount';
 import { displayGranularity } from './GranularitySelect';
+import { PositionModal } from './PositionModal';
 
 export function PositionCard({ position }: PositionCardProps) {
   const drip = useDripContext();
@@ -56,93 +58,109 @@ export function PositionCard({ position }: PositionCardProps) {
     );
   }, [position, vault, protoConfig]);
 
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   return (
-    <StyledContainer>
-      <StyledHeaderContainer>
-        <HStack>
-          {tokenAInfo ? (
-            <>
-              <StyledTokenIcon
-                fallback={<Skeleton borderRadius="50px" w="32px" h="32px" />}
-                src={tokenAInfo.logoURI}
-              />
-              <Text>{tokenAInfo.symbol}</Text>
-            </>
+    <>
+      <StyledContainer onClick={onOpen}>
+        <StyledHeaderContainer>
+          <HStack>
+            {tokenAInfo ? (
+              <>
+                <StyledTokenIcon
+                  fallback={<Skeleton borderRadius="50px" w="32px" h="32px" />}
+                  src={tokenAInfo.logoURI}
+                />
+                <Text>{tokenAInfo.symbol}</Text>
+              </>
+            ) : (
+              <Skeleton h="40px" w="120px" />
+            )}
+          </HStack>
+          <ArrowRightIcon w="20px" />
+          <HStack>
+            {tokenBInfo ? (
+              <>
+                <StyledTokenIcon
+                  src={tokenBInfo.logoURI}
+                  fallback={<Skeleton borderRadius="50px" w="32px" h="32px" />}
+                />
+                <Text>{tokenBInfo.symbol}</Text>
+              </>
+            ) : (
+              <Skeleton h="40px" w="120px" />
+            )}
+          </HStack>
+        </StyledHeaderContainer>
+        <StyledBodyContainer>
+          <StyledDataRow>
+            <StyledDataKey>Deposit</StyledDataKey>
+            {tokenAInfo ? (
+              <Text>
+                {formatTokenAmount(position.depositedTokenAAmount, tokenAInfo.decimals, true)}{' '}
+                {tokenAInfo.symbol}
+              </Text>
+            ) : (
+              <Skeleton h="20px" w="100px" />
+            )}
+          </StyledDataRow>
+          <StyledDataRow>
+            <StyledDataKey>Open Date</StyledDataKey>
+            {tokenAInfo ? (
+              <Text>{new Date(position.depositTimestamp.muln(1e3).toNumber()).toDateString()}</Text>
+            ) : (
+              <Skeleton h="20px" w="100px" />
+            )}
+          </StyledDataRow>
+          <StyledDataRow>
+            <StyledDataKey>Drip Frequency</StyledDataKey>
+            {protoConfig ? (
+              <Text>{displayGranularity(protoConfig.granularity.toNumber())}</Text>
+            ) : (
+              <Skeleton h="20px" w="100px" />
+            )}
+          </StyledDataRow>
+          <StyledDataRow>
+            <StyledDataKey>End Date</StyledDataKey>
+            {estimatedEndDate ? (
+              <Text>{estimatedEndDate.toDateString()}</Text>
+            ) : (
+              <Skeleton h="20px" w="100px" />
+            )}
+          </StyledDataRow>
+        </StyledBodyContainer>
+        <StyledFooterContainer>
+          <Progress
+            colorScheme="gray"
+            isAnimated
+            isIndeterminate={!dripProgress}
+            borderRadius="50px"
+            size="sm"
+            w="100%"
+            value={dripProgress?.toNumber()}
+          />
+          {dripProgress ? (
+            <StyledFooterRow>{dripProgress.toNumber()}% dripped</StyledFooterRow>
           ) : (
-            <Skeleton h="40px" w="120px" />
+            <StyledFooterRow>
+              <Skeleton mt="5px" w="33%" h="12px" />
+            </StyledFooterRow>
           )}
-        </HStack>
-        <Text>→</Text>
-        <HStack>
-          {tokenBInfo ? (
-            <>
-              <StyledTokenIcon
-                src={tokenBInfo.logoURI}
-                fallback={<Skeleton borderRadius="50px" w="32px" h="32px" />}
-              />
-              <Text>{tokenBInfo.symbol}</Text>
-            </>
-          ) : (
-            <Skeleton h="40px" w="120px" />
-          )}
-        </HStack>
-      </StyledHeaderContainer>
-      <StyledBodyContainer>
-        <StyledDataRow>
-          <StyledDataKey>Deposit</StyledDataKey>
-          {tokenAInfo ? (
-            <Text>
-              {formatTokenAmount(position.depositedTokenAAmount, tokenAInfo.decimals, true)}{' '}
-              {tokenAInfo.symbol}
-            </Text>
-          ) : (
-            <Skeleton h="20px" w="100px" />
-          )}
-        </StyledDataRow>
-        <StyledDataRow>
-          <StyledDataKey>Open Date</StyledDataKey>
-          {tokenAInfo ? (
-            <Text>{new Date(position.depositTimestamp.muln(1e3).toNumber()).toDateString()}</Text>
-          ) : (
-            <Skeleton h="20px" w="100px" />
-          )}
-        </StyledDataRow>
-        <StyledDataRow>
-          <StyledDataKey>Drip Frequency</StyledDataKey>
-          {protoConfig ? (
-            <Text>{displayGranularity(protoConfig.granularity.toNumber())}</Text>
-          ) : (
-            <Skeleton h="20px" w="100px" />
-          )}
-        </StyledDataRow>
-        <StyledDataRow>
-          <StyledDataKey>End Date</StyledDataKey>
-          {estimatedEndDate ? (
-            <Text>{estimatedEndDate.toDateString()}</Text>
-          ) : (
-            <Skeleton h="20px" w="100px" />
-          )}
-        </StyledDataRow>
-      </StyledBodyContainer>
-      <StyledFooterContainer>
-        <Progress
-          colorScheme="gray"
-          isAnimated
-          isIndeterminate={!dripProgress}
-          borderRadius="50px"
-          size="sm"
-          w="100%"
-          value={dripProgress?.toNumber()}
+        </StyledFooterContainer>
+      </StyledContainer>
+      {isOpen && (
+        <PositionModal
+          tokenAInfo={tokenAInfo}
+          tokenBInfo={tokenBInfo}
+          vault={vault ?? undefined}
+          vaultProtoConfig={protoConfig ?? undefined}
+          estimatedEndDate={estimatedEndDate}
+          position={position}
+          isOpen={isOpen}
+          onClose={onClose}
         />
-        {dripProgress ? (
-          <StyledFooterRow>{dripProgress.toNumber()}% dripped</StyledFooterRow>
-        ) : (
-          <StyledFooterRow>
-            <Skeleton mt="5px" w="33%" h="12px" />
-          </StyledFooterRow>
-        )}
-      </StyledFooterContainer>
-    </StyledContainer>
+      )}
+    </>
   );
 }
 
@@ -177,6 +195,7 @@ const StyledHeaderContainer = styled(Box)`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
 `;
 
 const StyledTokenIcon = styled(Image)`

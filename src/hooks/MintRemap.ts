@@ -6,19 +6,14 @@ const MINT_REMAP: Record<Network, Partial<Record<string, NetworkAddress>>> = {
   [Network.Mainnet]: {},
   [Network.Devnet]: {
     // wSOL
-    BTZN3hrJ2S8s4A5iAEfUEEeaRnMUX8EsuG1nvTah2hmX: NetworkAddress.from(
+    GAstZSga54WrsQdDZ9pgch6Xe9Lyxaiyx4sY23nKyEZ4: NetworkAddress.from(
       Network.Mainnet,
       'So11111111111111111111111111111111111111112'
     ),
     // USDC
-    '5r23oKMycxnnjAJ4cEEkh1bbCowcZwzL6HYmhLqRazQa': NetworkAddress.from(
+    E3R1FopVaFpPAXojjdhJvWfKyaPuGHrx2GY7RCvHn7Dy: NetworkAddress.from(
       Network.Mainnet,
       'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'
-    ),
-    // ETH
-    DweqWEsB5UviF93NnvWDP4H2NabMUzST2WP3CB7FfpXZ: NetworkAddress.from(
-      Network.Mainnet,
-      '7vfCXTUXx5WJV5JADk17DUJ4ksgau7utNKj4b963voxs'
     )
   }
 };
