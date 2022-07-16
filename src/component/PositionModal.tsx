@@ -196,7 +196,19 @@ export function PositionModal({
               <StyledModalField>
                 {/* TODO(matcha): Compute max B amount to withdraw and render here */}
                 <StyledModalFieldHeader>Accrued {tokenBInfo?.symbol}</StyledModalFieldHeader>
-                <StyledModalFieldValue>2 SOL</StyledModalFieldValue>
+                <StyledModalFieldValue>
+                  {tokenBInfo && closePositionPreview ? (
+                    `${formatTokenAmount(
+                      position.withdrawnTokenBAmount.add(
+                        closePositionPreview.tokenBAmountBeingWithdrawn
+                      ),
+                      tokenBInfo.decimals,
+                      true
+                    )} ${tokenBInfo?.symbol}`
+                  ) : (
+                    <Skeleton mt="7px" w="120px" h="20px" />
+                  )}
+                </StyledModalFieldValue>
               </StyledModalField>
               <StyledModalField>
                 <StyledModalFieldHeader>Total Drips</StyledModalFieldHeader>
