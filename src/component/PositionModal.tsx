@@ -58,10 +58,6 @@ export function PositionModal({
   const drip = useDripContext();
   const refreshContext = useRefreshContext();
 
-  useEffect(() => {
-    console.log('position modal refresh', refreshContext.refreshTrigger);
-  }, [refreshContext.refreshTrigger]);
-
   const dripPosition = useAsyncMemo(
     async () => drip?.getPosition(position.pubkey),
     [drip, position]

@@ -5,7 +5,6 @@ import {
   TOKEN_PROGRAM_ID
 } from '@solana/spl-token';
 import { TokenAmount } from '@solana/web3.js';
-import { useEffect } from 'react';
 import { useAsyncMemo } from 'use-async-memo';
 import { useDripContext } from '../contexts/DripContext';
 import { useRefreshContext } from '../contexts/Refresh';
@@ -15,10 +14,6 @@ import { toPubkey } from '../utils/pubkey';
 export function useTokenBalance(user?: Address, token?: NetworkAddress): TokenAmount | undefined {
   const drip = useDripContext();
   const refreshContext = useRefreshContext();
-
-  useEffect(() => {
-    console.log('token balance updated refresh', refreshContext.refreshTrigger);
-  }, [refreshContext.refreshTrigger]);
 
   return useAsyncMemo(async () => {
     console.log('fetching');
