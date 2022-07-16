@@ -131,6 +131,14 @@ export function PositionModal({
     return txHash;
   }, [dripPosition]);
 
+  useEffect(() => {
+    console.log('Withdrawn B After Spread:', withdrawnTokenBAmountAfterSpread?.toString());
+    console.log(
+      'Withdrawable B After Spread:',
+      closePositionPreview?.tokenBAmountBeingWithdrawn.toString()
+    );
+  }, [withdrawnTokenBAmountAfterSpread, closePositionPreview]);
+
   return (
     <Modal size="xl" isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -260,9 +268,9 @@ export function PositionModal({
               <StyledModalField>
                 <StyledModalFieldHeader>Withdrawn {tokenBInfo?.symbol}</StyledModalFieldHeader>
                 <StyledModalFieldValue>
-                  {tokenBInfo ? (
+                  {tokenBInfo && withdrawnTokenBAmountAfterSpread ? (
                     `${formatTokenAmount(
-                      position.withdrawnTokenBAmount,
+                      withdrawnTokenBAmountAfterSpread,
                       tokenBInfo.decimals,
                       true
                     )} ${tokenBInfo?.symbol}`
