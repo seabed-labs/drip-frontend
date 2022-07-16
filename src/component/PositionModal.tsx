@@ -21,7 +21,7 @@ import {
 } from '@dcaf-labs/drip-sdk/dist/interfaces/drip-querier/results';
 import { TokenInfo } from '@solana/spl-token-registry';
 import { BN } from 'bn.js';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { useAsyncMemo } from 'use-async-memo';
 import { useDripContext } from '../contexts/DripContext';
@@ -66,8 +66,13 @@ export function PositionModal({
     [drip, position]
   );
 
+  const [closePositionPreviewLoading, setClosePositionPreviewLoading] = useState(false);
+
   const closePositionPreview = useAsyncMemo(async () => {
-    return dripPosition?.getClosePositionPreview();
+    setClosePositionPreviewLoading(true);
+    const preview = await dripPosition?.getClosePositionPreview();
+    setClosePositionPreviewLoading(false);
+    return preview;
   }, [dripPosition]);
 
   const averagePrice = useAsyncMemo(
@@ -125,7 +130,7 @@ export function PositionModal({
   const withdrawTokenB = useCallback(async () => {
     if (!dripPosition) throw new Error('Drip position is undefined');
     const txInfo = await dripPosition.withdrawB();
-    await delay(1500);
+    setClosePositionPreviewLoading(true);
     refreshContext.forceRefresh();
     return txInfo;
   }, [dripPosition, refreshContext.forceRefresh]);
@@ -134,7 +139,7 @@ export function PositionModal({
     if (!dripPosition) throw new Error('Drip position is undefined');
 
     const txInfo = await dripPosition.closePosition();
-    await delay(1500);
+    setClosePositionPreviewLoading(true);
     refreshContext.forceRefresh();
     onClose();
     return txInfo;
@@ -144,6 +149,7 @@ export function PositionModal({
     () =>
       withdrawnTokenBAmountAfterSpread &&
       closePositionPreview &&
+      !closePositionPreviewLoading &&
       withdrawnTokenBAmountAfterSpread.add(closePositionPreview.tokenBAmountBeingWithdrawn),
     [withdrawnTokenBAmountAfterSpread, closePositionPreview]
   );
@@ -243,7 +249,7 @@ export function PositionModal({
                     `${formatDecimalTokenAmount(averagePrice)} ${tokenAInfo.symbol} per ${
                       tokenBInfo.symbol
                     }`
-                  ) : accruedTokenB?.eqn(0) ? (
+                  ) : closePositionPreviewLoading || (accruedTokenB && accruedTokenB.eqn(0)) ? (
                     '-'
                   ) : (
                     <Skeleton mt="7px" w="170px" h="20px" />
