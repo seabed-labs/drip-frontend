@@ -12,11 +12,11 @@ export function formatTokenAmountStr(amount: string, decimals: number, pretty = 
 
 export function formatTokenAmount(amount: BN, decimals: number, pretty = false): string {
   const amountDecimal = new Decimal(amount.toString()).div(new Decimal(10).pow(decimals));
-  return pretty ? numeral(amountDecimal.toString()).format('0.[0000]a') : amountDecimal.toString();
+  return pretty ? numeral(amountDecimal.toString()).format('0.[000]a') : amountDecimal.toString();
 }
 
 export function formatDecimalTokenAmount(amount: Decimal): string {
-  return numeral(amount.toString()).format('0.[0000]a');
+  return numeral(amount.toString()).format('0.[000]a');
 }
 
 export function parseTokenAmount(amount: string, decimals: number): BN {
