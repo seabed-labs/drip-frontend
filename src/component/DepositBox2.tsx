@@ -135,7 +135,7 @@ export function DepositBox() {
 
     const txInfo = await dripVault.deposit({
       amount: depositAmountRaw,
-      dcaParams: {
+      dripParams: {
         expiry: dripUntil
       }
     });

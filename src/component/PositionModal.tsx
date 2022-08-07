@@ -89,10 +89,10 @@ export function PositionModal({
       return new BN(0);
     }
 
-    const i = position.dcaPeriodIdBeforeDeposit;
+    const i = position.dripPeriodIdBeforeDeposit;
     const j = BN.min(
-      vault.lastDcaPeriod,
-      position.dcaPeriodIdBeforeDeposit.add(position.numberOfSwaps)
+      vault.lastDripPeriod,
+      position.dripPeriodIdBeforeDeposit.add(position.numberOfSwaps)
     );
 
     return j.sub(i);
@@ -102,7 +102,7 @@ export function PositionModal({
     if (!position || !vaultProtoConfig) return undefined;
 
     return position.withdrawnTokenBAmount
-      .muln(1e4 - vaultProtoConfig.baseWithdrawalSpread)
+      .muln(1e4 - vaultProtoConfig.tokenBWithdrawalSpread)
       .divn(1e4);
   }, [position, vaultProtoConfig]);
 
@@ -116,10 +116,10 @@ export function PositionModal({
     }
 
     const initialDeposit = position.depositedTokenAAmount;
-    const i = position.dcaPeriodIdBeforeDeposit;
+    const i = position.dripPeriodIdBeforeDeposit;
     const j = BN.min(
-      vault.lastDcaPeriod,
-      position.dcaPeriodIdBeforeDeposit.add(position.numberOfSwaps)
+      vault.lastDripPeriod,
+      position.dripPeriodIdBeforeDeposit.add(position.numberOfSwaps)
     );
     const dripAmount = position.periodicDripAmount;
     const periodsDripped = j.sub(i);

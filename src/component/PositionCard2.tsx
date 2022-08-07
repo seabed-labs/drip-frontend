@@ -35,7 +35,7 @@ export function PositionCard({ position }: PositionCardProps) {
 
     const totalDrips = position.numberOfSwaps;
     const completedDrips = BN.min(
-      vault.lastDcaPeriod.sub(position.dcaPeriodIdBeforeDeposit),
+      vault.lastDripPeriod.sub(position.dripPeriodIdBeforeDeposit),
       totalDrips
     );
 
@@ -48,7 +48,7 @@ export function PositionCard({ position }: PositionCardProps) {
     const now = new Date();
     const totalDrips = position.numberOfSwaps;
     const completedDrips = BN.min(
-      vault.lastDcaPeriod.sub(position.dcaPeriodIdBeforeDeposit),
+      vault.lastDripPeriod.sub(position.dripPeriodIdBeforeDeposit),
       totalDrips
     );
     const remainingDrips = totalDrips.sub(completedDrips);
