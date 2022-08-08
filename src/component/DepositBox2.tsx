@@ -64,7 +64,14 @@ export function DepositBox() {
 
   const wallet = useAnchorWallet();
   const tokenANetworkAddress = useNetworkAddress(tokenA);
-  const maximumAmount = useTokenBalance(wallet?.publicKey, tokenANetworkAddress);
+
+  // If the token balance is empty, there is likely no token account for the wallet
+  const maximumAmount = useTokenBalance(wallet?.publicKey, tokenANetworkAddress) ?? {
+    amount: '0',
+    decimals: 1,
+    uiAmount: '0',
+    uiAmountString: '0'
+  };
 
   const tokenAs = useTokenAs();
   const tokenBs = useTokenBs(tokenA);
@@ -171,7 +178,7 @@ export function DepositBox() {
                 amount={'500'}
               />
             )}
-            {maximumAmount && (
+            {tokenAInfo && (
               <Button
                 h="20px"
                 transition="0.2s ease"

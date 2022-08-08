@@ -62,7 +62,7 @@ export function MintButton({
 
   // We can't mint orca USDC or wsol
   const unsupported =
-    mint == 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v' ||
+    mint == 'EmXq3Ni9gfudTiyNKzzYvpnQqnJEMRw2ttnVXoJXjLo1' ||
     mint === 'So11111111111111111111111111111111111111112';
 
   return unsupported ? (
@@ -70,7 +70,7 @@ export function MintButton({
   ) : (
     <Tooltip label={`Mint ${amount} ${tokenName}`}>
       <IconButton
-        disabled={disabled || unsupported || loading}
+        disabled={disabled || loading}
         {...buttonProps}
         aria-label="Mint Tokens"
         icon={loading ? <Spinner /> : <InfoIcon />}
