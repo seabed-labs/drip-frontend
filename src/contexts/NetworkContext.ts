@@ -1,8 +1,9 @@
 import { createContext, useContext } from 'react';
 import { Network } from '../models/Network';
 
-// TODO: Make this an env variable
-const NetworkContext = createContext<Network>(Network.Devnet);
+const NetworkContext = createContext<Network>(
+  process.env.REACT_APP_NETWORK === 'MAINNETBETA' ? Network.Mainnet : Network.Devnet
+);
 
 export function useNetwork() {
   return useContext(NetworkContext);
