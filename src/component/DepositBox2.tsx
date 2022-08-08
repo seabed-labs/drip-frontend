@@ -260,9 +260,11 @@ export function DepositBox() {
       <Box h="20px" />
       <StyledMainRowContainer>
         <StyledSubRowContainer>
-          <Center w="100%">
-            <Text overflow="hidden">{dripPreviewText}</Text>
-          </Center>
+          {readyToDeposit && dripUntil && isValidDate && (
+            <Center w="100%">
+              <Text overflow="hidden">{dripPreviewText}</Text>
+            </Center>
+          )}
         </StyledSubRowContainer>
         <StyledSubRowContainer>
           <Center w="100%">
