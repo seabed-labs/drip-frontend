@@ -5,26 +5,26 @@ import { NetworkAddress } from '../models/NetworkAddress';
 const MINT_REMAP: Record<Network, Partial<Record<string, NetworkAddress>>> = {
   [Network.Mainnet]: {},
   [Network.Devnet]: {
-    // wSOL
-    '8LXJFDvW9nrp4MXb4rSW7eSvxAhdzmdiUpNHiDdzJaNP': NetworkAddress.from(
-      Network.Mainnet,
-      'So11111111111111111111111111111111111111112'
-    ),
-    // USDC
-    BzTNAVYYHn9aSfUKeNQ2Fv635MsY6WnHMVRMZgb4hbc6: NetworkAddress.from(
+    // USDC (Orca USDC)
+    EmXq3Ni9gfudTiyNKzzYvpnQqnJEMRw2ttnVXoJXjLo1: NetworkAddress.from(
       Network.Mainnet,
       'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'
     ),
-    // ETH
-    DqakM9iwYs425rToh9LCXzfzc1Xh3A3nrz36QkSJTfNd: NetworkAddress.from(
+    // USDT
+    '8ULDKGmKJJaZa32eiL36ARr6cFaZaoAXAosWeg5r17ra': NetworkAddress.from(
       Network.Mainnet,
-      '7vfCXTUXx5WJV5JADk17DUJ4ksgau7utNKj4b963voxs'
+      'BQcdHdAQW1hczDbBi9hiegXAR7A98Q9jx3X3iBBBDiq4'
     ),
-    // ETH
-    EMtrTfsR7FvvJFg8J6g9y332L4PGzo3qDSztQbvbswpg: NetworkAddress.from(
+    // BTC
+    '5nY3xT4PJe7NU41zqBx5UACHDckrimmfwznv4uLenrQg': NetworkAddress.from(
       Network.Mainnet,
       '9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E'
     )
+    // // ETH
+    // DqakM9iwYs425rToh9LCXzfzc1Xh3A3nrz36QkSJTfNd: NetworkAddress.from(
+    //   Network.Mainnet,
+    //   '7vfCXTUXx5WJV5JADk17DUJ4ksgau7utNKj4b963voxs'
+    // ),
   }
 };
 

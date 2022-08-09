@@ -1766,12 +1766,12 @@
   resolved "https://registry.yarnpkg.com/@ctrl/tinycolor/-/tinycolor-3.4.1.tgz#75b4c27948c81e88ccd3a8902047bcd797f38d32"
   integrity sha512-ej5oVy6lykXsvieQtqZxCOaLT+xD4+QNarq78cIYISHmZXshCvROLudpQN3lfL8G0NL7plMSSK+zlyvCaIJ4Iw==
 
-"@dcaf-labs/drip-sdk@0.0.0-alpha.37":
-  version "0.0.0-alpha.37"
-  resolved "https://npm.pkg.github.com/download/@dcaf-labs/drip-sdk/0.0.0-alpha.37/dadfa851a6b8d1de5c50f80b8dc18efdbb27a86693ec091cfd76aa4c9f0e672b#f68573ed42b51a75c9b3793225feac3f22a707b7"
-  integrity sha512-MBzrgenUAv6afG6MxBj3a1Fxoa0vPEdvfelTVUIlHQMSHCMIWaBvEjwbx4pb/5cMdSRA8OSMKOAXRAzfuSOiBA==
+"@dcaf-labs/drip-sdk@0.0.0-alpha.40":
+  version "0.0.0-alpha.40"
+  resolved "https://npm.pkg.github.com/download/@dcaf-labs/drip-sdk/0.0.0-alpha.40/c1b015ab6310f58d7876889aa49e39a2db6e341ff6bcd577f77a8ef6e06172f1#919ba8ce8737e32a2087a71719b4e0e275324955"
+  integrity sha512-QvbhQIQJTcyyMy1pcPvsfRfyzrPtF1/7dxs8DqgBiSB+mb2EEpbqbDUowiXVVtKpeydGSKlNCHrEFmnciEK6Uw==
   dependencies:
-    "@project-serum/anchor" "^0.24.2"
+    "@project-serum/anchor" "^0.25.0"
     "@solana/spl-token" "^0.2.0"
     "@solana/web3.js" "^1.37.0"
     bn.js "^5.2.0"
@@ -2399,10 +2399,10 @@
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.5.tgz#db5a11bf66bdab39569719555b0f76e138d7bd64"
   integrity sha512-9X2obfABZuDVLCgPK9aX0a/x4jaOEweTTWE2+9sr0Qqqevj2Uv5XorvusThmc9XGYpS9yI+fhh8RTafBtGposw==
 
-"@project-serum/anchor@^0.24.2":
-  version "0.24.2"
-  resolved "https://registry.yarnpkg.com/@project-serum/anchor/-/anchor-0.24.2.tgz#a3c52a99605c80735f446ca9b3a4885034731004"
-  integrity sha512-0/718g8/DnEuwAidUwh5wLYphUYXhUbiClkuRNhvNoa+1Y8a4g2tJyxoae+emV+PG/Gikd/QUBNMkIcimiIRTA==
+"@project-serum/anchor@^0.25.0":
+  version "0.25.0"
+  resolved "https://registry.yarnpkg.com/@project-serum/anchor/-/anchor-0.25.0.tgz#88ee4843336005cf5a64c80636ce626f0996f503"
+  integrity sha512-E6A5Y/ijqpfMJ5psJvbw0kVTzLZFUcOFgs6eSM2M2iWE1lVRF18T6hWZVNl6zqZsoz98jgnNHtVGJMs+ds9A7A==
   dependencies:
     "@project-serum/borsh" "^0.2.5"
     "@solana/web3.js" "^1.36.0"
@@ -2417,6 +2417,7 @@
     js-sha256 "^0.9.0"
     pako "^2.0.3"
     snake-case "^3.0.4"
+    superstruct "^0.15.4"
     toml "^3.0.0"
 
 "@project-serum/borsh@^0.2.5":
@@ -11079,6 +11080,11 @@ superstruct@^0.14.2:
   version "0.14.2"
   resolved "https://registry.yarnpkg.com/superstruct/-/superstruct-0.14.2.tgz#0dbcdf3d83676588828f1cf5ed35cda02f59025b"
   integrity sha512-nPewA6m9mR3d6k7WkZ8N8zpTWfenFH3q9pA2PkuiZxINr9DKB2+40wEQf0ixn8VaGuJ78AB6iWOtStI+/4FKZQ==
+
+superstruct@^0.15.4:
+  version "0.15.5"
+  resolved "https://registry.yarnpkg.com/superstruct/-/superstruct-0.15.5.tgz#0f0a8d3ce31313f0d84c6096cd4fa1bfdedc9dab"
+  integrity sha512-4AOeU+P5UuE/4nOUkmcQdW5y7i9ndt1cQd/3iUe+LTz3RxESf/W/5lg4B74HbDMMv8PHnPnGCQFH45kBcrQYoQ==
 
 supports-color@^5.3.0, supports-color@^5.5.0:
   version "5.5.0"

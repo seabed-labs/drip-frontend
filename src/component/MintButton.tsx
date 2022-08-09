@@ -60,7 +60,14 @@ export function MintButton({
     refreshContext.forceRefresh();
   }
 
-  return (
+  // We can't mint orca USDC or wsol
+  const unsupported =
+    mint == 'EmXq3Ni9gfudTiyNKzzYvpnQqnJEMRw2ttnVXoJXjLo1' ||
+    mint === 'So11111111111111111111111111111111111111112';
+
+  return unsupported ? (
+    <></>
+  ) : (
     <Tooltip label={`Mint ${amount} ${tokenName}`}>
       <IconButton
         disabled={disabled || loading}

@@ -2,6 +2,7 @@ import { ChakraProvider } from '@chakra-ui/react';
 import { FC } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import styled from 'styled-components';
+import { Banner } from './component/Banner';
 import { Header } from './component/Header';
 import { DripContext } from './contexts/DripContext';
 import { RefreshContext } from './contexts/Refresh';
@@ -34,6 +35,7 @@ const App: FC = () => {
       <DripContext.Provider value={drip}>
         <RefreshContext.Provider value={{ refreshTrigger, forceRefresh }}>
           <TokenInfoContext.Provider value={tokenInfoMap}>
+            <Banner />
             <StyledAppContainer>
               <Header />
               <Routes>
