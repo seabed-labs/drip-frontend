@@ -133,14 +133,13 @@ export function DepositBox() {
       tokenAMint: tokenA,
       tokenBMint: tokenB
     });
-
     const dripVault = await drip.getVault(vaultPubkey);
 
     const depositAmountRaw = new BN(
       new Decimal(depositAmountStr).mul(new Decimal(10).pow(tokenAInfo.decimals)).round().toString()
     );
 
-    const txInfo = await dripVault.deposit({
+    const txInfo = await dripVault.depositWithMetadata({
       amount: depositAmountRaw,
       dripParams: {
         expiry: dripUntil
