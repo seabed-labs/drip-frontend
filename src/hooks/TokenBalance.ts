@@ -2,9 +2,11 @@ import { Address } from '@project-serum/anchor';
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
   getAssociatedTokenAddress,
+  getMinimumBalanceForRentExemptAccount,
   TOKEN_PROGRAM_ID
 } from '@solana/spl-token';
-import { TokenAmount } from '@solana/web3.js';
+import { LAMPORTS_PER_SOL, TokenAmount } from '@solana/web3.js';
+import { isSol } from '@dcaf-labs/drip-sdk';
 import { useAsyncMemo } from 'use-async-memo';
 import { useDripContext } from '../contexts/DripContext';
 import { useRefreshContext } from '../contexts/Refresh';
@@ -26,6 +28,25 @@ export function useTokenBalance(user?: Address, token?: NetworkAddress): TokenAm
       ASSOCIATED_TOKEN_PROGRAM_ID
     );
     try {
+      if (isSol(token.address)) {
+        const depositForRentExemption = await getMinimumBalanceForRentExemptAccount(
+          drip.provider.connection
+        );
+
+        const maxUseableSolBalance =
+          (await drip.provider.connection.getBalance(toPubkey(user))) -
+          (depositForRentExemption + BUFFER_FOR_GAS);
+
+        const uiAmount = maxUseableSolBalance / LAMPORTS_PER_SOL;
+
+        return {
+          decimals: 9,
+          amount: maxUseableSolBalance.toString(),
+          uiAmount: uiAmount,
+          uiAmountString: uiAmount.toString()
+        };
+      }
+
       // Will throw an error if ATA doesn't exist on the wallet
       const tokenBalanceResponse = await drip.provider.connection.getTokenAccountBalance(
         tokenATA,
@@ -38,3 +59,5 @@ export function useTokenBalance(user?: Address, token?: NetworkAddress): TokenAm
     }
   }, [user, drip, token?.toPrimitiveDep(), refreshContext.refreshTrigger]);
 }
+
+const BUFFER_FOR_GAS = 0.01 * LAMPORTS_PER_SOL;
