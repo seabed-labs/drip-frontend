@@ -26,6 +26,7 @@ import { useTokenInfo } from '../hooks/TokenInfo';
 import { NetworkAddress } from '../models/NetworkAddress';
 import { solscanTokenUrl } from '../utils/block-explorer';
 import { displayPubkey, toPubkey } from '../utils/pubkey';
+import { Device } from '../utils/ui/css';
 
 export interface TokenSelectorProps {
   onSelectToken(token: PublicKey): unknown;
@@ -79,32 +80,77 @@ export function TokenSelector({
         borderRadius="50px"
         bgColor="whiteAlpha.100"
         justifyContent="space-between"
-        padding="14px"
-        h="50px"
+        p="10px"
+        h="40px"
         transition="0.3s ease"
         onClick={onOpen}
         disabled={disabled}
         _hover={{
           bgColor: 'whiteAlpha.200',
-          transition: '0.3s ease'
+          transition: '0.3s ease',
+          borderRadius: '50px'
+        }}
+        css={{
+          [`@media ${Device.Tablet}`]: {
+            height: '50px',
+            padding: '14px'
+          }
         }}
       >
         {selectedTokenInfo && (
-          <Image mr="5px" borderRadius="60px" w="28px" src={selectedTokenInfo.logoURI} />
+          <Image
+            mr="5px"
+            borderRadius="60px"
+            w="28px"
+            css={{
+              [`@media ${Device.Tablet}`]: {
+                width: '28px',
+                marginRight: '5px'
+              }
+            }}
+            src={selectedTokenInfo.logoURI}
+          />
         )}
         {selectedTokenInfo ? (
           <Flex ml="2px" flex-direction="row" w="100%" justify-content="flex-start">
-            <Text fontSize="18px">{selectedTokenInfo.symbol}</Text>
+            <Text
+              fontSize="14px"
+              css={{
+                [`@media ${Device.Tablet}`]: {
+                  fontSize: '18px'
+                }
+              }}
+            >
+              {selectedTokenInfo.symbol}
+            </Text>
           </Flex>
         ) : (
-          <Text paddingX="4px" fontSize="18px">
+          <Text
+            paddingX="2px"
+            fontSize="12px"
+            css={{
+              [`@media ${Device.Tablet}`]: {
+                paddingX: '4px',
+                fontSize: '18px'
+              }
+            }}
+          >
             {placeholder}
           </Text>
         )}
       </Button>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent borderRadius="20px" mt="15rem" bgColor="#101010">
+        <ModalContent
+          borderRadius="20px"
+          mt="3rem"
+          css={{
+            [`@media ${Device.Tablet}`]: {
+              marginTop: '15rem'
+            }
+          }}
+          bgColor="#101010"
+        >
           <ModalHeader>{modalTitle}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>

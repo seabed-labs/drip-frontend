@@ -5,6 +5,7 @@ import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import Logo from '../assets/logo.svg';
 import Drip from '../assets/drip.svg';
+import { Device } from '../utils/ui/css';
 
 const StyledContainer = styled.div`
   width: 100%;
@@ -12,47 +13,76 @@ const StyledContainer = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  overflow: hidden;
 `;
 
 const StyledLeftContainer = styled.div`
-  width: 100%;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
+  visibility: hidden;
+  width: 0;
+
+  @media ${Device.Tablet} {
+    visibility: visible;
+    width: 100%;
+  }
 `;
 
 const StyledMiddleContainer = styled.div`
-  width: 100%;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-around;
+  width: 100px;
+
+  @media ${Device.Tablet} {
+    width: 100%;
+  }
 `;
 
 const StyledRightContainer = styled.div`
-  width: 100%;
+  width: 0;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
+  visibility: hidden;
+
+  @media ${Device.Tablet} {
+    visibility: visible;
+    width: 100%;
+  }
 `;
 
 const StyledLogo = styled(Image)`
-  height: 80px;
+  height: 0;
+
+  @media ${Device.Tablet} {
+    height: 80px;
+  }
 `;
 
 const StyledDrip = styled(Image)`
-  height: 80px;
   transform: translateY(-10px);
+  height: 0;
+
+  @media ${Device.Tablet} {
+    height: 80px;
+  }
 `;
 
 const StyledNavButton = styled(Button)<{ selected: boolean }>`
   width: 100px;
   background: transparent !important;
-  font-size: 26px !important;
   color: ${(props) => (props.selected ? '#62aaff' : 'rgba(255, 255, 255, 0.6)')};
   text-decoration: ${(props) => (props.selected ? 'underline' : 'none')};
+  font-size: 22px !important;
+
+  @media ${Device.MobileL} {
+    font-size: 26px !important;
+  }
 
   &:hover {
     color: #62aaff;

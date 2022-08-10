@@ -23,13 +23,25 @@ import { MintButton } from './MintButton';
 import { TokenAmountInput } from './TokenAmountInput';
 import { TokenSelector } from './TokenSelect';
 import { useRefreshContext } from '../contexts/Refresh';
+import { Device } from '../utils/ui/css';
 
 const StyledContainer = styled.div`
-  padding: 40px;
-  width: 520px;
+  padding: 30px;
   background: #101010;
-  border-radius: 60px;
+  border-radius: 40px;
   box-shadow: 0 0 128px 1px rgba(98, 170, 255, 0.15);
+  overflow: hidden;
+  width: 320px;
+
+  @media ${Device.MobileL} {
+    width: 400px;
+    padding: 40px;
+    border-radius: 60px;
+  }
+
+  @media ${Device.Tablet} {
+    width: 520px;
+  }
 `;
 
 const StyledMainRowContainer = styled.div`
@@ -51,7 +63,11 @@ const StyledSubRowContainer = styled.div`
 
 const StyledStepHeader = styled(Text)`
   font-weight: bold;
-  font-size: 22px;
+  font-size: 18px;
+
+  @media ${Device.Tablet} {
+    font-size: 22px;
+  }
 `;
 
 export function DepositBox() {
