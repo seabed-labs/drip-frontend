@@ -12,7 +12,7 @@ export function formatTokenAmountStr(amount: string, decimals: number, pretty = 
 
 export function formatTokenAmount(amount: BN, decimals: number, pretty = false): string {
   const amountDecimal = new Decimal(amount.toString()).div(new Decimal(10).pow(decimals));
-  return pretty ? numeral(amountDecimal.toString()).format('0.[0]a') : amountDecimal.toString();
+  return pretty ? numeral(amountDecimal.toString()).format('0.[00]a') : amountDecimal.toString();
 }
 
 export function formatDecimalTokenAmount(amount: Decimal): string {
