@@ -23,13 +23,23 @@ import { MintButton } from './MintButton';
 import { TokenAmountInput } from './TokenAmountInput';
 import { TokenSelector } from './TokenSelect';
 import { useRefreshContext } from '../contexts/Refresh';
+import { Device } from '../utils/ui/css';
 
 const StyledContainer = styled.div`
-  padding: 40px;
-  width: 520px;
+  padding: 30px;
   background: #101010;
-  border-radius: 60px;
+  border-radius: 40px;
   box-shadow: 0 0 128px 1px rgba(98, 170, 255, 0.15);
+  width: 320px;
+
+  @media ${Device.MobileL} {
+    border-radius: 60px;
+  }
+
+  @media ${Device.Tablet} {
+    width: 460px;
+    padding: 40px;
+  }
 `;
 
 const StyledMainRowContainer = styled.div`
@@ -51,7 +61,11 @@ const StyledSubRowContainer = styled.div`
 
 const StyledStepHeader = styled(Text)`
   font-weight: bold;
-  font-size: 22px;
+  font-size: 18px;
+
+  @media ${Device.Tablet} {
+    font-size: 22px;
+  }
 `;
 
 export function DepositBox() {
@@ -261,7 +275,17 @@ export function DepositBox() {
         <StyledSubRowContainer>
           {readyToDeposit && dripUntil && isValidDate && (
             <Center w="100%">
-              <Text overflow="hidden">{dripPreviewText}</Text>
+              <Text
+                css={{
+                  fontSize: '8px',
+                  [`@media ${Device.Tablet}`]: {
+                    fontSize: '13px'
+                  }
+                }}
+                overflow="hidden"
+              >
+                {dripPreviewText}
+              </Text>
             </Center>
           )}
         </StyledSubRowContainer>

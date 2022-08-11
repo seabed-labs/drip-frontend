@@ -19,8 +19,10 @@ export function useDripPreviewText(
     const numCycles = expiryToNumberOfSwaps(endDate, granularity);
     const dripAmount = new Decimal(amount).div(numCycles);
 
-    return `${formatTokenAmountStr(numCycles.toString(), 0, true)} drips of ${numeral(
-      dripAmount.toSignificantDigits(3).toString()
+    const dripsStr = numCycles === 1 ? 'drip' : 'drips';
+
+    return `${formatTokenAmountStr(numCycles.toString(), 0, true)} ${dripsStr} of ${numeral(
+      dripAmount.toDecimalPlaces(3).toString()
     ).format('0.[000000]a')} ${tokenA} to ${tokenB} every ${displayGranularity(granularity)}`;
   }, [tokenA, tokenB, amount, granularity, endDate]);
 }
