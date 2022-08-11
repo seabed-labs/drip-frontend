@@ -5,12 +5,10 @@ import { DepositBox } from '../component/DepositBox2';
 import { Device } from '../utils/ui/css';
 
 const StyledContainer = styled(Center)`
+  margin-top: 50px;
+
   @media ${Device.Laptop} {
     margin-top: 100px;
-  }
-
-  @media ${Device.MobileS} {
-    margin-top: 50px;
   }
 `;
 

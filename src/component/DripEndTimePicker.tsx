@@ -2,6 +2,7 @@ import { Box } from '@chakra-ui/react';
 import DateTimePicker from 'react-datetime-picker';
 import styled from 'styled-components';
 import sx from 'classnames';
+import { Device } from '../utils/ui/css';
 
 interface DripEndTimePickerProps {
   disabled?: boolean;
@@ -15,10 +16,19 @@ const StyledContainer = styled(Box)`
     border-radius: 50px;
     padding: 10px 12px;
     background-color: rgba(255, 255, 255, 0.06);
-    width: 440px;
+    width: 260px;
+    height: 40px;
+
+    @media ${Device.Tablet} {
+      width: 380px;
+      height: 50px;
+    }
 
     .react-datetime-picker__inputGroup {
-      font-size: 20px;
+      font-size: 10px;
+      @media ${Device.Tablet} {
+        font-size: 18px;
+      }
     }
 
     .react-datetime-picker__wrapper {
@@ -27,10 +37,18 @@ const StyledContainer = styled(Box)`
 
     .react-datetime-picker__clear-button__icon {
       stroke: rgba(255, 255, 255, 0.5);
+      height: 12px;
+      @media ${Device.Tablet} {
+        height: unset;
+      }
     }
 
     .react-datetime-picker__calendar-button__icon {
       stroke: rgba(255, 255, 255, 0.5);
+      height: 12px;
+      @media ${Device.Tablet} {
+        height: unset;
+      }
     }
 
     .react-calendar__month-view__days__day--weekend {
@@ -58,6 +76,11 @@ const StyledContainer = styled(Box)`
     background-color: #101010;
     border: none;
     border-radius: 30px;
+    width: 280px;
+
+    @media ${Device.Tablet} {
+      width: unset;
+    }
 
     button {
       background-color: #101010 !important;

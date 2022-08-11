@@ -101,7 +101,7 @@ export function TokenSelector({
           <Image
             mr="5px"
             borderRadius="60px"
-            w="28px"
+            w="24px"
             css={{
               [`@media ${Device.Tablet}`]: {
                 width: '28px',
@@ -114,7 +114,7 @@ export function TokenSelector({
         {selectedTokenInfo ? (
           <Flex ml="2px" flex-direction="row" w="100%" justify-content="flex-start">
             <Text
-              fontSize="14px"
+              fontSize="12px"
               css={{
                 [`@media ${Device.Tablet}`]: {
                   fontSize: '18px'

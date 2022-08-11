@@ -30,17 +30,15 @@ const StyledContainer = styled.div`
   background: #101010;
   border-radius: 40px;
   box-shadow: 0 0 128px 1px rgba(98, 170, 255, 0.15);
-  overflow: hidden;
   width: 320px;
 
   @media ${Device.MobileL} {
-    width: 400px;
-    padding: 40px;
     border-radius: 60px;
   }
 
   @media ${Device.Tablet} {
-    width: 520px;
+    width: 460px;
+    padding: 40px;
   }
 `;
 
@@ -277,7 +275,17 @@ export function DepositBox() {
         <StyledSubRowContainer>
           {readyToDeposit && dripUntil && isValidDate && (
             <Center w="100%">
-              <Text overflow="hidden">{dripPreviewText}</Text>
+              <Text
+                css={{
+                  fontSize: '8px',
+                  [`@media ${Device.Tablet}`]: {
+                    fontSize: '13px'
+                  }
+                }}
+                overflow="hidden"
+              >
+                {dripPreviewText}
+              </Text>
             </Center>
           )}
         </StyledSubRowContainer>

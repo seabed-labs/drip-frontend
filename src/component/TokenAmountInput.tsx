@@ -20,7 +20,7 @@ export function TokenAmountInput({ disabled = false, onUpdate, amount }: TokenAm
           width: '200px'
         },
         [`@media ${Device.Tablet}`]: {
-          width: '300px'
+          width: '240px'
         }
       }}
     >
