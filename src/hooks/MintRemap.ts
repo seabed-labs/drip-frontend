@@ -11,12 +11,12 @@ const MINT_REMAP: Record<Network, Partial<Record<string, NetworkAddress>>> = {
       'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'
     ),
     // USDT
-    '7ihthG4cFydyDnuA3zmJrX13ePGpLcANf3tHLmKLPN7M': NetworkAddress.from(
+    H9gBUJs5Kc5zyiKRTzZcYom4Hpj9VPHLy4VzExTVPgxa: NetworkAddress.from(
       Network.Mainnet,
       'BQcdHdAQW1hczDbBi9hiegXAR7A98Q9jx3X3iBBBDiq4'
     ),
     // BTC
-    H9gBUJs5Kc5zyiKRTzZcYom4Hpj9VPHLy4VzExTVPgxa: NetworkAddress.from(
+    '7ihthG4cFydyDnuA3zmJrX13ePGpLcANf3tHLmKLPN7M': NetworkAddress.from(
       Network.Mainnet,
       '9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E'
     )
