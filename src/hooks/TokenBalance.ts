@@ -33,9 +33,11 @@ export function useTokenBalance(user?: Address, token?: NetworkAddress): TokenAm
           drip.provider.connection
         );
 
-        const maxUseableSolBalance =
+        const maxUseableSolBalance = Math.max(
           (await drip.provider.connection.getBalance(toPubkey(user))) -
-          (depositForRentExemption + BUFFER_FOR_GAS);
+            (depositForRentExemption + BUFFER_FOR_GAS),
+          0
+        );
 
         const uiAmount = maxUseableSolBalance / LAMPORTS_PER_SOL;
 

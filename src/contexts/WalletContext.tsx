@@ -12,6 +12,11 @@ import {
 } from '@solana/wallet-adapter-wallets';
 import { clusterApiUrl } from '@solana/web3.js';
 import { FC, ReactNode, useMemo } from 'react';
+import {
+  SolanaMobileWalletAdapter,
+  createDefaultAuthorizationResultCache,
+  createDefaultAddressSelector
+} from '@solana-mobile/wallet-adapter-mobile';
 
 export const WalletContext: FC<{ children: ReactNode }> = ({ children }) => {
   // The network can be set to 'devnet', 'testnet', or 'mainnet-beta'.
@@ -31,7 +36,13 @@ export const WalletContext: FC<{ children: ReactNode }> = ({ children }) => {
       new TorusWalletAdapter(),
       new LedgerWalletAdapter(),
       new SolletWalletAdapter({ network }),
-      new SolletExtensionWalletAdapter({ network })
+      new SolletExtensionWalletAdapter({ network }),
+      new SolanaMobileWalletAdapter({
+        addressSelector: createDefaultAddressSelector(),
+        appIdentity: {},
+        authorizationResultCache: createDefaultAuthorizationResultCache(),
+        cluster: network
+      })
     ],
     [network]
   );
