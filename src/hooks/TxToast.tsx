@@ -7,6 +7,16 @@ interface TxToast {
   failure(error: Error): void;
 }
 
+function mapErrorMesage(message: string): string {
+  if (
+    message.includes(
+      'failed to send transaction: Transaction simulation failed: Attempt to debit an account but found no record of a prior credit'
+    )
+  ) {
+    return 'Insufficient funds. (Note: SOL is needed to pay for tx fees)';
+  }
+  return message;
+}
 export function useTxToast(): TxToast {
   const toast = useToast();
 
@@ -31,7 +41,7 @@ export function useTxToast(): TxToast {
       failure(error: Error) {
         toast({
           title: 'Transaction (or simulation) failed',
-          description: error.message,
+          description: mapErrorMesage(error.message),
           status: 'error',
           duration: 9000,
           isClosable: true,
