@@ -11,20 +11,15 @@ const MINT_REMAP: Record<Network, Partial<Record<string, NetworkAddress>>> = {
       'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'
     ),
     // USDT
-    '8ULDKGmKJJaZa32eiL36ARr6cFaZaoAXAosWeg5r17ra': NetworkAddress.from(
+    '7ihthG4cFydyDnuA3zmJrX13ePGpLcANf3tHLmKLPN7M': NetworkAddress.from(
       Network.Mainnet,
       'BQcdHdAQW1hczDbBi9hiegXAR7A98Q9jx3X3iBBBDiq4'
     ),
     // BTC
-    '5nY3xT4PJe7NU41zqBx5UACHDckrimmfwznv4uLenrQg': NetworkAddress.from(
+    H9gBUJs5Kc5zyiKRTzZcYom4Hpj9VPHLy4VzExTVPgxa: NetworkAddress.from(
       Network.Mainnet,
       '9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E'
     )
-    // // ETH
-    // DqakM9iwYs425rToh9LCXzfzc1Xh3A3nrz36QkSJTfNd: NetworkAddress.from(
-    //   Network.Mainnet,
-    //   '7vfCXTUXx5WJV5JADk17DUJ4ksgau7utNKj4b963voxs'
-    // ),
   }
 };
 
