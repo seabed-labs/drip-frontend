@@ -62,4 +62,4 @@ export function useTokenBalance(user?: Address, token?: NetworkAddress): TokenAm
   }, [user, drip, token?.toPrimitiveDep(), refreshContext.refreshTrigger]);
 }
 
-const BUFFER_FOR_GAS = 0.01 * LAMPORTS_PER_SOL;
+const BUFFER_FOR_GAS = 0.03 * LAMPORTS_PER_SOL;
