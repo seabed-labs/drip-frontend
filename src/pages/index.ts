@@ -1,2 +1,2 @@
 export * from './Deposit';
-export * from './Positions2';
+export * from './Positions';
