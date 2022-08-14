@@ -1,7 +1,7 @@
 import { Center } from '@chakra-ui/react';
 import { FC } from 'react';
 import styled from 'styled-components';
-import { DepositBox } from '../component/DepositBox2';
+import { DepositBox } from '../component/DepositBox';
 import { Device } from '../utils/ui/css';
 
 const StyledContainer = styled(Center)`
