@@ -161,7 +161,6 @@ export function DepositBox() {
     });
     refreshContext.forceRefresh();
     setDripUntil(undefined);
-    setGranularity(undefined);
     setDepositAmountStr(undefined);
     return txInfo;
   }, [
