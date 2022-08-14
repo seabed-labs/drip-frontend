@@ -11,8 +11,7 @@ import {
   Text,
   HStack,
   ModalBody,
-  ModalFooter,
-  Button
+  ModalFooter
 } from '@chakra-ui/react';
 import { QuoteToken } from '@dcaf-labs/drip-sdk';
 import {
@@ -21,19 +20,14 @@ import {
 } from '@dcaf-labs/drip-sdk/dist/interfaces/drip-querier/results';
 import { TokenInfo } from '@solana/spl-token-registry';
 import { BN } from 'bn.js';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { useAsyncMemo } from 'use-async-memo';
 import { useDripContext } from '../contexts/DripContext';
 import { useRefreshContext } from '../contexts/Refresh';
 import { VaultPositionAccountWithPubkey } from '../hooks/Positions';
 import { formatDate } from '../utils/date';
-import { delay } from '../utils/time';
-import {
-  formatDecimalTokenAmount,
-  formatTokenAmount,
-  formatTokenAmountStr
-} from '../utils/token-amount';
+import { formatTokenAmount } from '../utils/token-amount';
 import { displayGranularity } from './GranularitySelect';
 import { TransactionButton } from './TransactionButton';
 
@@ -247,7 +241,7 @@ export function PositionModal({
                 <StyledModalFieldHeader>Avg. Drip Price</StyledModalFieldHeader>
                 <StyledModalFieldValue>
                   {averagePrice && tokenAInfo && tokenBInfo ? (
-                    `${formatDecimalTokenAmount(averagePrice)} ${tokenAInfo.symbol} per ${
+                    `${formatTokenAmount(averagePrice, 0, true)} ${tokenAInfo.symbol} per ${
                       tokenBInfo.symbol
                     }`
                   ) : closePositionPreviewLoading || (accruedTokenB && accruedTokenB.eqn(0)) ? (

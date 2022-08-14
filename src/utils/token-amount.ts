@@ -10,13 +10,20 @@ export function formatTokenAmountStr(amount: string, decimals: number, pretty = 
   return formatTokenAmount(new BN(amount), decimals, pretty);
 }
 
-export function formatTokenAmount(amount: BN, decimals: number, pretty = false): string {
+export function formatTokenAmount(amount: BN | Decimal, decimals: number, pretty = false): string {
   const amountDecimal = new Decimal(amount.toString()).div(new Decimal(10).pow(decimals));
-  return pretty ? numeral(amountDecimal.toString()).format('0.[00]a') : amountDecimal.toString();
+  if (!pretty) {
+    return amountDecimal.toString();
+  }
+  if (amountDecimal.lessThan(0.01) && amountDecimal.greaterThan(0)) {
+    return numeral(amountDecimal.toString()).format('0.0e+0');
+  } else {
+    return formatDecimalTokenAmount(amountDecimal);
+  }
 }
 
 export function formatDecimalTokenAmount(amount: Decimal): string {
-  return numeral(amount.toString()).format('0.[000]a');
+  return numeral(amount.toString()).format('0.[00]a');
 }
 
 export function parseTokenAmount(amount: string, decimals: number): BN {

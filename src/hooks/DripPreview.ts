@@ -1,8 +1,7 @@
 import { Granularity, expiryToNumberOfSwaps } from '@dcaf-labs/drip-sdk';
 import Decimal from 'decimal.js';
-import numeral from 'numeral';
 import { useMemo } from 'react';
-import { formatTokenAmountStr } from '../utils/token-amount';
+import { formatTokenAmount, formatTokenAmountStr } from '../utils/token-amount';
 
 export function useDripPreviewText(
   tokenA?: string,
@@ -20,10 +19,14 @@ export function useDripPreviewText(
     const dripAmount = new Decimal(amount).div(numCycles);
 
     const dripsStr = numCycles === 1 ? 'drip' : 'drips';
-
-    return `${formatTokenAmountStr(numCycles.toString(), 0, true)} ${dripsStr} of ${numeral(
-      dripAmount.toDecimalPlaces(3).toString()
-    ).format('0.[000000]a')} ${tokenA} to ${tokenB} every ${displayGranularity(granularity)}`;
+    const periodicDripAmountStr = formatTokenAmount(dripAmount, 0, true);
+    return `${formatTokenAmountStr(
+      numCycles.toString(),
+      0,
+      true
+    )} ${dripsStr} of ${periodicDripAmountStr} ${tokenA} to ${tokenB} every ${displayGranularity(
+      granularity
+    )}`;
   }, [tokenA, tokenB, amount, granularity, endDate]);
 }
 
