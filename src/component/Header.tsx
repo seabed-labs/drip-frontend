@@ -13,7 +13,6 @@ const StyledContainer = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  overflow: hidden;
 `;
 
 const StyledLeftContainer = styled.div`
