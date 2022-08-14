@@ -122,6 +122,12 @@ export function DepositBox() {
 
   const drip = useDripContext();
   const network = useNetwork();
+  const postSubmit = () => {
+    refreshContext.forceRefresh();
+    setDripUntil(undefined);
+    setDepositAmountStr(undefined);
+  };
+
   const deposit = useCallback(async () => {
     if (!drip) throw new Error('Drip SDK is undefined');
     if (!tokenA) throw new Error('Token A is undefined');
@@ -159,9 +165,6 @@ export function DepositBox() {
         expiry: dripUntil
       }
     });
-    refreshContext.forceRefresh();
-    setDripUntil(undefined);
-    setDepositAmountStr(undefined);
     return txInfo;
   }, [
     drip,
@@ -301,6 +304,8 @@ export function DepositBox() {
               }
               mt="10px"
               sendTx={deposit}
+              onSucess={postSubmit}
+              onError={postSubmit}
             />
           </Center>
         </StyledSubRowContainer>

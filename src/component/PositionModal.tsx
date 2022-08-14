@@ -135,14 +135,15 @@ export function PositionModal({
     return txInfo;
   }, [dripPosition, refreshContext.forceRefresh]);
 
-  const closePosition = useCallback(async () => {
-    if (!dripPosition) throw new Error('Drip position is undefined');
-
-    const txInfo = await dripPosition.closePosition();
+  const postSubmit = () => {
     setClosePositionPreviewLoading(true);
     refreshContext.forceRefresh();
     onClose();
-    return txInfo;
+  };
+
+  const closePosition = useCallback(async () => {
+    if (!dripPosition) throw new Error('Drip position is undefined');
+    return await dripPosition.closePosition();
   }, [dripPosition, refreshContext.forceRefresh]);
 
   const accruedTokenB = useMemo(
@@ -320,6 +321,8 @@ export function PositionModal({
                 w="100%"
                 sendTx={closePosition}
                 text="Close Position"
+                onSucess={postSubmit}
+                onError={postSubmit}
               />
             </StyledModalCol>
             <StyledModalCol>
@@ -339,6 +342,8 @@ export function PositionModal({
                 w="100%"
                 sendTx={withdrawTokenB}
                 text={`Withdraw ${tokenBInfo?.symbol}`}
+                onSucess={postSubmit}
+                onError={postSubmit}
               />
             </StyledModalCol>
           </StyledModalGrid>

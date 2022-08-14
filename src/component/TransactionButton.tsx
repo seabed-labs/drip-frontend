@@ -10,12 +10,16 @@ interface TransactionButtonProps {
   text: string;
   disabled?: boolean;
   sendTx: () => Promise<BroadcastTransactionWithMetadata<unknown>>;
+  onSucess: () => void;
+  onError: () => void;
 }
 
 export function TransactionButton({
   disabled,
   text,
   sendTx,
+  onSucess,
+  onError,
   ...buttonProps
 }: TransactionButtonProps & ButtonProps) {
   const [loading, setLoading] = useState(false);
@@ -29,9 +33,11 @@ export function TransactionButton({
       setLoading(true);
       const txInfo = await sendTx();
       txToast.success(txInfo);
+      onSucess();
     } catch (err) {
       console.error(`Error during ${text}: ${err}`);
       txToast.failure(err as Error);
+      onError();
     } finally {
       setLoading(false);
     }
