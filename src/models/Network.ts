@@ -1,4 +1,5 @@
 import { ENV } from '@solana/spl-token-registry';
+import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 
 export enum Network {
   Mainnet,
@@ -32,5 +33,23 @@ export function isSupportedENV(env: ENV): boolean {
       return true;
     default:
       return false;
+  }
+}
+
+export function getClusterApiUrl(network: Network): string {
+  switch (network) {
+    case Network.Mainnet:
+      return 'https://ssc-dao.genesysgo.net';
+    case Network.Devnet:
+      return 'https://devnet.genesysgo.net';
+  }
+}
+
+export function toWalletAdapterNetwork(network: Network): WalletAdapterNetwork {
+  switch (network) {
+    case Network.Mainnet:
+      return WalletAdapterNetwork.Mainnet;
+    case Network.Devnet:
+      return WalletAdapterNetwork.Devnet;
   }
 }

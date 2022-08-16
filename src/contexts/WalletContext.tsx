@@ -1,4 +1,3 @@
-import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
 import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
 import {
@@ -10,38 +9,35 @@ import {
   SolletWalletAdapter,
   TorusWalletAdapter
 } from '@solana/wallet-adapter-wallets';
-import { clusterApiUrl } from '@solana/web3.js';
 import { FC, ReactNode, useMemo } from 'react';
 import {
   SolanaMobileWalletAdapter,
   createDefaultAuthorizationResultCache,
   createDefaultAddressSelector
 } from '@solana-mobile/wallet-adapter-mobile';
+import { useNetwork } from './NetworkContext';
+import { getClusterApiUrl, toWalletAdapterNetwork } from '../models/Network';
 
 export const WalletContext: FC<{ children: ReactNode }> = ({ children }) => {
-  // The network can be set to 'devnet', 'testnet', or 'mainnet-beta'.
-  const network = WalletAdapterNetwork.Devnet;
+  const network = useNetwork();
 
-  // You can also provide a custom RPC endpoint.
-  const endpoint = useMemo(() => clusterApiUrl(network), [network]);
+  const endpoint = useMemo(() => getClusterApiUrl(network), [network]);
+  const walletAdapterNetwork = useMemo(() => toWalletAdapterNetwork(network), [network]);
 
-  // @solana/wallet-adapter-wallets includes all the adapters but supports tree shaking and lazy loading --
-  // Only the wallets you configure here will be compiled into your application, and only the dependencies
-  // of wallets that your users connect to will be loaded.
   const wallets = useMemo(
     () => [
-      new PhantomWalletAdapter(),
+      new PhantomWalletAdapter({ network }),
       new SlopeWalletAdapter(),
-      new SolflareWalletAdapter({ network }),
+      new SolflareWalletAdapter({ network: walletAdapterNetwork }),
       new TorusWalletAdapter(),
       new LedgerWalletAdapter(),
-      new SolletWalletAdapter({ network }),
-      new SolletExtensionWalletAdapter({ network }),
+      new SolletWalletAdapter({ network: walletAdapterNetwork }),
+      new SolletExtensionWalletAdapter({ network: walletAdapterNetwork }),
       new SolanaMobileWalletAdapter({
         addressSelector: createDefaultAddressSelector(),
         appIdentity: {},
         authorizationResultCache: createDefaultAuthorizationResultCache(),
-        cluster: network
+        cluster: walletAdapterNetwork
       })
     ],
     [network]
