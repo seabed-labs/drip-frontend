@@ -13,9 +13,12 @@ import { useTokenInfoMap } from './hooks/TokenInfoMap';
 import { Deposit, Positions } from './pages';
 import { theme } from './theme';
 import { Device } from './utils/ui/css';
-
+import ReactGA from 'react-ga';
 require('./App.css');
 require('@solana/wallet-adapter-react-ui/styles.css');
+
+const TRACKING_ID = process.env.REACT_APP_TRACKING_ID ?? 'UA-237792885-1'; // OUR_TRACKING_ID
+ReactGA.initialize(TRACKING_ID);
 
 const StyledAppContainer = styled.div`
   min-height: 100vh;
