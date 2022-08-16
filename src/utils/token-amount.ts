@@ -15,7 +15,7 @@ export function formatTokenAmount(amount: BN | Decimal, decimals: number, pretty
   if (!pretty) {
     return amountDecimal.toString();
   }
-  if (amountDecimal.lessThan(0.01) && amountDecimal.greaterThan(0)) {
+  if (amountDecimal.lessThan(0.01) && amountDecimal.greaterThan(0.00001)) {
     return numeral(amountDecimal.toString()).format('0.0e+0');
   } else {
     return formatDecimalTokenAmount(amountDecimal);
