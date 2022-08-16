@@ -1,5 +1,5 @@
 import { ChakraProvider } from '@chakra-ui/react';
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import styled from 'styled-components';
 import { Banner } from './component/Banner';
@@ -37,6 +37,10 @@ const App: FC = () => {
   const drip = useDrip();
   const tokenInfoMap = useTokenInfoMap();
   const [refreshTrigger, forceRefresh] = useStateRefresh();
+
+  useEffect(() => {
+    ReactGA.pageview(window.location.pathname + window.location.search);
+  }, []);
 
   return (
     <ChakraProvider theme={theme}>
