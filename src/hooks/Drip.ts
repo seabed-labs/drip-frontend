@@ -1,5 +1,4 @@
 import { Drip } from '@dcaf-labs/drip-sdk';
-import { Network } from '@dcaf-labs/drip-sdk/dist/models';
 import { AnchorProvider } from '@project-serum/anchor';
 import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react';
 import { Connection, PublicKey, Transaction } from '@solana/web3.js';
