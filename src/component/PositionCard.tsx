@@ -62,6 +62,14 @@ export function PositionCard({ position }: PositionCardProps) {
     );
   }, [position, vault, protoConfig]);
 
+  const estimatedNextDripDate = useMemo(() => {
+    if (!vault) return undefined;
+
+    return new Date(vault.dripActivationTimestamp.toNumber() * 1e3);
+  }, [vault]);
+
+  const positonIsDoneDripping = estimatedEndDate === '-';
+
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -125,9 +133,17 @@ export function PositionCard({ position }: PositionCardProps) {
             )}
           </StyledDataRow>
           <StyledDataRow>
-            <StyledDataKey>{'Est. End Date'}</StyledDataKey>
+            <StyledDataKey>{'Est. End'}</StyledDataKey>
             {estimatedEndDate ? (
-              <Text>{estimatedEndDate !== '-' ? formatDate(estimatedEndDate) : '-'}</Text>
+              <Text>{!positonIsDoneDripping ? formatDate(estimatedEndDate) : '-'}</Text>
+            ) : (
+              <Skeleton h="20px" w="100px" />
+            )}
+          </StyledDataRow>
+          <StyledDataRow>
+            <StyledDataKey>{'Est. Next Drip'}</StyledDataKey>
+            {estimatedEndDate && estimatedNextDripDate ? (
+              <Text>{!positonIsDoneDripping ? formatDate(estimatedNextDripDate) : '-'}</Text>
             ) : (
               <Skeleton h="20px" w="100px" />
             )}
