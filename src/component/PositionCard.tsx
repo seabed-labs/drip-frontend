@@ -64,8 +64,11 @@ export function PositionCard({ position }: PositionCardProps) {
 
   const estimatedNextDripDate = useMemo(() => {
     if (!vault) return undefined;
-
-    return new Date(vault.dripActivationTimestamp.toNumber() * 1e3);
+    const vaultDripActivationDate = new Date(vault.dripActivationTimestamp.toNumber() * 1e3);
+    if (vaultDripActivationDate < new Date()) {
+      return new Date();
+    }
+    return vaultDripActivationDate;
   }, [vault]);
 
   const positonIsDoneDripping = estimatedEndDate === '-';
