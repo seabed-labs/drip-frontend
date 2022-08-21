@@ -1,4 +1,4 @@
-import { Center, Grid, GridItem, Spinner, Text, VStack } from '@chakra-ui/react';
+import { Center, SimpleGrid, Spinner, Text, VStack } from '@chakra-ui/react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { FC } from 'react';
 import { PositionCard } from '../component/PositionCard';
@@ -42,12 +42,17 @@ export const Positions: FC = () => {
   }
 
   return (
-    <Grid templateColumns="repeat(3, 1fr)" gap="80px" mt="80px">
+    <SimpleGrid
+      w="100%"
+      minChildWidth="290px"
+      justifyItems="center"
+      spacingX="80px"
+      spacingY="40px"
+      mt="40px"
+    >
       {positions.map((position) => (
-        <GridItem key={position.pubkey.toBase58()}>
-          <PositionCard position={position} />
-        </GridItem>
+        <PositionCard key={position.pubkey.toBase58()} position={position} />
       ))}
-    </Grid>
+    </SimpleGrid>
   );
 };

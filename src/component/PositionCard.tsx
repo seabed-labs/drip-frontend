@@ -10,6 +10,7 @@ import { VaultPositionAccountWithPubkey } from '../hooks/Positions';
 import { useTokenInfo } from '../hooks/TokenInfo';
 import { formatDate } from '../utils/date';
 import { formatTokenAmount } from '../utils/token-amount';
+import { Device } from '../utils/ui/css';
 import { displayGranularity } from './GranularitySelect';
 import { PositionModal } from './PositionModal';
 
@@ -92,7 +93,7 @@ export function PositionCard({ position }: PositionCardProps) {
               <Skeleton h="40px" w="120px" />
             )}
           </HStack>
-          <ArrowRightIcon w="20px" />
+          <ArrowRightIcon w="12px" />
           <HStack>
             {tokenBInfo ? (
               <>
@@ -120,7 +121,7 @@ export function PositionCard({ position }: PositionCardProps) {
             )}
           </StyledDataRow>
           <StyledDataRow>
-            <StyledDataKey>Open Date</StyledDataKey>
+            <StyledDataKey>Start</StyledDataKey>
             {tokenAInfo ? (
               <Text>{formatDate(new Date(position.depositTimestamp.muln(1e3).toNumber()))}</Text>
             ) : (
@@ -128,7 +129,7 @@ export function PositionCard({ position }: PositionCardProps) {
             )}
           </StyledDataRow>
           <StyledDataRow>
-            <StyledDataKey>Drip Frequency</StyledDataKey>
+            <StyledDataKey>Frequency</StyledDataKey>
             {protoConfig ? (
               <Text>{displayGranularity(protoConfig.granularity.toNumber())}</Text>
             ) : (
@@ -136,7 +137,7 @@ export function PositionCard({ position }: PositionCardProps) {
             )}
           </StyledDataRow>
           <StyledDataRow>
-            <StyledDataKey>{'Est. End'}</StyledDataKey>
+            <StyledDataKey>End</StyledDataKey>
             {estimatedEndDate ? (
               <Text>{!positonIsDoneDripping ? formatDate(estimatedEndDate) : '-'}</Text>
             ) : (
@@ -144,7 +145,7 @@ export function PositionCard({ position }: PositionCardProps) {
             )}
           </StyledDataRow>
           <StyledDataRow>
-            <StyledDataKey>{'Est. Next Drip'}</StyledDataKey>
+            <StyledDataKey>Next Drip</StyledDataKey>
             {estimatedEndDate && estimatedNextDripDate ? (
               <Text>{!positonIsDoneDripping ? formatDate(estimatedNextDripDate) : '-'}</Text>
             ) : (
@@ -198,11 +199,15 @@ const StyledContainer = styled(Box)`
   justify-content: flex-start;
   align-items: center;
   padding: 30px;
-  width: 367px;
+  width: 290px;
   background: #101010;
   border-radius: 30px;
   box-shadow: 0 0 30px 1px rgba(49, 85, 128, 0.15);
   transition: 0.3s ease;
+
+  @media ${Device.MobileL} {
+    width: 367px;
+  }
 
   &:hover {
     transform: translateY(-4px);
@@ -213,7 +218,10 @@ const StyledContainer = styled(Box)`
 
 const StyledHeaderContainer = styled(Box)`
   width: 100%;
-  font-size: 32px;
+  font-size: 24px;
+  @media ${Device.MobileL} {
+    font-size: 32px;
+  }
   font-weight: bold;
   display: flex;
   flex-direction: row;
@@ -222,7 +230,10 @@ const StyledHeaderContainer = styled(Box)`
 `;
 
 const StyledTokenIcon = styled(Image)`
-  width: 32px;
+  width: 28px;
+  @media ${Device.MobileL} {
+    width: 32px;
+  }
   border-radius: 50px;
 `;
 

@@ -28,6 +28,7 @@ import { useRefreshContext } from '../contexts/Refresh';
 import { VaultPositionAccountWithPubkey } from '../hooks/Positions';
 import { formatDate } from '../utils/date';
 import { formatTokenAmount } from '../utils/token-amount';
+import { Device } from '../utils/ui/css';
 import { displayGranularity } from './GranularitySelect';
 import { TransactionButton } from './TransactionButton';
 
@@ -167,7 +168,7 @@ export function PositionModal({
               ) : (
                 <Skeleton h="40px" w="120px" />
               )}
-              <ArrowRightIcon w="20px" />
+              <ArrowRightIcon w="12px" />
               {tokenBInfo ? (
                 <HStack>
                   <StyledTokenIcon
@@ -185,7 +186,8 @@ export function PositionModal({
                 border="2px solid #62AAFF"
                 borderRadius="50px"
                 padding="5px 10px"
-                fontSize="14px"
+                fontSize="12px"
+                ml="5px"
               >
                 {displayGranularity(vaultProtoConfig.granularity.toNumber())}
               </Text>
@@ -198,7 +200,7 @@ export function PositionModal({
           <StyledModalGrid>
             <StyledModalCol h="300px">
               <StyledModalField>
-                <StyledModalFieldHeader>Initial Deposit</StyledModalFieldHeader>
+                <StyledModalFieldHeader>Deposit</StyledModalFieldHeader>
                 <StyledModalFieldValue>
                   {tokenAInfo ? (
                     `${formatTokenAmount(
@@ -224,7 +226,7 @@ export function PositionModal({
                 </StyledModalFieldValue>
               </StyledModalField>
               <StyledModalField>
-                <StyledModalFieldHeader>Est. End Date</StyledModalFieldHeader>
+                <StyledModalFieldHeader>End</StyledModalFieldHeader>
                 <StyledModalFieldValue>
                   {estimatedEndDate ? (
                     estimatedEndDate !== '-' ? (
@@ -238,12 +240,17 @@ export function PositionModal({
                 </StyledModalFieldValue>
               </StyledModalField>
               <StyledModalField>
-                <StyledModalFieldHeader>Avg. Drip Price</StyledModalFieldHeader>
+                <StyledModalFieldHeader>Avg. Price</StyledModalFieldHeader>
                 <StyledModalFieldValue>
                   {averagePrice && tokenAInfo && tokenBInfo ? (
-                    `${formatTokenAmount(averagePrice, 0, true)} ${tokenAInfo.symbol} per ${
-                      tokenBInfo.symbol
-                    }`
+                    <Text>
+                      <StyledPriceValue>{`${formatTokenAmount(
+                        averagePrice,
+                        0,
+                        true
+                      )}`}</StyledPriceValue>{' '}
+                      <StyledPriceUnit>{`${tokenAInfo.symbol} per ${tokenBInfo.symbol}`}</StyledPriceUnit>
+                    </Text>
                   ) : closePositionPreviewLoading || (accruedTokenB && accruedTokenB.eqn(0)) ? (
                     '-'
                   ) : (
@@ -254,7 +261,7 @@ export function PositionModal({
             </StyledModalCol>
             <StyledModalCol h="300px">
               <StyledModalField>
-                <StyledModalFieldHeader>Open Date</StyledModalFieldHeader>
+                <StyledModalFieldHeader>Start</StyledModalFieldHeader>
                 <StyledModalFieldValue>
                   {formatDate(new Date(position.depositTimestamp.muln(1e3).toNumber()))}
                 </StyledModalFieldValue>
@@ -349,18 +356,26 @@ export function PositionModal({
 
 const StyledHeaderContainer = styled(Box)`
   width: 100%;
-  font-size: 32px;
+  font-size: 20px;
   font-weight: bold;
   display: flex;
   flex-direction: row;
   align-items: center;
   margin-bottom: -24px;
   justify-content: space-between;
+
+  @media ${Device.MobileL} {
+    font-size: 30px;
+  }
 `;
 
 const StyledTokenIcon = styled(Image)`
-  width: 32px;
+  width: 20px;
   border-radius: 50px;
+
+  @media ${Device.MobileL} {
+    width: 30px;
+  }
 `;
 
 const StyledDripHeader = styled(Box)`
@@ -397,10 +412,27 @@ const StyledModalField = styled(Box)`
 
 const StyledModalFieldHeader = styled(Text)`
   font-weight: 600;
-  font-size: 18px;
+  font-size: 14px;
   color: #62aaff;
+
+  @media ${Device.MobileL} {
+    font-size: 18px;
+  }
 `;
 
 const StyledModalFieldValue = styled(Text)`
-  font-size: 18px;
+  font-size: 14px;
+
+  @media ${Device.MobileL} {
+    font-size: 16px;
+  }
+`;
+
+const StyledPriceValue = styled(Text)`
+  display: inline-block;
+`;
+const StyledPriceUnit = styled(Text)`
+  display: inline-block;
+  font-size: 13px;
+  opacity: 60%;
 `;
