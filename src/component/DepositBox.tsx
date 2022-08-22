@@ -125,7 +125,7 @@ export function DepositBox() {
   const postSubmit = () => {
     refreshContext.forceRefresh();
     setDripUntil(undefined);
-    setDepositAmountStr(undefined);
+    setDepositAmountStr('');
   };
 
   const deposit = useCallback(async () => {
@@ -220,7 +220,7 @@ export function DepositBox() {
             placeholder="Select Token A"
             onSelectToken={(token) => {
               setTokenA(token);
-              setDepositAmountStr(undefined);
+              setDepositAmountStr('');
               setGranularity(undefined);
               setTokenB(undefined);
               setDripUntil(undefined);
