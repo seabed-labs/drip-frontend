@@ -122,10 +122,18 @@ export function DepositBox() {
 
   const drip = useDripContext();
   const network = useNetwork();
-  const postSubmit = () => {
+
+  const onSubmitSuccess = () => {
     refreshContext.forceRefresh();
     setDripUntil(undefined);
+    setGranularity(undefined);
+    setTokenA(undefined);
+    setTokenB(undefined);
     setDepositAmountStr('');
+  };
+
+  const onSubmitFailure = () => {
+    refreshContext.forceRefresh();
   };
 
   const deposit = useCallback(async () => {
@@ -304,8 +312,8 @@ export function DepositBox() {
               }
               mt="10px"
               sendTx={deposit}
-              onSucess={postSubmit}
-              onError={postSubmit}
+              onSucess={onSubmitSuccess}
+              onError={onSubmitFailure}
             />
           </Center>
         </StyledSubRowContainer>
