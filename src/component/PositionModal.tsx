@@ -243,13 +243,16 @@ export function PositionModal({
                 <StyledModalFieldHeader>Avg. Price</StyledModalFieldHeader>
                 <StyledModalFieldValue>
                   {averagePrice && tokenAInfo && tokenBInfo ? (
-                    <Text>
+                    <Text display="flex" flexDir="row" alignItems="flex-end">
                       <StyledPriceValue>{`${formatTokenAmount(
                         averagePrice,
                         0,
                         true
-                      )}`}</StyledPriceValue>{' '}
-                      <StyledPriceUnit>{`${tokenAInfo.symbol} per ${tokenBInfo.symbol}`}</StyledPriceUnit>
+                      )}`}</StyledPriceValue>
+                      <Text w="5px" display="inline"></Text>
+                      <StyledPriceUnit>
+                        {`${tokenAInfo.symbol} per ${tokenBInfo.symbol}`}
+                      </StyledPriceUnit>
                     </Text>
                   ) : closePositionPreviewLoading || (accruedTokenB && accruedTokenB.eqn(0)) ? (
                     '-'
