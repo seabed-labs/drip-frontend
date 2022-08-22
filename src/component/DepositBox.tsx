@@ -298,6 +298,21 @@ export function DepositBox() {
               </Text>
             </Center>
           )}
+          {dripUntil && granularity && !isValidDate && (
+            <Center w="100%">
+              <Text
+                css={{
+                  fontSize: '8px',
+                  [`@media ${Device.Tablet}`]: {
+                    fontSize: '13px'
+                  }
+                }}
+                overflow="hidden"
+              >
+                Enter a future date (minimum 2 drips required)
+              </Text>
+            </Center>
+          )}
         </StyledSubRowContainer>
         <StyledSubRowContainer>
           <Center w="100%">

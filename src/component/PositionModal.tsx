@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { ArrowRightIcon } from '@chakra-ui/icons';
+import { ArrowRightIcon, RepeatIcon } from '@chakra-ui/icons';
 import {
   Box,
   Modal,
@@ -55,6 +55,7 @@ export function PositionModal({
 }: PositionModalProps) {
   const drip = useDripContext();
   const refreshContext = useRefreshContext();
+  const [isPriceFlipped, setIsPriceFlipped] = useState(false);
 
   const dripPosition = useAsyncMemo(
     async () => drip?.getPosition(position.pubkey),
@@ -240,16 +241,37 @@ export function PositionModal({
                 </StyledModalFieldValue>
               </StyledModalField>
               <StyledModalField>
-                <StyledModalFieldHeader>Avg. Price</StyledModalFieldHeader>
+                <StyledModalFieldHeader>
+                  <Text display="inline">Avg. Price</Text>
+                  {averagePrice && (
+                    <RepeatIcon
+                      onClick={() => setIsPriceFlipped((isFlipped) => !isFlipped)}
+                      _hover={{
+                        color: 'rgba(255, 255, 255, 0.8)',
+                        transition: '0.2s ease'
+                      }}
+                      transition="0.2s ease"
+                      cursor="pointer"
+                      color="rgba(255, 255, 255, 0.6)"
+                      ml="6px"
+                      w="12px"
+                    />
+                  )}
+                </StyledModalFieldHeader>
                 <StyledModalFieldValue>
                   {averagePrice && tokenAInfo && tokenBInfo ? (
-                    <Text>
+                    <Text display="flex" flexDir="row" alignItems="flex-end">
                       <StyledPriceValue>{`${formatTokenAmount(
-                        averagePrice,
+                        isPriceFlipped ? averagePrice.pow(-1) : averagePrice,
                         0,
                         true
-                      )}`}</StyledPriceValue>{' '}
-                      <StyledPriceUnit>{`${tokenAInfo.symbol} per ${tokenBInfo.symbol}`}</StyledPriceUnit>
+                      )}`}</StyledPriceValue>
+                      <Text w="5px" display="inline"></Text>
+                      <StyledPriceUnit>
+                        {isPriceFlipped
+                          ? `${tokenBInfo.symbol} per ${tokenAInfo.symbol}`
+                          : `${tokenAInfo.symbol} per ${tokenBInfo.symbol}`}
+                      </StyledPriceUnit>
                     </Text>
                   ) : closePositionPreviewLoading || (accruedTokenB && accruedTokenB.eqn(0)) ? (
                     '-'
