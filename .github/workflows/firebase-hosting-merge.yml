@@ -40,6 +40,7 @@ jobs:
         run: yarn
 
       - name: install firebase tools
+        if: steps.cache-modules.outputs.cache-hit != 'true'
         run: npm install -g firebase-tools
 
   build_and_deploy_devnet:
