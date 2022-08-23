@@ -15,13 +15,50 @@ on:
       - '*'
 
 jobs:
+  install_node_modules:
+    name: install and cache node node_modules
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: ⚡️ cache
+        id: cache-modules
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{ matrix.node-version }}-${{ runner.OS }}-build-${{ hashFiles('package.json') }}
+
+      - name: setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: install node_modules
+        run: yarn
+
   build_and_deploy_devnet:
     name: build and deploy internal devnet app
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: REACT_APP_NETWORK=DEVNET yarn build
-      - uses: FirebaseExtended/action-hosting-deploy@v0
+
+      - name: ⚡️ cache
+        id: cache-modules
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{ matrix.node-version }}-${{ runner.OS }}-build-${{ hashFiles('package.json') }}
+
+      - name: setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: build
+        run: REACT_APP_NETWORK=DEVNET yarn build
+
+      - name: deploy
+        uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_INTERNAL_DRIP_DEVNET }}'
@@ -34,11 +71,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: REACT_APP_NETWORK=MAINNETBETA yarn build
+
+      - name: ⚡️ cache
+        id: cache-modules
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{ matrix.node-version }}-${{ runner.OS }}-build-${{ hashFiles('package.json') }}
+
+      - name: setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: build
+        run: REACT_APP_NETWORK=MAINNETBETA yarn build
+
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_INTERNAL_DRIP_DEVNET }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_INTERNAL_DRIP_MAINNET }}'
           channelId: live
           target: mainnet
-          projectId: internal-drip-devnet
+          projectId: internal-drip-mainnet
