@@ -67,8 +67,8 @@ jobs:
       - name: build
         run: REACT_APP_NETWORK=DEVNET yarn build
 
-      - name: set project
-        run: firebase use devnet
+      # - name: set project
+      #   run: firebase use devnet
 
       - name: deploy
         uses: FirebaseExtended/action-hosting-deploy@v0
@@ -103,8 +103,8 @@ jobs:
       - name: build
         run: REACT_APP_NETWORK=MAINNETBETA yarn build
 
-      - name: set project
-        run: firebase use mainnet
+      # - name: set project
+      #   run: firebase use mainnet
 
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
