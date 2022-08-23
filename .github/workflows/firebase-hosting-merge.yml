@@ -37,6 +37,7 @@ jobs:
         run: yarn
 
   build_and_deploy_devnet:
+    needs: [install_node_modules]
     name: build and deploy internal devnet app
     runs-on: ubuntu-latest
     steps:
@@ -67,6 +68,7 @@ jobs:
           projectId: internal-drip-devnet
 
   build_and_deploy_mainnet:
+    needs: [install_node_modules]
     name: build and deploy internal mainnet app
     runs-on: ubuntu-latest
     steps:
