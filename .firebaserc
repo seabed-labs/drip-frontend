@@ -1,15 +1,18 @@
 {
   "projects": {
-    "devnet": "internal-drip-devnet",
-    "mainnet": "internal-drip-mainnet"
+    "default": "internal-drip-devnet"
   },
   "targets": {
     "internal-drip-mainnet": {
       "hosting": {
-        "mainnet": [
+        "main": [
           "internal-drip-mainnet"
-        ],
-        "devnet": [
+        ]
+      }
+    },
+    "internal-drip-devnet": {
+      "hosting": {
+        "main": [
           "internal-drip-devnet"
         ]
       }
