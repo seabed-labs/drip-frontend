@@ -1,0 +1,7 @@
+{
+  "projects": {
+    "default": "internal-drip-devnet",
+    "devnet": "internal-drip-devnet",
+    "mainnet": "internal-drip-mainnet"
+  }
+}
