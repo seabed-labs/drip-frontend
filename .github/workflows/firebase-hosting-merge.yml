@@ -36,6 +36,7 @@ jobs:
           node-version: 16
 
       - name: install node_modules
+        if: steps.cache-modules.outputs.cache-hit != 'true'
         run: yarn
 
       - name: install firebase tools
