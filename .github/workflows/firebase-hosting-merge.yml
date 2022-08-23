@@ -64,7 +64,7 @@ jobs:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_INTERNAL_DRIP_DEVNET }}'
           channelId: live
-          target: devnet
+          # target: devnet
           projectId: internal-drip-devnet
 
   build_and_deploy_mainnet:
@@ -94,5 +94,5 @@ jobs:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_INTERNAL_DRIP_MAINNET }}'
           channelId: live
-          target: mainnet
+          # target: mainnet
           projectId: internal-drip-mainnet
