@@ -53,7 +53,9 @@ jobs:
         id: cache-modules
         uses: actions/cache@v1
         with:
-          path: node_modules
+          path: |
+            node_modules
+            /opt/hostedtoolcache/node
           key: ${{ matrix.node-version }}-${{ runner.OS }}-build-${{ hashFiles('package.json') }}
 
       - name: setup node
@@ -87,7 +89,9 @@ jobs:
         id: cache-modules
         uses: actions/cache@v1
         with:
-          path: node_modules
+          path: |
+            node_modules
+            /opt/hostedtoolcache/node
           key: ${{ matrix.node-version }}-${{ runner.OS }}-build-${{ hashFiles('package.json') }}
 
       - name: setup node
