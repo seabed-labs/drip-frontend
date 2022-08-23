@@ -1,14 +1,7 @@
 {
-  "hosting": [
-    {
-      "target": "devnet",
-      "public": "build",
-      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
-    },
-    {
-      "target": "mainnet",
-      "public": "build",
-      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
-    }
-  ]
+  "hosting": {
+    "target": "main",
+    "public": "build",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
+  }
 }
