@@ -8,7 +8,6 @@ import { useDripContext } from '../contexts/DripContext';
 import { useNetworkAddress } from '../hooks/CurrentNetworkAddress';
 import { VaultPositionAccountWithPubkey } from '../hooks/Positions';
 import { useTokenInfo } from '../hooks/TokenInfo';
-import { useTokenMintMarketPriceUSD } from '../hooks/TokenPrice';
 import { formatDate } from '../utils/date';
 import { formatTokenAmount } from '../utils/token-amount';
 import { Device } from '../utils/ui/css';
