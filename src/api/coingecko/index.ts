@@ -44,7 +44,7 @@ export class CoingeckoAPI {
       `${BASE_URL}/api/v3/simple/token_price/${BLOCKCHAIN_NETWORK}`,
       { params, headers: this.headers }
     );
-    if (!data.mintAddress || !data.mintAddress[USD_CURRENCY]) {
+    if (!data[mintAddress][USD_CURRENCY]) {
       throw new Error(
         `Unexpected data from CoinGecko while fetching USD price for mint ${mintAddress} => ${data.toString()}`
       );

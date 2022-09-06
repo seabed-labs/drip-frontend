@@ -1,16 +1,14 @@
 import { Address } from '@project-serum/anchor';
+import { PublicKey } from '@solana/web3.js';
 import { useEffect, useState } from 'react';
 import { CoingeckoAPI } from '../api/coingecko';
 import { toPubkey } from '../utils/pubkey';
 
-export function useTokenMintMarketPriceUSD(address: Address): number | undefined {
+export function useTokenMintMarketPriceUSD(mintPubKey: PublicKey): number | undefined {
   const [usdPrice, setPrice] = useState<number | undefined>(undefined);
-
-  const addressStr = address?.toString();
 
   useEffect(() => {
     (async () => {
-      const mintPubKey = toPubkey(addressStr);
       const cgClient = new CoingeckoAPI();
       try {
         const price = await cgClient.getUSDPriceForTokenByMint(mintPubKey.toString());
@@ -26,7 +24,7 @@ export function useTokenMintMarketPriceUSD(address: Address): number | undefined
         console.error(err);
       }
     })();
-  }, [addressStr]);
+  }, [mintPubKey]);
 
   return usdPrice;
 }
