@@ -4,7 +4,7 @@ import { CoingeckoAPI } from '../api/coingecko';
 import { toPubkey } from '../utils/pubkey';
 
 export function useTokenMintMarketPriceUSD(address: Address): number | undefined {
-  const [usdPrice, setPrice] = useState<number>();
+  const [usdPrice, setPrice] = useState<number | undefined>(undefined);
 
   const addressStr = address?.toString();
 
