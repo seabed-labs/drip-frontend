@@ -4,13 +4,16 @@ import { useNetwork } from '../contexts/NetworkContext';
 import { Network } from '../models/Network';
 
 export function useTokenMintMarketPriceUSD(mintAddress?: string): number | undefined {
-  const [usdPrice, setPrice] = useState<number>();
+  const [usdPrice, setPrice] = useState<number | undefined>(undefined);
   const network = useNetwork();
 
   useEffect(() => {
     (async () => {
-      if (!mintAddress || network == Network.Devnet) {
+      if (!mintAddress) {
         return;
+      }
+      if (network == Network.Devnet) {
+        return -1;
       }
       const cgClient = new CoingeckoAPI();
       try {

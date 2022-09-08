@@ -40,8 +40,6 @@ interface PositionModalProps {
   vaultProtoConfig?: VaultProtoConfigAccount;
   tokenAInfo?: TokenInfo;
   tokenBInfo?: TokenInfo;
-  tokenAPrice?: Decimal;
-  tokenBPrice?: Decimal;
   estimatedEndDate?: Date | '-';
   isOpen: boolean;
   onClose(): void;
@@ -53,8 +51,6 @@ export function PositionModal({
   vaultProtoConfig,
   tokenAInfo,
   tokenBInfo,
-  tokenAPrice,
-  tokenBPrice,
   estimatedEndDate,
   isOpen,
   onClose
@@ -68,6 +64,8 @@ export function PositionModal({
     [drip, position]
   );
 
+  let tokenAPrice = undefined;
+  let tokenBPrice = undefined;
   const rawTokenAPrice = useTokenMintMarketPriceUSD(vault?.tokenAMint.toString());
   if (rawTokenAPrice) {
     tokenAPrice = new Decimal(rawTokenAPrice);
