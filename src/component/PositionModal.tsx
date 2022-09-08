@@ -68,15 +68,13 @@ export function PositionModal({
     [drip, position]
   );
 
-  if (vault) {
-    const rawTokenAPrice = useTokenMintMarketPriceUSD(vault.tokenAMint);
-    if (rawTokenAPrice) {
-      tokenAPrice = new Decimal(rawTokenAPrice);
-    }
-    const rawTokenBPrice = useTokenMintMarketPriceUSD(vault.tokenBMint);
-    if (rawTokenBPrice) {
-      tokenBPrice = new Decimal(rawTokenBPrice);
-    }
+  const rawTokenAPrice = useTokenMintMarketPriceUSD(vault?.tokenAMint.toString());
+  if (rawTokenAPrice) {
+    tokenAPrice = new Decimal(rawTokenAPrice);
+  }
+  const rawTokenBPrice = useTokenMintMarketPriceUSD(vault?.tokenBMint.toString());
+  if (rawTokenBPrice) {
+    tokenBPrice = new Decimal(rawTokenBPrice);
   }
 
   const [closePositionPreviewLoading, setClosePositionPreviewLoading] = useState(false);
