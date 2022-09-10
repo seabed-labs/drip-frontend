@@ -79,8 +79,8 @@
   },
   "scripts": {
     "prepare": "yarn run husky install",
-    "start-devnet-staging": "REACT_APP_NETWORK=DEVNET REACT_APP_PROGRAM_ID=mJQRvVj8wxhJDymyiMhJkExLsMTURWRmtxx9oXsrwrU yarn start",
-    "start-mainnet-staging": "REACT_APP_NETWORK=MAINNETBETA REACT_APP_PROGRAM_ID=mJQRvVj8wxhJDymyiMhJkExLsMTURWRmtxx9oXsrwrU yarn start",
+    "start-devnet-staging": "REACT_APP_NETWORK=DEVNET REACT_APP_PROGRAM_ID=F1NyoZsUhJzcpGyoEqpDNbUMKVvCnSXcCki1nN3ycAeo yarn start",
+    "start-mainnet-staging": "REACT_APP_NETWORK=MAINNETBETA REACT_APP_PROGRAM_ID=F1NyoZsUhJzcpGyoEqpDNbUMKVvCnSXcCki1nN3ycAeo yarn start",
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
