@@ -1,5 +1,7 @@
 # Drip Frontend
 
+[![Maintainability](https://api.codeclimate.com/v1/badges/652ca31a64079f1ebc00/maintainability)](https://codeclimate.com/repos/62c90637d150fe5a9a00007f/maintainability)
+
 ## App Deploys
 
 [mainnet](https://drip.dcaf.so/)
@@ -13,11 +15,6 @@
 
 [devnet-staging](https://drip-devnet-staging.netlify.app/)
 [![Netlify Status](https://api.netlify.com/api/v1/badges/422e3c8e-777a-47fa-a58e-604a61d42539/deploy-status)](https://app.netlify.com/sites/drip-devnet-staging/deploys)
-
-## Admin Deploys
-
-[![Deploy Internal Apps](https://github.com/dcaf-labs/drip-frontend/actions/workflows/firebase-hosting-merge.yml/badge.svg)](https://github.com/dcaf-labs/drip-frontend/actions/workflows/firebase-hosting-merge.yml)
-[![Maintainability](https://api.codeclimate.com/v1/badges/652ca31a64079f1ebc00/maintainability)](https://codeclimate.com/repos/62c90637d150fe5a9a00007f/maintainability)
 
 ## Getting Started
 
