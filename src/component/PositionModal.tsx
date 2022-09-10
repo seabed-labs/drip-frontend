@@ -20,12 +20,14 @@ import {
 } from '@dcaf-labs/drip-sdk/dist/interfaces/drip-querier/results';
 import { TokenInfo } from '@solana/spl-token-registry';
 import { BN } from 'bn.js';
+import Decimal from 'decimal.js';
 import { useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { useAsyncMemo } from 'use-async-memo';
 import { useDripContext } from '../contexts/DripContext';
 import { useRefreshContext } from '../contexts/Refresh';
 import { VaultPositionAccountWithPubkey } from '../hooks/Positions';
+import { useTokenMintMarketPriceUSD } from '../hooks/TokenPrice';
 import { formatDate } from '../utils/date';
 import { formatTokenAmount } from '../utils/token-amount';
 import { Device } from '../utils/ui/css';
@@ -61,6 +63,17 @@ export function PositionModal({
     async () => drip?.getPosition(position.pubkey),
     [drip, position]
   );
+
+  let tokenAPrice = undefined;
+  let tokenBPrice = undefined;
+  const rawTokenAPrice = useTokenMintMarketPriceUSD(vault?.tokenAMint.toString());
+  if (rawTokenAPrice) {
+    tokenAPrice = new Decimal(rawTokenAPrice);
+  }
+  const rawTokenBPrice = useTokenMintMarketPriceUSD(vault?.tokenBMint.toString());
+  if (rawTokenBPrice) {
+    tokenBPrice = new Decimal(rawTokenBPrice);
+  }
 
   const [closePositionPreviewLoading, setClosePositionPreviewLoading] = useState(false);
 
@@ -235,6 +248,32 @@ export function PositionModal({
                     ) : (
                       '-'
                     )
+                  ) : (
+                    <Skeleton mt="7px" w="170px" h="20px" />
+                  )}
+                </StyledModalFieldValue>
+              </StyledModalField>
+              <StyledModalField>
+                <StyledModalFieldHeader>Market Price</StyledModalFieldHeader>
+                <StyledModalFieldValue>
+                  {tokenAPrice && tokenBPrice && tokenAInfo && tokenBInfo ? (
+                    <Text display="flex" flexDir="row" alignItems="flex-end">
+                      <StyledPriceValue>{`${formatTokenAmount(
+                        isPriceFlipped
+                          ? tokenBPrice.div(tokenAPrice)
+                          : tokenAPrice.div(tokenBPrice),
+                        0,
+                        true
+                      )}`}</StyledPriceValue>
+                      <Text w="5px" display="inline"></Text>
+                      <StyledPriceUnit>
+                        {isPriceFlipped
+                          ? `${tokenBInfo.symbol} per ${tokenAInfo.symbol}`
+                          : `${tokenAInfo.symbol} per ${tokenBInfo.symbol}`}
+                      </StyledPriceUnit>
+                    </Text>
+                  ) : closePositionPreviewLoading || (accruedTokenB && accruedTokenB.eqn(0)) ? (
+                    '-'
                   ) : (
                     <Skeleton mt="7px" w="170px" h="20px" />
                   )}

@@ -1,32 +1,34 @@
-import { Address } from '@project-serum/anchor';
 import { useEffect, useState } from 'react';
 import { CoingeckoAPI } from '../api/coingecko';
-import { toPubkey } from '../utils/pubkey';
+import { useNetwork } from '../contexts/NetworkContext';
+import { Network } from '../models/Network';
 
-export function useTokenMintMarketPriceUSD(address: Address): number | undefined {
+export function useTokenMintMarketPriceUSD(mintAddress?: string): number | undefined {
   const [usdPrice, setPrice] = useState<number | undefined>(undefined);
-
-  const addressStr = address?.toString();
+  const network = useNetwork();
 
   useEffect(() => {
     (async () => {
-      const mintPubKey = toPubkey(addressStr);
+      if (!mintAddress) {
+        return;
+      }
+      if (network == Network.Devnet) {
+        return -1;
+      }
       const cgClient = new CoingeckoAPI();
       try {
-        const price = await cgClient.getUSDPriceForTokenByMint(mintPubKey.toString());
+        const price = await cgClient.getUSDPriceForTokenByMint(mintAddress);
 
         if (price) {
           setPrice(price);
         } else {
-          console.log(
-            `Tried fetching price for ${mintPubKey.toString()} from CoinGecko but got ${price}`
-          );
+          console.log(`Tried fetching price for ${mintAddress} from CoinGecko but got ${price}`);
         }
       } catch (err) {
         console.error(err);
       }
     })();
-  }, [addressStr]);
+  }, [mintAddress]);
 
   return usdPrice;
 }
