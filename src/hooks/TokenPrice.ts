@@ -1,7 +1,7 @@
+import { Network } from '@dcaf-labs/drip-sdk/dist/models';
 import { useEffect, useState } from 'react';
 import { CoingeckoAPI } from '../api/coingecko';
 import { useNetwork } from '../contexts/NetworkContext';
-import { Network } from '../models/Network';
 
 export function useTokenMintMarketPriceUSD(mintAddress?: string): number | undefined {
   const [usdPrice, setPrice] = useState<number | undefined>(undefined);
@@ -12,7 +12,7 @@ export function useTokenMintMarketPriceUSD(mintAddress?: string): number | undef
       if (!mintAddress) {
         return;
       }
-      if (network == Network.Devnet) {
+      if (network === Network.DevnetProd || network === Network.DevnetStaging) {
         return -1;
       }
       const cgClient = new CoingeckoAPI();

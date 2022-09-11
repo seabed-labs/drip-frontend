@@ -1,6 +1,7 @@
-import { TokenInfo, TokenListProvider } from '@solana/spl-token-registry';
+import { Network } from '@dcaf-labs/drip-sdk/dist/models';
+import { ENV, TokenInfo, TokenListProvider } from '@solana/spl-token-registry';
 import { useEffect, useState } from 'react';
-import { fromENV, isSupportedENV, Network } from '../models/Network';
+import { isSupportedENV } from '../models/Network';
 
 export function useTokenInfoMap(): TokenInfoMap | undefined {
   const [tokenInfoMap, setTokenInfoMap] = useState<TokenInfoMap>();
@@ -14,21 +15,18 @@ export function useTokenInfoMap(): TokenInfoMap | undefined {
           .filter((tokenInfo) => isSupportedENV(tokenInfo.chainId))
           .reduce(
             (map, tokenInfo) => {
-              const network = fromENV(tokenInfo.chainId);
-              map[network][tokenInfo.address] = tokenInfo;
-
+              if (tokenInfo?.chainId === ENV.MainnetBeta) {
+                map[Network.MainnetProd][tokenInfo.address] = tokenInfo;
+              } else if (tokenInfo?.chainId === ENV.Devnet) {
+                map[Network.DevnetProd][tokenInfo.address] = tokenInfo;
+                map[Network.DevnetStaging][tokenInfo.address] = tokenInfo;
+              }
               return map;
             },
-            // (map, tokenInfo) => ({
-            //   ...map,
-            //   [fromENV(tokenInfo.chainId)]: {
-            //     ...map[fromENV(tokenInfo.chainId)],
-            //     [tokenInfo.address]: tokenInfo
-            //   }
-            // }),
             {
-              [Network.Mainnet]: {},
-              [Network.Devnet]: {}
+              [Network.MainnetProd]: {},
+              [Network.DevnetProd]: {},
+              [Network.DevnetStaging]: {}
             } as TokenInfoMap
           )
       );
