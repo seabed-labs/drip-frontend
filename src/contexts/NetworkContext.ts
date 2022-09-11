@@ -9,6 +9,8 @@ function getNetwork(): Network {
   } else if (react_app_network === 'devnetstaging') {
     return Network.DevnetStaging;
   }
+  // For prod we only have 1 program (the main program)
+  // So mainnetstaging and mainnetprod will be the same app experience (same program, same backend)
   return Network.MainnetProd;
 }
 
