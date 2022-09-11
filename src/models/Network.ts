@@ -25,10 +25,10 @@ export function isSupportedENV(env: ENV): boolean {
 export function getClusterApiUrl(network: Network): string {
   switch (network) {
     case Network.MainnetProd:
-      return 'https://ssc-dao.genesysgo.net';
+      return 'https://api.mainnet-beta.solana.com';
     case Network.DevnetProd:
     case Network.DevnetStaging:
-      return 'https://devnet.genesysgo.net';
+      return 'https://api.devnet.solana.com';
   }
 }
 
