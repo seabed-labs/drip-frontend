@@ -151,7 +151,6 @@ export function DepositBox() {
     );
 
     const vaultProtoConfig = vaultProtoConfigs.find((config) => config.granularity === granularity);
-    console.log('protoConfig', vaultProtoConfig?.pubkey.toBase58());
     if (!vaultProtoConfig) {
       throw new Error(`Could not find matching proto config for granularity ${granularity}`);
     }

@@ -5,10 +5,8 @@ function getNetwork(): Network {
   const react_app_network = process.env.REACT_APP_NETWORK;
 
   if (!react_app_network || react_app_network === 'devnetprod') {
-    console.log('devnetprod');
     return Network.DevnetProd;
   } else if (react_app_network === 'devnetstaging') {
-    console.log('devnetstaging');
     return Network.DevnetStaging;
   }
   return Network.MainnetProd;

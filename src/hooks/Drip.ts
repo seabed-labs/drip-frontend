@@ -26,7 +26,6 @@ const defaultWallet = new DefaultWallet();
 
 export function useDrip(): Drip {
   const network = useNetwork();
-  console.log(network);
   const wallet = useWallet();
   const anchorWallet = useAnchorWallet();
   return useMemo(() => {
@@ -39,8 +38,7 @@ export function useDrip(): Drip {
         AnchorProvider.defaultOptions()
       )
     );
-    console.log(drip.network);
-    console.log(drip.programId.toBase58());
+    console.log('connected to program:', drip.programId.toBase58());
 
     return drip;
   }, [wallet, anchorWallet]);
