@@ -2146,16 +2146,9 @@
   resolved "https://registry.npmjs.org/@ctrl/tinycolor/-/tinycolor-3.4.1.tgz"
   integrity sha512-ej5oVy6lykXsvieQtqZxCOaLT+xD4+QNarq78cIYISHmZXshCvROLudpQN3lfL8G0NL7plMSSK+zlyvCaIJ4Iw==
 
-"@dcaf-labs/drip-sdk@0.0.0-alpha.58":
-  version "0.0.0-alpha.58"
-  resolved "https://npm.pkg.github.com/download/@dcaf-labs/drip-sdk/0.0.0-alpha.58/c1946a1adc41decfcf59a5b22bb572222591db74"
-  integrity sha512-kmBBJKK32rGMOMUz4ZhhHFRQn/rjvX2pdpA9D0qtanQq2pycK2lcxfva/CYHCqsQP6Wm9TRsm4+YZOSzQDPdlg==
-  dependencies:
-    "@project-serum/anchor" "^0.25.0"
-    "@solana/spl-token" "^0.2.0"
-    "@solana/web3.js" "^1.37.0"
-    bn.js "^5.2.0"
-    decimal.js "^10.3.1"
+"@dcaf-labs/drip-sdk@link:../drip-sdk":
+  version "0.0.0"
+  uid ""
 
 "@emotion/babel-plugin@^11.7.1":
   version "11.9.2"

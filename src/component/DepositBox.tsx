@@ -151,12 +151,12 @@ export function DepositBox() {
     );
 
     const vaultProtoConfig = vaultProtoConfigs.find((config) => config.granularity === granularity);
-
+    console.log('protoConfig', vaultProtoConfig?.pubkey.toBase58());
     if (!vaultProtoConfig) {
       throw new Error(`Could not find matching proto config for granularity ${granularity}`);
     }
 
-    const vaultPubkey = findVaultPubkey(drip.getProgramId(network), {
+    const vaultPubkey = findVaultPubkey(drip.programId, {
       protoConfig: vaultProtoConfig.pubkey,
       tokenAMint: tokenA,
       tokenBMint: tokenB
@@ -192,15 +192,18 @@ export function DepositBox() {
         <StyledSubRowContainer>
           <StyledStepHeader>Drip</StyledStepHeader>
           <div>
-            {network === Network.Devnet && tokenA && tokenAInfo && wallet && (
-              <MintButton
-                marginRight={'20px'}
-                mint={tokenA.toBase58()}
-                tokenName={tokenAInfo.name}
-                wallet={wallet.publicKey.toBase58()}
-                amount={'500'}
-              />
-            )}
+            {(network === Network.DevnetProd || network === Network.DevnetStaging) &&
+              tokenA &&
+              tokenAInfo &&
+              wallet && (
+                <MintButton
+                  marginRight={'20px'}
+                  mint={tokenA.toBase58()}
+                  tokenName={tokenAInfo.name}
+                  wallet={wallet.publicKey.toBase58()}
+                  amount={'500'}
+                />
+              )}
             {tokenAInfo && (
               <Button
                 h="20px"

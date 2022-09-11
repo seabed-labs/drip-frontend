@@ -2,7 +2,7 @@ import { FC } from 'react';
 import styled from 'styled-components';
 import { Text } from '@chakra-ui/react';
 import { useNetwork } from '../contexts/NetworkContext';
-import { Network } from '../models/Network';
+import { Network } from '@dcaf-labs/drip-sdk/dist/models';
 
 const StyledContainer = styled.div`
   width: 100%;
@@ -19,9 +19,9 @@ const StyledText = styled(Text)<{ selected: boolean }>`
 
 export const Banner: FC = () => {
   const network = useNetwork();
-  return network !== Network.Mainnet ? (
+  return network !== Network.MainnetProd ? (
     <StyledContainer>
-      <StyledText>{network === Network.Devnet ? 'Devnet' : 'Localnet'}</StyledText>
+      <StyledText>Devnet</StyledText>
     </StyledContainer>
   ) : (
     <></>

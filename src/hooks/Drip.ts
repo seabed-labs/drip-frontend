@@ -5,7 +5,6 @@ import { Connection, PublicKey, Transaction } from '@solana/web3.js';
 import { useMemo } from 'react';
 import { useNetwork } from '../contexts/NetworkContext';
 import { getClusterApiUrl } from '../models/Network';
-import { getProgramId } from '../utils/env';
 
 export class DefaultWallet {
   publicKey: PublicKey = PublicKey.default;
@@ -27,6 +26,7 @@ const defaultWallet = new DefaultWallet();
 
 export function useDrip(): Drip {
   const network = useNetwork();
+  console.log(network);
   const wallet = useWallet();
   const anchorWallet = useAnchorWallet();
   return useMemo(() => {
@@ -37,9 +37,10 @@ export function useDrip(): Drip {
         new Connection(clusterUrl, 'confirmed'),
         anchorWallet ?? defaultWallet,
         AnchorProvider.defaultOptions()
-      ),
-      getProgramId()
+      )
     );
+    console.log(drip.network);
+    console.log(drip.programId.toBase58());
 
     return drip;
   }, [wallet, anchorWallet]);
