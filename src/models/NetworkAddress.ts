@@ -1,8 +1,8 @@
+import { Network } from '@dcaf-labs/drip-sdk/dist/models';
 import { Address } from '@project-serum/anchor';
 import { PublicKey } from '@solana/web3.js';
 import { RenderDependency } from '../interfaces';
 import { toPubkey } from '../utils/pubkey';
-import { Network } from './Network';
 
 export class NetworkAddress implements RenderDependency<string> {
   private constructor(public readonly network: Network, public readonly address: PublicKey) {}

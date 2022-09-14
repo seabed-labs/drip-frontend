@@ -38,6 +38,7 @@ export function useDrip(): Drip {
         AnchorProvider.defaultOptions()
       )
     );
+    console.log('connected to program:', drip.programId.toBase58());
 
     return drip;
   }, [wallet, anchorWallet]);
