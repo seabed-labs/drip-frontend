@@ -16,17 +16,15 @@ export function useTokenInfoMap(): TokenInfoMap | undefined {
           .reduce(
             (map, tokenInfo) => {
               if (tokenInfo?.chainId === ENV.MainnetBeta) {
-                map[Network.MainnetProd][tokenInfo.address] = tokenInfo;
+                map[Network.Mainnet][tokenInfo.address] = tokenInfo;
               } else if (tokenInfo?.chainId === ENV.Devnet) {
-                map[Network.DevnetProd][tokenInfo.address] = tokenInfo;
-                map[Network.DevnetStaging][tokenInfo.address] = tokenInfo;
+                map[Network.Devnet][tokenInfo.address] = tokenInfo;
               }
               return map;
             },
             {
-              [Network.MainnetProd]: {},
-              [Network.DevnetProd]: {},
-              [Network.DevnetStaging]: {}
+              [Network.Mainnet]: {},
+              [Network.Devnet]: {}
             } as TokenInfoMap
           )
       );

@@ -12,7 +12,7 @@ export function useTokenMintMarketPriceUSD(mintAddress?: string): number | undef
       if (!mintAddress) {
         return;
       }
-      if (network === Network.DevnetProd || network === Network.DevnetStaging) {
+      if (network === Network.Devnet) {
         return -1;
       }
       const cgClient = new CoingeckoAPI();
