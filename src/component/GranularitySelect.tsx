@@ -29,7 +29,7 @@ export function GranularitySelect({ tokenA, tokenB, onUpdate }: GranularitySelec
   const vaultProtoConfigsForPair = useAsyncMemo(async () => {
     if (!drip || !tokenA || !tokenB) return undefined;
 
-    return await drip.querier.getSupportedVaultProtoConfigsForPair(tokenA, tokenB);
+    return await drip.config.getSupportedVaultProtoConfigsForPair(tokenA, tokenB);
   }, [drip, tokenA, tokenB]);
 
   const isDisabled = !tokenA || !tokenB || !vaultProtoConfigsForPair;

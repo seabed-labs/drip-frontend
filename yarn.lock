@@ -2146,16 +2146,22 @@
   resolved "https://registry.npmjs.org/@ctrl/tinycolor/-/tinycolor-3.4.1.tgz"
   integrity sha512-ej5oVy6lykXsvieQtqZxCOaLT+xD4+QNarq78cIYISHmZXshCvROLudpQN3lfL8G0NL7plMSSK+zlyvCaIJ4Iw==
 
-"@dcaf-labs/drip-sdk@0.0.0-alpha.66":
-  version "0.0.0-alpha.66"
-  resolved "https://npm.pkg.github.com/download/@dcaf-labs/drip-sdk/0.0.0-alpha.66/48d0fafd67bf37e8d9982d4f7d922472743a488d#48d0fafd67bf37e8d9982d4f7d922472743a488d"
-  integrity sha512-V/MpuZItIN+S5AhE/bt2eijA6+cFVvfBaz2Hmi553LjxtuSvCUC+Qyy3KuH5BOfZOdh8MyXyoa+rt6Scg6qrHg==
+"@dcaf-labs/drip-sdk@0.0.0-alpha.68":
+  version "0.0.0-alpha.68"
+  resolved "https://npm.pkg.github.com/download/@dcaf-labs/drip-sdk/0.0.0-alpha.68/823f50c56b883e26eaf4a8849ad9b3298eb23b17#823f50c56b883e26eaf4a8849ad9b3298eb23b17"
+  integrity sha512-SM54vw/1OdbvLxiP7vHYbfygdJpQSevHOQ3gbgl8vOoss300q425L4C3i04MqeWYLaej5Jd8EHkO5axFMZQorA==
   dependencies:
+    "@dcaf-labs/drip-ts" "0.0.0-alpha.13"
     "@project-serum/anchor" "^0.25.0"
     "@solana/spl-token" "^0.2.0"
     "@solana/web3.js" "^1.37.0"
     bn.js "^5.2.0"
     decimal.js "^10.3.1"
+
+"@dcaf-labs/drip-ts@0.0.0-alpha.13":
+  version "0.0.0-alpha.13"
+  resolved "https://npm.pkg.github.com/download/@dcaf-labs/drip-ts/0.0.0-alpha.13/135f2af5d24663bba26b0d49974b5cd12e7b59a4#135f2af5d24663bba26b0d49974b5cd12e7b59a4"
+  integrity sha512-fMMS26yu8UtzCHTxF+IsUrf+xUh0ITW0JvypmVRyFwDI1rLNFdoM7Jlv+Aub3ByyzR8SDCklnvT3OG719tMS4A==
 
 "@emotion/babel-plugin@^11.7.1":
   version "11.9.2"

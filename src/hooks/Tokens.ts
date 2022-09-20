@@ -10,7 +10,7 @@ export function useTokenAs(forTokenB?: Address): Token[] | undefined {
   return useAsyncMemo(async () => {
     if (!drip) return undefined;
 
-    const tokenAsRecord = await drip.querier.getAllTokenAs(
+    const tokenAsRecord = await drip.config.getAllTokenAs(
       forTokenB ? toPubkey(forTokenB) : undefined
     );
 
@@ -24,7 +24,7 @@ export function useTokenBs(forTokenA?: Address): Token[] | undefined {
   return useAsyncMemo(async () => {
     if (!drip) return undefined;
 
-    const tokenBsRecord = await drip.querier.getAllTokenBs(
+    const tokenBsRecord = await drip.config.getAllTokenBs(
       forTokenA ? toPubkey(forTokenA) : undefined
     );
 
