@@ -19,7 +19,7 @@ const StyledText = styled(Text)<{ selected: boolean }>`
 
 export const Banner: FC = () => {
   const network = useNetwork();
-  return network !== Network.MainnetProd ? (
+  return network !== Network.Mainnet ? (
     <StyledContainer>
       <StyledText>Devnet</StyledText>
     </StyledContainer>

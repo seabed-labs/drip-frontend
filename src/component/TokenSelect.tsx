@@ -67,7 +67,7 @@ export function TokenSelector({
 
     return tokens.filter(
       (token) =>
-        token.symbol.toLowerCase().includes(filter.toLowerCase()) ||
+        token.symbol?.toLowerCase().includes(filter.toLowerCase()) ||
         token.mint.toBase58().includes(filter)
     );
   }, [tokens, filter]);

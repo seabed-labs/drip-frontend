@@ -145,7 +145,7 @@ export function DepositBox() {
     if (!depositAmountStr) throw new Error('Deposit Amount is undefined');
     if (!dripUntil) throw new Error('Drip end date is undefined');
 
-    const vaultProtoConfigs = await drip.querier.getSupportedVaultProtoConfigsForPair(
+    const vaultProtoConfigs = await drip.config.getSupportedVaultProtoConfigsForPair(
       tokenA,
       tokenB
     );
@@ -191,18 +191,15 @@ export function DepositBox() {
         <StyledSubRowContainer>
           <StyledStepHeader>Drip</StyledStepHeader>
           <div>
-            {(network === Network.DevnetProd || network === Network.DevnetStaging) &&
-              tokenA &&
-              tokenAInfo &&
-              wallet && (
-                <MintButton
-                  marginRight={'20px'}
-                  mint={tokenA.toBase58()}
-                  tokenName={tokenAInfo.name}
-                  wallet={wallet.publicKey.toBase58()}
-                  amount={'500'}
-                />
-              )}
+            {network === Network.Devnet && tokenA && tokenAInfo && wallet && (
+              <MintButton
+                marginRight={'20px'}
+                mint={tokenA.toBase58()}
+                tokenName={tokenAInfo.name}
+                wallet={wallet.publicKey.toBase58()}
+                amount={'500'}
+              />
+            )}
             {tokenAInfo && (
               <Button
                 h="20px"
