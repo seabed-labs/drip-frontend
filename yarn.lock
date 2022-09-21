@@ -2146,10 +2146,10 @@
   resolved "https://registry.npmjs.org/@ctrl/tinycolor/-/tinycolor-3.4.1.tgz"
   integrity sha512-ej5oVy6lykXsvieQtqZxCOaLT+xD4+QNarq78cIYISHmZXshCvROLudpQN3lfL8G0NL7plMSSK+zlyvCaIJ4Iw==
 
-"@dcaf-labs/drip-sdk@0.0.0-alpha.68":
-  version "0.0.0-alpha.68"
-  resolved "https://npm.pkg.github.com/download/@dcaf-labs/drip-sdk/0.0.0-alpha.68/823f50c56b883e26eaf4a8849ad9b3298eb23b17#823f50c56b883e26eaf4a8849ad9b3298eb23b17"
-  integrity sha512-SM54vw/1OdbvLxiP7vHYbfygdJpQSevHOQ3gbgl8vOoss300q425L4C3i04MqeWYLaej5Jd8EHkO5axFMZQorA==
+"@dcaf-labs/drip-sdk@0.3.0":
+  version "0.3.0"
+  resolved "https://npm.pkg.github.com/download/@dcaf-labs/drip-sdk/0.3.0/690eb8f4e9950c3f5c0147537688843dbe1cf8f8#690eb8f4e9950c3f5c0147537688843dbe1cf8f8"
+  integrity sha512-hAoCs+UudmxHnaxT9cs5BO0txjv6Rkl1o4FmPHuvL30ClXDk7ouyBAbxA0pCGdHmfPbSJ90N8f75VAqE1RaALA==
   dependencies:
     "@dcaf-labs/drip-ts" "0.0.0-alpha.13"
     "@project-serum/anchor" "^0.25.0"
