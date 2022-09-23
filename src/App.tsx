@@ -6,10 +6,8 @@ import { Banner } from './component/Banner';
 import { Header } from './component/Header';
 import { DripContext } from './contexts/DripContext';
 import { RefreshContext } from './contexts/Refresh';
-import { TokenInfoContext } from './contexts/TokenInfo';
 import { useDrip } from './hooks/Drip';
 import { useStateRefresh } from './hooks/StateRefresh';
-import { useTokenInfoMap } from './hooks/TokenInfoMap';
 import { Deposit, Positions } from './pages';
 import { theme } from './theme';
 import { Device } from './utils/ui/css';
@@ -35,7 +33,6 @@ const StyledAppContainer = styled.div`
 
 const App: FC = () => {
   const drip = useDrip();
-  const tokenInfoMap = useTokenInfoMap();
   const [refreshTrigger, forceRefresh] = useStateRefresh();
 
   useEffect(() => {
@@ -46,17 +43,15 @@ const App: FC = () => {
     <ChakraProvider theme={theme}>
       <DripContext.Provider value={drip}>
         <RefreshContext.Provider value={{ refreshTrigger, forceRefresh }}>
-          <TokenInfoContext.Provider value={tokenInfoMap}>
-            <Banner />
-            <StyledAppContainer>
-              <Header />
-              <Routes>
-                <Route path="/deposit" element={<Deposit />} />
-                <Route path="/positions" element={<Positions />} />
-                <Route path="*" element={<Navigate to="/deposit" />} />
-              </Routes>
-            </StyledAppContainer>
-          </TokenInfoContext.Provider>
+          <Banner />
+          <StyledAppContainer>
+            <Header />
+            <Routes>
+              <Route path="/deposit" element={<Deposit />} />
+              <Route path="/positions" element={<Positions />} />
+              <Route path="*" element={<Navigate to="/deposit" />} />
+            </Routes>
+          </StyledAppContainer>
         </RefreshContext.Provider>
       </DripContext.Provider>
     </ChakraProvider>
