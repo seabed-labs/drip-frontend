@@ -1,30 +1,46 @@
-import { getMint } from '@solana/spl-token';
-import { TokenInfo } from '@solana/spl-token-registry';
-import { useMemo } from 'react';
+import { Token } from '@dcaf-labs/drip-sdk';
+import { PublicKey } from '@solana/web3.js';
 import { useAsyncMemo } from 'use-async-memo';
+import { getDripApi } from '../api/drip';
 import { useDripContext } from '../contexts/DripContext';
-import { useTokenInfoContext } from '../contexts/TokenInfo';
+import { useTokenMapContext } from '../contexts/TokenMap';
 import { NetworkAddress } from '../models/NetworkAddress';
+import { getDefaultIconUrl } from '../utils/token';
 import { useRemappedMint } from './MintRemap';
 
-export function useTokenInfo(mint?: NetworkAddress): TokenInfo | undefined {
-  const tokenInfoMap = useTokenInfoContext();
-  const infoMint = useRemappedMint(mint);
+export function useTokenInfo(mint?: NetworkAddress): Token | undefined {
+  const tokenMap = useTokenMapContext();
+
+  const remappedMint = useRemappedMint(mint);
   const drip = useDripContext();
-  const actualMint = useAsyncMemo(
-    async () => drip && mint && getMint(drip?.provider.connection, mint.address),
-    [mint?.toPrimitiveDep(), drip]
-  );
 
-  return useMemo(() => {
-    const tokenInfo = infoMint && tokenInfoMap?.[infoMint.network]?.[infoMint.address.toBase58()];
-    if (!tokenInfo || !actualMint) {
-      return undefined;
+  const dripApi = getDripApi();
+
+  const token = useAsyncMemo(async () => {
+    if (mint) {
+      let token: Token | undefined;
+
+      if (tokenMap && tokenMap[mint.address.toString()]) {
+        token = tokenMap[mint.address.toString()];
+      } else {
+        const apiToken = await dripApi.v1TokenPubkeyPathGet({
+          pubkeyPath: mint.address.toString()
+        });
+        token = {
+          mint: new PublicKey(apiToken.pubkey),
+          decimals: apiToken.decimals,
+          symbol: apiToken.symbol,
+          iconUrl: apiToken.iconUrl
+        };
+      }
+
+      if (token && !token.iconUrl && remappedMint) {
+        token.iconUrl = getDefaultIconUrl(remappedMint.address.toString());
+      }
+
+      return token;
     }
+  }, [mint?.toPrimitiveDep(), drip, remappedMint, tokenMap]);
 
-    return {
-      ...tokenInfo,
-      decimals: actualMint.decimals
-    };
-  }, [infoMint && infoMint.toPrimitiveDep(), tokenInfoMap, actualMint]);
+  return token;
 }

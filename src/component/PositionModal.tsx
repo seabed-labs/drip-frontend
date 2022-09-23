@@ -13,12 +13,11 @@ import {
   ModalBody,
   ModalFooter
 } from '@chakra-ui/react';
-import { QuoteToken } from '@dcaf-labs/drip-sdk';
+import { QuoteToken, Token } from '@dcaf-labs/drip-sdk';
 import {
   VaultAccount,
   VaultProtoConfigAccount
 } from '@dcaf-labs/drip-sdk/dist/interfaces/drip-querier/results';
-import { TokenInfo } from '@solana/spl-token-registry';
 import { BN } from 'bn.js';
 import Decimal from 'decimal.js';
 import { useCallback, useMemo, useState } from 'react';
@@ -38,8 +37,8 @@ interface PositionModalProps {
   position: VaultPositionAccountWithPubkey;
   vault?: VaultAccount;
   vaultProtoConfig?: VaultProtoConfigAccount;
-  tokenAInfo?: TokenInfo;
-  tokenBInfo?: TokenInfo;
+  tokenAInfo?: Token;
+  tokenBInfo?: Token;
   estimatedEndDate?: Date | '-';
   isOpen: boolean;
   onClose(): void;
@@ -175,7 +174,7 @@ export function PositionModal({
                 <HStack>
                   <StyledTokenIcon
                     fallback={<Skeleton borderRadius="50px" w="32px" h="32px" />}
-                    src={tokenAInfo.logoURI}
+                    src={tokenAInfo.iconUrl}
                   />
                   <Text>{tokenAInfo.symbol}</Text>
                 </HStack>
@@ -187,7 +186,7 @@ export function PositionModal({
                 <HStack>
                   <StyledTokenIcon
                     fallback={<Skeleton borderRadius="50px" w="32px" h="32px" />}
-                    src={tokenBInfo.logoURI}
+                    src={tokenBInfo.iconUrl}
                   />
                   <Text>{tokenBInfo.symbol}</Text>
                 </HStack>

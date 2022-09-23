@@ -108,7 +108,7 @@ export function TokenSelector({
                 marginRight: '5px'
               }
             }}
-            src={selectedTokenInfo.logoURI}
+            src={selectedTokenInfo.iconUrl}
           />
         )}
         {selectedTokenInfo ? (
@@ -204,7 +204,7 @@ function TokenRow({ token, ...boxProps }: TokenRowProps & BoxProps) {
       justifyContent="space-between"
     >
       <HStack>
-        <Image borderRadius="30px" w="30px" src={tokenInfo?.logoURI} />
+        <Image borderRadius="30px" w="30px" src={tokenInfo?.iconUrl} />
         <Text>{token.symbol}</Text>
       </HStack>
       <Code
