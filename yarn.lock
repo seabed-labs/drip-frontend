@@ -2163,6 +2163,11 @@
   resolved "https://npm.pkg.github.com/download/@dcaf-labs/drip-ts/0.0.0-alpha.14/3b601c52533879479f2e8434f36581cad9e340fe#3b601c52533879479f2e8434f36581cad9e340fe"
   integrity sha512-A/Zegv8CYFczmYbnFqlw2rrpsiu6eSzCVuzwl8yejbzDXdKGkalzUFRQIKln0dmtLZLT2d3kAG/XjaOeg+Y1xg==
 
+"@dcaf-labs/drip-ts@0.0.0-alpha.16":
+  version "0.0.0-alpha.16"
+  resolved "https://npm.pkg.github.com/download/@dcaf-labs/drip-ts/0.0.0-alpha.16/94063b4b2545d0e0763e3df1a903edcc0deac21f#94063b4b2545d0e0763e3df1a903edcc0deac21f"
+  integrity sha512-zFo1QsjrOWsOgBV8RNmxQGPrkHkjmAVqL6sdUYUjl4Gb5cQrpjgWeOSJ+Tb/1VAaEALQg3KRDl5SWqd9dkBjtA==
+
 "@emotion/babel-plugin@^11.7.1":
   version "11.9.2"
   resolved "https://registry.npmjs.org/@emotion/babel-plugin/-/babel-plugin-11.9.2.tgz"
