@@ -6,7 +6,7 @@ import { useDripContext } from '../contexts/DripContext';
 import { NetworkAddress } from '../models/NetworkAddress';
 import { useRemappedMint } from './MintRemap';
 
-function getIconUrl(mint: string) {
+function getDefaultIconUrl(mint: string) {
   return `https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/${mint}/logo.png`;
 }
 
@@ -30,7 +30,7 @@ export function useTokenInfo(mint?: NetworkAddress): Token | undefined {
       };
 
       if (!token?.iconUrl && remappedMint) {
-        token.iconUrl = getIconUrl(remappedMint.address.toString());
+        token.iconUrl = getDefaultIconUrl(remappedMint.address.toString());
       }
 
       return token;
