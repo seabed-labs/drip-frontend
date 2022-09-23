@@ -1,37 +1,30 @@
-import { Network } from '@dcaf-labs/drip-sdk/dist/models';
-import { ENV, TokenInfo, TokenListProvider } from '@solana/spl-token-registry';
+import { Token } from '@dcaf-labs/drip-sdk';
+import { PublicKey } from '@solana/web3.js';
 import { useEffect, useState } from 'react';
-import { isSupportedENV } from '../models/Network';
+import { getDripApi } from '../api/drip';
 
-export function useTokenInfoMap(): TokenInfoMap | undefined {
-  const [tokenInfoMap, setTokenInfoMap] = useState<TokenInfoMap>();
+export type TokenMap = Record<string, Token>;
+
+export function useTokenMap(): TokenMap | undefined {
+  const [tokenMap, setTokenMap] = useState<TokenMap>();
+
+  const dripApi = getDripApi();
 
   useEffect(() => {
     (async () => {
-      const tokens = await new TokenListProvider().resolve();
-      setTokenInfoMap(
-        tokens
-          .getList()
-          .filter((tokenInfo) => isSupportedENV(tokenInfo.chainId))
-          .reduce(
-            (map, tokenInfo) => {
-              if (tokenInfo?.chainId === ENV.MainnetBeta) {
-                map[Network.Mainnet][tokenInfo.address] = tokenInfo;
-              } else if (tokenInfo?.chainId === ENV.Devnet) {
-                map[Network.Devnet][tokenInfo.address] = tokenInfo;
-              }
-              return map;
-            },
-            {
-              [Network.Mainnet]: {},
-              [Network.Devnet]: {}
-            } as TokenInfoMap
-          )
-      );
+      const tokens = await dripApi.v1TokensGet();
+      const tokenMap: TokenMap = {};
+      tokens.forEach((token) => {
+        tokenMap[token.pubkey] = {
+          mint: new PublicKey(token.pubkey),
+          decimals: token.decimals,
+          symbol: token.symbol,
+          iconUrl: token.iconUrl
+        };
+      });
+      setTokenMap(tokenMap);
     })();
-  }, [setTokenInfoMap]);
+  }, [setTokenMap]);
 
-  return tokenInfoMap;
+  return tokenMap;
 }
-
-export type TokenInfoMap = Record<Network, Partial<Record<string, TokenInfo>>>;

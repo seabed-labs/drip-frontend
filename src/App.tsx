@@ -6,10 +6,10 @@ import { Banner } from './component/Banner';
 import { Header } from './component/Header';
 import { DripContext } from './contexts/DripContext';
 import { RefreshContext } from './contexts/Refresh';
-import { TokenInfoContext } from './contexts/TokenInfo';
+import { TokenMapContext } from './contexts/TokenMap';
 import { useDrip } from './hooks/Drip';
 import { useStateRefresh } from './hooks/StateRefresh';
-import { useTokenInfoMap } from './hooks/TokenInfoMap';
+import { useTokenMap } from './hooks/TokenInfoMap';
 import { Deposit, Positions } from './pages';
 import { theme } from './theme';
 import { Device } from './utils/ui/css';
@@ -35,7 +35,7 @@ const StyledAppContainer = styled.div`
 
 const App: FC = () => {
   const drip = useDrip();
-  const tokenInfoMap = useTokenInfoMap();
+  const tokenMap = useTokenMap();
   const [refreshTrigger, forceRefresh] = useStateRefresh();
 
   useEffect(() => {
@@ -46,7 +46,7 @@ const App: FC = () => {
     <ChakraProvider theme={theme}>
       <DripContext.Provider value={drip}>
         <RefreshContext.Provider value={{ refreshTrigger, forceRefresh }}>
-          <TokenInfoContext.Provider value={tokenInfoMap}>
+          <TokenMapContext.Provider value={tokenMap}>
             <Banner />
             <StyledAppContainer>
               <Header />
@@ -56,7 +56,7 @@ const App: FC = () => {
                 <Route path="*" element={<Navigate to="/deposit" />} />
               </Routes>
             </StyledAppContainer>
-          </TokenInfoContext.Provider>
+          </TokenMapContext.Provider>
         </RefreshContext.Provider>
       </DripContext.Provider>
     </ChakraProvider>
