@@ -85,7 +85,7 @@ export function PositionCard({ position }: PositionCardProps) {
               <>
                 <StyledTokenIcon
                   fallback={<Skeleton borderRadius="50px" w="32px" h="32px" />}
-                  src={tokenAInfo.logoURI}
+                  src={tokenAInfo.iconUrl}
                 />
                 <Text>{tokenAInfo.symbol}</Text>
               </>
@@ -98,7 +98,7 @@ export function PositionCard({ position }: PositionCardProps) {
             {tokenBInfo ? (
               <>
                 <StyledTokenIcon
-                  src={tokenBInfo.logoURI}
+                  src={tokenBInfo.iconUrl}
                   fallback={<Skeleton borderRadius="50px" w="32px" h="32px" />}
                 />
                 <Text>{tokenBInfo.symbol}</Text>

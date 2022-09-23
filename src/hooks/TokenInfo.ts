@@ -1,30 +1,41 @@
-import { getMint } from '@solana/spl-token';
-import { TokenInfo } from '@solana/spl-token-registry';
-import { useMemo } from 'react';
+import { Token } from '@dcaf-labs/drip-sdk';
+import { PublicKey } from '@solana/web3.js';
 import { useAsyncMemo } from 'use-async-memo';
+import { getDripApi } from '../api/drip';
 import { useDripContext } from '../contexts/DripContext';
-import { useTokenInfoContext } from '../contexts/TokenInfo';
 import { NetworkAddress } from '../models/NetworkAddress';
 import { useRemappedMint } from './MintRemap';
 
-export function useTokenInfo(mint?: NetworkAddress): TokenInfo | undefined {
-  const tokenInfoMap = useTokenInfoContext();
-  const infoMint = useRemappedMint(mint);
+function getIconUrl(mint: string) {
+  return `https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/${mint}/logo.png`;
+}
+
+export function useTokenInfo(mint?: NetworkAddress): Token | undefined {
+  const remappedMint = useRemappedMint(mint);
   const drip = useDripContext();
-  const actualMint = useAsyncMemo(
-    async () => drip && mint && getMint(drip?.provider.connection, mint.address),
-    [mint?.toPrimitiveDep(), drip]
-  );
 
-  return useMemo(() => {
-    const tokenInfo = infoMint && tokenInfoMap?.[infoMint.network]?.[infoMint.address.toBase58()];
-    if (!tokenInfo || !actualMint) {
-      return undefined;
+  const dripApi = getDripApi();
+
+  const token = useAsyncMemo(async () => {
+    if (mint) {
+      const apiToken = await dripApi.v1TokenPubkeyPathGet({
+        pubkeyPath: mint?.address.toString()
+      });
+
+      const token = {
+        mint: new PublicKey(apiToken.pubkey),
+        decimals: apiToken.decimals,
+        symbol: apiToken.symbol,
+        iconUrl: apiToken.iconUrl
+      };
+
+      if (!token?.iconUrl && remappedMint) {
+        token.iconUrl = getIconUrl(remappedMint.address.toString());
+      }
+
+      return token;
     }
+  }, [mint?.toPrimitiveDep(), drip, remappedMint]);
 
-    return {
-      ...tokenInfo,
-      decimals: actualMint.decimals
-    };
-  }, [infoMint && infoMint.toPrimitiveDep(), tokenInfoMap, actualMint]);
+  return token;
 }

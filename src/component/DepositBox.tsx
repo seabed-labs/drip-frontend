@@ -195,7 +195,7 @@ export function DepositBox() {
               <MintButton
                 marginRight={'20px'}
                 mint={tokenA.toBase58()}
-                tokenName={tokenAInfo.name}
+                tokenName={tokenAInfo.symbol ?? 'UNKOWN'}
                 wallet={wallet.publicKey.toBase58()}
                 amount={'500'}
               />
