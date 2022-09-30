@@ -26,7 +26,7 @@ export function isSupportedENV(env: ENV): boolean {
 export function getClusterApiUrl(network: Network): string {
   switch (network) {
     case Network.Mainnet:
-      return 'https://api.mainnet-beta.solana.com';
+      return 'https://dimensional-young-cloud.solana-mainnet.discover.quiknode.pro/a5a0fb3cfa38ab740ed634239fd502a99dbf028d';
     case Network.Devnet:
       return 'https://api.devnet.solana.com';
     default:
