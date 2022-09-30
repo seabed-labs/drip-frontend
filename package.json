@@ -81,6 +81,7 @@
   "scripts": {
     "prepare": "yarn run husky install",
     "start-devnet-staging": "REACT_APP_NETWORK=devnet REACT_APP_DRIP_PROGRAM_ID=F1NyoZsUhJzcpGyoEqpDNbUMKVvCnSXcCki1nN3ycAeo REACT_APP_CLIENT_ENV=staging yarn start",
+    "start-mainnet-prod": "REACT_APP_NETWORK=mainnet REACT_APP_DRIP_PROGRAM_ID=dripTrkvSyQKvkyWg7oi4jmeEGMA5scSYowHArJ9Vwk REACT_APP_CLIENT_ENV=production yarn start",
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
