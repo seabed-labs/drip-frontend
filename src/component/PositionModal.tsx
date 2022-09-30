@@ -259,8 +259,8 @@ export function PositionModal({
                     <Text display="flex" flexDir="row" alignItems="flex-end">
                       <StyledPriceValue>{`${formatTokenAmount(
                         isPriceFlipped
-                          ? tokenBPrice.div(tokenAPrice)
-                          : tokenAPrice.div(tokenBPrice),
+                          ? tokenAPrice.div(tokenBPrice)
+                          : tokenBPrice.div(tokenAPrice),
                         0,
                         true
                       )}`}</StyledPriceValue>
