@@ -5,6 +5,7 @@ import { useDripContext } from '../contexts/DripContext';
 import { PublicKey } from '@solana/web3.js';
 import BN from 'bn.js';
 import { useRefreshContext } from '../contexts/Refresh';
+import { useQuery } from './QueryParam';
 
 export interface Position {
   vault: PublicKey;
@@ -27,6 +28,7 @@ export function usePositions(): [positions: VaultPositionAccountWithPubkey[], lo
 
   const [loading, setLoading] = useState(true);
   const wallet = useAnchorWallet();
+  const query = useQuery();
   const [positionsRecord, setPositionsRecord] = useState<Record<string, VaultPositionAccount>>();
   const { connected } = useWallet();
 
@@ -43,10 +45,14 @@ export function usePositions(): [positions: VaultPositionAccountWithPubkey[], lo
         return;
       }
 
-      setPositionsRecord(await drip.querier.getAllPositions(wallet.publicKey));
+      setPositionsRecord(
+        await drip.querier.getAllPositions(
+          new PublicKey(query.get('proxyWallet') ?? wallet.publicKey)
+        )
+      );
       setLoading(false);
     })();
-  }, [drip, wallet, refreshContext.refreshTrigger]);
+  }, [drip, wallet, query, refreshContext.refreshTrigger]);
 
   const positions = useMemo(
     () =>
