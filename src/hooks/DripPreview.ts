@@ -1,6 +1,7 @@
 import { Granularity, expiryToNumberOfSwaps } from '@dcaf-labs/drip-sdk';
 import Decimal from 'decimal.js';
 import { useMemo } from 'react';
+import { explainGranularity } from '../utils/granularity';
 import { formatTokenAmount, formatTokenAmountStr } from '../utils/token-amount';
 
 export function useDripPreviewText(
@@ -24,25 +25,9 @@ export function useDripPreviewText(
       numCycles.toString(),
       0,
       true
-    )} ${dripsStr} of ${periodicDripAmountStr} ${tokenA} to ${tokenB} every ${displayGranularity(
-      granularity
+    )} ${dripsStr} of ${periodicDripAmountStr} ${tokenA} to ${tokenB} every ${explainGranularity(
+      granularity,
+      false
     )}`;
   }, [tokenA, tokenB, amount, granularity, endDate]);
-}
-
-function displayGranularity(granularity: Granularity): string {
-  switch (granularity) {
-    case Granularity.Minutely:
-      return 'minute';
-    case Granularity.Hourly:
-      return 'hour';
-    case Granularity.Daily:
-      return 'day';
-    case Granularity.Weekly:
-      return 'week';
-    case Granularity.Monthly:
-      return 'month';
-    case Granularity.Yearly:
-      return 'year';
-  }
 }

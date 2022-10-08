@@ -28,9 +28,9 @@ import { useRefreshContext } from '../contexts/Refresh';
 import { VaultPositionAccountWithPubkey } from '../hooks/Positions';
 import { useTokenMintMarketPriceUSD } from '../hooks/TokenPrice';
 import { formatDate } from '../utils/date';
+import { explainGranularity } from '../utils/granularity';
 import { formatTokenAmount } from '../utils/token-amount';
 import { Device } from '../utils/ui/css';
-import { displayGranularity } from './GranularitySelect';
 import { TransactionButton } from './TransactionButton';
 
 interface PositionModalProps {
@@ -202,7 +202,7 @@ export function PositionModal({
                 fontSize="12px"
                 ml="5px"
               >
-                {displayGranularity(vaultProtoConfig.granularity.toNumber())}
+                {explainGranularity(vaultProtoConfig.granularity.toNumber())}
               </Text>
             ) : (
               <Skeleton h="40px" w="80px" />

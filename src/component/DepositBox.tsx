@@ -269,10 +269,8 @@ export function DepositBox() {
         <StyledSubRowContainer>
           <Center w="100%">
             <DripEndTimePicker
-              enableTimeSelect={Boolean(
-                granularity && [Granularity.Minutely, Granularity.Hourly].includes(granularity)
-              )}
               value={dripUntil}
+              granularity={granularity}
               onUpdate={setDripUntil}
               disabled={!granularity}
             />
