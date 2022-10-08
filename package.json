@@ -26,7 +26,6 @@
     "crypto-browserify": "^3.12.0",
     "decimal.js": "^10.3.1",
     "framer-motion": "^6",
-    "fs": "^0.0.1-security",
     "gapi-script": "^1.2.0",
     "moment": "^2.29.4",
     "numeral": "^2.0.6",
@@ -72,10 +71,12 @@
     "process": "^0.11.10",
     "react-app-rewired": "^2.1.11",
     "react-scripts": "5.0.0",
+    "source-map-explorer": "^2.5.3",
     "source-map-loader": "^3.0.1",
     "typescript": "^4.5.5"
   },
   "scripts": {
+    "analyze": "source-map-explorer 'build/static/js/*.js'",
     "prepare": "yarn run husky install",
     "start-devnet-staging": "REACT_APP_NETWORK=devnet REACT_APP_DRIP_PROGRAM_ID=F1NyoZsUhJzcpGyoEqpDNbUMKVvCnSXcCki1nN3ycAeo REACT_APP_CLIENT_ENV=staging yarn start",
     "start-mainnet-prod": "REACT_APP_NETWORK=mainnet REACT_APP_DRIP_PROGRAM_ID=dripTrkvSyQKvkyWg7oi4jmeEGMA5scSYowHArJ9Vwk REACT_APP_CLIENT_ENV=production yarn start",
