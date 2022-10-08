@@ -5660,7 +5660,7 @@ class-utils@^0.3.5:
     isobject "^3.0.0"
     static-extend "^0.1.1"
 
-classnames@*, classnames@^2.2.6, classnames@^2.3.1:
+classnames@*, classnames@^2.3.1:
   version "2.3.1"
   resolved "https://registry.npmjs.org/classnames/-/classnames-2.3.1.tgz"
   integrity sha512-OlQdbZ7gLfGarSqxesMesDa5uz7KFbID8Kpq/SxIoNGDqY8lSYs0D+hhtBXhcdB3rcbXArFr7vlHheLk1voeNA==
@@ -6314,7 +6314,7 @@ data-urls@^2.0.0:
     whatwg-mimetype "^2.3.0"
     whatwg-url "^8.0.0"
 
-date-fns@^2.0.1, date-fns@^2.24.0:
+date-fns@^2.0.1:
   version "2.28.0"
   resolved "https://registry.npmjs.org/date-fns/-/date-fns-2.28.0.tgz"
   integrity sha512-8d35hViGYx/QH0icHYCeLmsLmMUheMmTyV9Fcm6gvNwdw31yXXH+O85sOBJ+OLnLQMKZowvpKb6FgMIQjcpvQw==
@@ -11867,18 +11867,6 @@ react-date-picker@^8.4.0:
     react-fit "^1.4.0"
     update-input-width "^1.2.2"
 
-react-datepicker@^4.7.0:
-  version "4.8.0"
-  resolved "https://registry.npmjs.org/react-datepicker/-/react-datepicker-4.8.0.tgz"
-  integrity sha512-u69zXGHMpxAa4LeYR83vucQoUCJQ6m/WBsSxmUMu/M8ahTSVMMyiyQzauHgZA2NUr9y0FUgOAix71hGYUb6tvg==
-  dependencies:
-    "@popperjs/core" "^2.9.2"
-    classnames "^2.2.6"
-    date-fns "^2.24.0"
-    prop-types "^15.7.2"
-    react-onclickoutside "^6.12.0"
-    react-popper "^2.2.5"
-
 react-datetime-picker@3.5.0:
   version "3.5.0"
   resolved "https://registry.npmjs.org/react-datetime-picker/-/react-datetime-picker-3.5.0.tgz"
@@ -12071,11 +12059,6 @@ react-native@^0.69.1:
     use-sync-external-store "^1.0.0"
     whatwg-fetch "^3.0.0"
     ws "^6.1.4"
-
-react-onclickoutside@^6.12.0:
-  version "6.12.2"
-  resolved "https://registry.npmjs.org/react-onclickoutside/-/react-onclickoutside-6.12.2.tgz"
-  integrity sha512-NMXGa223OnsrGVp5dJHkuKxQ4czdLmXSp5jSV9OqiCky9LOpPATn3vLldc+q5fK3gKbEHvr7J1u0yhBh/xYkpA==
 
 react-popper@^2.2.5:
   version "2.3.0"
