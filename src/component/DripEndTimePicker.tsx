@@ -6,7 +6,7 @@ import { Device } from '../utils/ui/css';
 
 interface DripEndTimePickerProps {
   disabled?: boolean;
-  enableTimeSelect: boolean;
+  granularity?: number;
   value?: Date;
   onUpdate(newValue?: Date): void;
 }
@@ -98,12 +98,14 @@ const StyledContainer = styled(Box)`
 export function DripEndTimePicker({
   disabled = false,
   value,
-  onUpdate,
-  enableTimeSelect
+  granularity,
+  onUpdate
 }: DripEndTimePickerProps) {
+  granularity = granularity ?? 0;
   return (
-    <StyledContainer hideTime={!enableTimeSelect}>
+    <StyledContainer hideTime={granularity >= 86400}>
       <DateTimePicker
+        maxDetail={granularity >= 3600 ? 'hour' : granularity >= 60 ? 'minute' : undefined}
         disabled={disabled}
         className={sx({
           'date-time-picker': true,
@@ -116,7 +118,6 @@ export function DripEndTimePicker({
             onUpdate(undefined);
             return;
           }
-
           onUpdate(date);
         }}
         value={value}

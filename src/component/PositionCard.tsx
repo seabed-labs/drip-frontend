@@ -9,9 +9,9 @@ import { useNetworkAddress } from '../hooks/CurrentNetworkAddress';
 import { VaultPositionAccountWithPubkey } from '../hooks/Positions';
 import { useTokenInfo } from '../hooks/TokenInfo';
 import { formatDate } from '../utils/date';
+import { explainGranularity } from '../utils/granularity';
 import { formatTokenAmount } from '../utils/token-amount';
 import { Device } from '../utils/ui/css';
-import { displayGranularity } from './GranularitySelect';
 import { PositionModal } from './PositionModal';
 
 export function PositionCard({ position }: PositionCardProps) {
@@ -131,7 +131,7 @@ export function PositionCard({ position }: PositionCardProps) {
           <StyledDataRow>
             <StyledDataKey>Frequency</StyledDataKey>
             {protoConfig ? (
-              <Text>{displayGranularity(protoConfig.granularity.toNumber())}</Text>
+              <Text>{explainGranularity(protoConfig.granularity.toNumber())}</Text>
             ) : (
               <Skeleton h="20px" w="100px" />
             )}
