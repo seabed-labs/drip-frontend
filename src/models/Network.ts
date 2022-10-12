@@ -4,10 +4,14 @@ import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 export function getClusterApiUrl(network: Network): string {
   switch (network) {
     case Network.Mainnet:
-      return 'https://api.mainnet-beta.solana.com';
+      // mocha+1@dcaf.so
+      return 'https://palpable-warmhearted-hexagon.solana-mainnet.discover.quiknode.pro/5793cf44e6e16325347e62d571454890f16e0388';
+    // return 'https://api.mainnet-beta.solana.com';
     // return 'https://dimensional-young-cloud.solana-mainnet.quiknode.pro/a5a0fb3cfa38ab740ed634239fd502a99dbf028d';
     case Network.Devnet:
-      return 'https://api.devnet.solana.com';
+      // mocha+2@dcaf.so
+      return 'https://wiser-icy-bush.solana-devnet.discover.quiknode.pro/7288cc56d980336f6fc0508eb1aa73e44fd2efcd';
+    // return 'https://api.devnet.solana.com';
     // return 'https://fabled-bitter-tent.solana-devnet.quiknode.pro/ea2807069cec3658c0e16618bea5a5c9b85e0dd7';
     default:
       return 'http://127.0.0.1:8899';
