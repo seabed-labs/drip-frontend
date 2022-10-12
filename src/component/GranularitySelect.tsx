@@ -5,6 +5,7 @@ import { useAsyncMemo } from 'use-async-memo';
 import { useDripContext } from '../contexts/DripContext';
 import { Device } from '../utils/ui/css';
 import styled from 'styled-components';
+import { explainGranularity } from '../utils/granularity';
 
 const StyledContainer = styled.div`
   display: flex;
@@ -70,27 +71,10 @@ export function GranularitySelect({ tokenA, tokenB, onUpdate }: GranularitySelec
       >
         {vaultProtoConfigsForPair?.map((protoConfig) => (
           <option key={protoConfig.pubkey.toBase58()} value={protoConfig.granularity}>
-            {displayGranularity(protoConfig.granularity)}
+            {explainGranularity(protoConfig.granularity)}
           </option>
         ))}
       </Select>
     </StyledContainer>
   );
-}
-
-export function displayGranularity(granularity: Granularity) {
-  switch (granularity) {
-    case Granularity.Minutely:
-      return 'Minutely';
-    case Granularity.Hourly:
-      return 'Hourly';
-    case Granularity.Daily:
-      return 'Daily';
-    case Granularity.Weekly:
-      return 'Weekly';
-    case Granularity.Monthly:
-      return 'Monthly';
-    case Granularity.Yearly:
-      return 'Yearly';
-  }
 }
