@@ -1,4 +1,4 @@
-import { Token } from '@dcaf-labs/drip-sdk';
+import { Token as SdkToken } from '@dcaf-labs/drip-sdk';
 import { PublicKey } from '@solana/web3.js';
 import { useAsyncMemo } from 'use-async-memo';
 import { getDripApi } from '../api/drip';
@@ -7,6 +7,10 @@ import { useTokenMapContext } from '../contexts/TokenMap';
 import { NetworkAddress } from '../models/NetworkAddress';
 import { getDefaultIconUrl } from '../utils/token';
 import { useRemappedMint } from './MintRemap';
+
+export interface Token extends SdkToken {
+  coinGeckoId?: string;
+}
 
 export function useTokenInfo(mint?: NetworkAddress): Token | undefined {
   const tokenMap = useTokenMapContext();
@@ -30,7 +34,8 @@ export function useTokenInfo(mint?: NetworkAddress): Token | undefined {
           mint: new PublicKey(apiToken.pubkey),
           decimals: apiToken.decimals,
           symbol: apiToken.symbol,
-          iconUrl: apiToken.iconUrl
+          iconUrl: apiToken.iconUrl,
+          coinGeckoId: apiToken.coinGeckoId
         };
       }
 

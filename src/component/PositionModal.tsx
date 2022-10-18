@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ArrowRightIcon, RepeatIcon } from '@chakra-ui/icons';
 import {
   Box,
@@ -12,7 +13,7 @@ import {
   ModalBody,
   ModalFooter
 } from '@chakra-ui/react';
-import { QuoteToken, Token } from '@dcaf-labs/drip-sdk';
+import { QuoteToken } from '@dcaf-labs/drip-sdk';
 import {
   VaultAccount,
   VaultProtoConfigAccount
@@ -26,13 +27,14 @@ import { useDripContext } from '../contexts/DripContext';
 import { useRefreshContext } from '../contexts/Refresh';
 import { useAverageDripPrice } from '../hooks/AverageDripPrice';
 import { VaultPositionAccountWithPubkey } from '../hooks/Positions';
-import { useTokenMintMarketPriceUSD } from '../hooks/TokenPrice';
+import { useTokenPairMarketPriceUSD } from '../hooks/TokenPrice';
 import { formatDate } from '../utils/date';
 import { explainGranularity } from '../utils/granularity';
 import { formatTokenAmount } from '../utils/token-amount';
 import { Device } from '../utils/ui/css';
 import { AverageDripPrice } from './AveragePrice';
 import { TransactionButton } from './TransactionButton';
+import { Token } from '../hooks/TokenInfo';
 
 interface PositionModalProps {
   position: VaultPositionAccountWithPubkey;
@@ -64,10 +66,21 @@ export function PositionModal({
     [drip, position]
   );
 
-  const rawTokenAPrice = useTokenMintMarketPriceUSD(vault?.tokenAMint.toString());
-  const tokenAPrice = rawTokenAPrice ? new Decimal(rawTokenAPrice) : undefined;
-  const rawTokenBPrice = useTokenMintMarketPriceUSD(vault?.tokenBMint.toString());
-  const tokenBPrice = rawTokenBPrice ? new Decimal(rawTokenBPrice) : undefined;
+  let tokenAPrice = undefined;
+  let tokenBPrice = undefined;
+  if (tokenAInfo?.coinGeckoId && tokenBInfo?.coinGeckoId) {
+    const tokenPairPrices = useTokenPairMarketPriceUSD([
+      tokenAInfo?.coinGeckoId,
+      tokenBInfo?.coinGeckoId
+    ]);
+    const rawTokenAPrice = tokenPairPrices?.get(tokenAInfo.coinGeckoId);
+    const rawTokenBPrice = tokenPairPrices?.get(tokenBInfo.coinGeckoId);
+    if (rawTokenAPrice && rawTokenBPrice) {
+      tokenAPrice = new Decimal(rawTokenAPrice);
+      tokenBPrice = new Decimal(rawTokenBPrice);
+    }
+  }
+
   const marketPrice =
     tokenAPrice && tokenBPrice
       ? isPriceFlipped

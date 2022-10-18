@@ -3,13 +3,15 @@ import { useEffect, useState } from 'react';
 import { CoingeckoAPI } from '../api/coingecko';
 import { useNetwork } from '../contexts/NetworkContext';
 
-export function useTokenMintMarketPriceUSD(mintAddress?: string): number | undefined {
-  const [usdPrice, setPrice] = useState<number | undefined>(undefined);
+export function useTokenPairMarketPriceUSD(
+  coinGeckoIDs: Array<string>
+): Map<string, number> | undefined {
+  const [usdPrices, setPrices] = useState<Map<string, number> | undefined>(undefined);
   const network = useNetwork();
 
   useEffect(() => {
     (async () => {
-      if (!mintAddress) {
+      if (!coinGeckoIDs || coinGeckoIDs.length != 2) {
         return;
       }
       if (network === Network.Devnet) {
@@ -17,18 +19,18 @@ export function useTokenMintMarketPriceUSD(mintAddress?: string): number | undef
       }
       const cgClient = new CoingeckoAPI();
       try {
-        const price = await cgClient.getUSDPriceForTokenByMint(mintAddress);
+        const priceByIds = await cgClient.getUSDPriceForTokenByIds(coinGeckoIDs);
 
-        if (price) {
-          setPrice(price);
+        if (priceByIds?.size == 2) {
+          setPrices(priceByIds);
         } else {
-          console.log(`Tried fetching price for ${mintAddress} from CoinGecko but got ${price}`);
+          console.log(`Unable to fetch market prices for token pair ${coinGeckoIDs.join(',')}`);
         }
       } catch (err) {
         console.error(err);
       }
     })();
-  }, [mintAddress]);
+  }, [coinGeckoIDs]);
 
-  return usdPrice;
+  return usdPrices;
 }
