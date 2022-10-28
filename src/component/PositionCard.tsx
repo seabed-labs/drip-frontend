@@ -57,10 +57,6 @@ export function PositionCard({ position }: PositionCardProps) {
     lastPositionPeriod?.periodId &&
     vault.lastDripPeriod >= lastPositionPeriod?.periodId
   );
-  // const averagePrice = useAverageDripPrice(
-  //   position,
-  //   isPriceFlipped ? QuoteToken.TokenB : QuoteToken.TokenA
-  // );
 
   const estimatedNextDripDate = useMemo(() => {
     if (!vault) return undefined;
