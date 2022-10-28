@@ -39,7 +39,7 @@ export function PositionCard({ position }: PositionCardProps) {
             periodId: position.dripPeriodIdBeforeDeposit.add(position.numberOfSwaps)
           })
         ),
-      [drip, vault]
+      [drip, vault, position]
     ) ?? [];
 
   const tokenAAddr = useNetworkAddress(vault?.tokenAMint);
