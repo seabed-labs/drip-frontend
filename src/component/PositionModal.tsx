@@ -31,6 +31,7 @@ import { formatDate } from '../utils/date';
 import { explainGranularity } from '../utils/granularity';
 import { formatTokenAmount } from '../utils/token-amount';
 import { Device } from '../utils/ui/css';
+import { AverageDripPrice } from './AveragePrice';
 import { TransactionButton } from './TransactionButton';
 
 interface PositionModalProps {
@@ -297,17 +298,12 @@ export function PositionModal({
                 <StyledModalFieldValue>
                   {averagePrice && tokenAInfo && tokenBInfo ? (
                     <Text display="flex" flexDir="row" alignItems="flex-end">
-                      <StyledPriceValue>{`${formatTokenAmount(
-                        averagePrice,
-                        0,
-                        true
-                      )}`}</StyledPriceValue>
-                      <Text w="5px" display="inline"></Text>
-                      <StyledPriceUnit>
-                        {isPriceFlipped
-                          ? `${tokenBInfo.symbol} per ${tokenAInfo.symbol}`
-                          : `${tokenAInfo.symbol} per ${tokenBInfo.symbol}`}
-                      </StyledPriceUnit>
+                      <AverageDripPrice
+                        isPriceFlipped={isPriceFlipped}
+                        position={position}
+                        tokenAInfo={tokenAInfo}
+                        tokenBInfo={tokenBInfo}
+                      />
                     </Text>
                   ) : closePositionPreviewLoading || (accruedTokenB && accruedTokenB.eqn(0)) ? (
                     '-'
