@@ -8,13 +8,15 @@ import {
   SolletExtensionWalletAdapter,
   SolletWalletAdapter,
   TorusWalletAdapter,
-  GlowWalletAdapter
+  GlowWalletAdapter,
+  BackpackWalletAdapter
 } from '@solana/wallet-adapter-wallets';
 import { FC, ReactNode, useMemo } from 'react';
 import {
   SolanaMobileWalletAdapter,
   createDefaultAuthorizationResultCache,
-  createDefaultAddressSelector
+  createDefaultAddressSelector,
+  createDefaultWalletNotFoundHandler
 } from '@solana-mobile/wallet-adapter-mobile';
 import { useNetwork } from './NetworkContext';
 import { getClusterApiUrl, toWalletAdapterNetwork } from '../models/Network';
@@ -35,11 +37,13 @@ export const WalletContext: FC<{ children: ReactNode }> = ({ children }) => {
       new LedgerWalletAdapter(),
       new SolletWalletAdapter({ network: walletAdapterNetwork }),
       new SolletExtensionWalletAdapter({ network: walletAdapterNetwork }),
+      new BackpackWalletAdapter({}),
       new SolanaMobileWalletAdapter({
         addressSelector: createDefaultAddressSelector(),
         appIdentity: {},
         authorizationResultCache: createDefaultAuthorizationResultCache(),
-        cluster: walletAdapterNetwork
+        cluster: walletAdapterNetwork,
+        onWalletNotFound: createDefaultWalletNotFoundHandler()
       })
     ],
     [network]
