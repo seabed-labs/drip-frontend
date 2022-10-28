@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ArrowRightIcon, RepeatIcon } from '@chakra-ui/icons';
 import {
   Box,
@@ -25,12 +24,14 @@ import styled from 'styled-components';
 import { useAsyncMemo } from 'use-async-memo';
 import { useDripContext } from '../contexts/DripContext';
 import { useRefreshContext } from '../contexts/Refresh';
+import { useAverageDripPrice } from '../hooks/AverageDripPrice';
 import { VaultPositionAccountWithPubkey } from '../hooks/Positions';
 import { useTokenMintMarketPriceUSD } from '../hooks/TokenPrice';
 import { formatDate } from '../utils/date';
 import { explainGranularity } from '../utils/granularity';
 import { formatTokenAmount } from '../utils/token-amount';
 import { Device } from '../utils/ui/css';
+import { AverageDripPrice } from './AveragePrice';
 import { TransactionButton } from './TransactionButton';
 
 interface PositionModalProps {
@@ -63,16 +64,16 @@ export function PositionModal({
     [drip, position]
   );
 
-  let tokenAPrice = undefined;
-  let tokenBPrice = undefined;
   const rawTokenAPrice = useTokenMintMarketPriceUSD(vault?.tokenAMint.toString());
-  if (rawTokenAPrice) {
-    tokenAPrice = new Decimal(rawTokenAPrice);
-  }
+  const tokenAPrice = rawTokenAPrice ? new Decimal(rawTokenAPrice) : undefined;
   const rawTokenBPrice = useTokenMintMarketPriceUSD(vault?.tokenBMint.toString());
-  if (rawTokenBPrice) {
-    tokenBPrice = new Decimal(rawTokenBPrice);
-  }
+  const tokenBPrice = rawTokenBPrice ? new Decimal(rawTokenBPrice) : undefined;
+  const marketPrice =
+    tokenAPrice && tokenBPrice
+      ? isPriceFlipped
+        ? tokenAPrice.div(tokenBPrice)
+        : tokenBPrice.div(tokenAPrice)
+      : undefined;
 
   const [closePositionPreviewLoading, setClosePositionPreviewLoading] = useState(false);
 
@@ -83,9 +84,9 @@ export function PositionModal({
     return preview;
   }, [dripPosition]);
 
-  const averagePrice = useAsyncMemo(
-    () => drip?.querier.getAveragePrice(position.pubkey, QuoteToken.TokenA),
-    [drip, position]
+  const averagePrice = useAverageDripPrice(
+    position,
+    isPriceFlipped ? QuoteToken.TokenB : QuoteToken.TokenA
   );
 
   const numberOfDripsCompleted = useMemo(() => {
@@ -255,12 +256,10 @@ export function PositionModal({
               <StyledModalField>
                 <StyledModalFieldHeader>Market Price</StyledModalFieldHeader>
                 <StyledModalFieldValue>
-                  {tokenAPrice && tokenBPrice && tokenAInfo && tokenBInfo ? (
+                  {marketPrice && tokenAInfo && tokenBInfo ? (
                     <Text display="flex" flexDir="row" alignItems="flex-end">
                       <StyledPriceValue>{`${formatTokenAmount(
-                        isPriceFlipped
-                          ? tokenAPrice.div(tokenBPrice)
-                          : tokenBPrice.div(tokenAPrice),
+                        marketPrice,
                         0,
                         true
                       )}`}</StyledPriceValue>
@@ -299,17 +298,12 @@ export function PositionModal({
                 <StyledModalFieldValue>
                   {averagePrice && tokenAInfo && tokenBInfo ? (
                     <Text display="flex" flexDir="row" alignItems="flex-end">
-                      <StyledPriceValue>{`${formatTokenAmount(
-                        isPriceFlipped ? averagePrice.pow(-1) : averagePrice,
-                        0,
-                        true
-                      )}`}</StyledPriceValue>
-                      <Text w="5px" display="inline"></Text>
-                      <StyledPriceUnit>
-                        {isPriceFlipped
-                          ? `${tokenBInfo.symbol} per ${tokenAInfo.symbol}`
-                          : `${tokenAInfo.symbol} per ${tokenBInfo.symbol}`}
-                      </StyledPriceUnit>
+                      <AverageDripPrice
+                        isPriceFlipped={isPriceFlipped}
+                        position={position}
+                        tokenAInfo={tokenAInfo}
+                        tokenBInfo={tokenBInfo}
+                      />
                     </Text>
                   ) : closePositionPreviewLoading || (accruedTokenB && accruedTokenB.eqn(0)) ? (
                     '-'
