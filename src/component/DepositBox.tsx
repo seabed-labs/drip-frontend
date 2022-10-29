@@ -87,7 +87,7 @@ export function DepositBox() {
     uiAmountString: '0'
   };
 
-  const tokenAs = useTokenAs();
+  const tokenAs = useTokenAs(tokenB);
   const tokenBs = useTokenBs(tokenA);
   const tokenAAddr = useNetworkAddress(tokenA);
   const tokenBAddr = useNetworkAddress(tokenB);
@@ -225,11 +225,14 @@ export function DepositBox() {
           <TokenSelector
             modalTitle="Select Token A"
             placeholder="Select Token A"
+            onClearToken={() => {
+              setTokenA(undefined);
+              setDepositAmountStr('');
+            }}
             onSelectToken={(token) => {
               setTokenA(token);
               setDepositAmountStr('');
               setGranularity(undefined);
-              setTokenB(undefined);
               setDripUntil(undefined);
             }}
             selectedToken={tokenA}
@@ -251,9 +254,11 @@ export function DepositBox() {
         <Box h="10px" />
         <StyledSubRowContainer>
           <TokenSelector
-            disabled={!tokenA}
             modalTitle="Select Token B"
             placeholder="Select Token B"
+            onClearToken={() => {
+              setTokenB(undefined);
+            }}
             onSelectToken={setTokenB}
             selectedToken={tokenB}
             tokens={tokenBs}

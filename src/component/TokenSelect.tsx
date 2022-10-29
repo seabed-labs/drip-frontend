@@ -15,8 +15,10 @@ import {
   VStack,
   BoxProps,
   Code,
-  Flex
+  Flex,
+  Box
 } from '@chakra-ui/react';
+import { SmallCloseIcon } from '@chakra-ui/icons';
 import { Token } from '@dcaf-labs/drip-sdk';
 import { PublicKey } from '@solana/web3.js';
 import { useMemo, useState } from 'react';
@@ -30,6 +32,7 @@ import { Device } from '../utils/ui/css';
 
 export interface TokenSelectorProps {
   onSelectToken(token: PublicKey): unknown;
+  onClearToken(): unknown;
   selectedToken?: PublicKey;
   placeholder?: string;
   tokens?: Token[];
@@ -39,6 +42,7 @@ export interface TokenSelectorProps {
 
 export function TokenSelector({
   onSelectToken,
+  onClearToken,
   selectedToken,
   tokens,
   placeholder = 'Select Token',
@@ -112,7 +116,13 @@ export function TokenSelector({
           />
         )}
         {selectedTokenInfo ? (
-          <Flex ml="2px" flex-direction="row" w="100%" justify-content="flex-start">
+          <Flex
+            ml="2px"
+            flex-direction="row"
+            w="100%"
+            justify-content="flex-start"
+            alignItems="center"
+          >
             <Text
               fontSize="12px"
               css={{
@@ -123,6 +133,26 @@ export function TokenSelector({
             >
               {selectedTokenInfo.symbol}
             </Text>
+            <Box
+              opacity="0.5"
+              ml="5px"
+              onClick={(e) => {
+                e.stopPropagation();
+                onClearToken();
+              }}
+              p="1px"
+              display="flex"
+              flexDir="column"
+              justifyContent="center"
+              alignItems="center"
+              transition="0.1s ease"
+              _hover={{
+                opacity: '1',
+                transition: '0.1s ease'
+              }}
+            >
+              <SmallCloseIcon />
+            </Box>
           </Flex>
         ) : (
           <Text
