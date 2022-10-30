@@ -16,12 +16,15 @@ import {
   BoxProps,
   Code,
   Flex,
-  Box
+  Box,
+  Divider,
+  Wrap,
+  WrapItem
 } from '@chakra-ui/react';
 import { SmallCloseIcon } from '@chakra-ui/icons';
-import { Token } from '@dcaf-labs/drip-sdk';
+import { isSol, Token } from '@dcaf-labs/drip-sdk';
 import { PublicKey } from '@solana/web3.js';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useNetwork } from '../contexts/NetworkContext';
 import { useNetworkAddress } from '../hooks/CurrentNetworkAddress';
 import { useTokenInfo } from '../hooks/TokenInfo';
@@ -29,6 +32,11 @@ import { NetworkAddress } from '../models/NetworkAddress';
 import { solscanTokenUrl } from '../utils/block-explorer';
 import { displayPubkey, toPubkey } from '../utils/pubkey';
 import { Device } from '../utils/ui/css';
+import { PrioritizedTokenOpts, usePrioritizedTokens } from '../hooks/PrioritizedTokens';
+import { useTokenBalances } from '../hooks/TokenBalances';
+import { useWallet } from '@solana/wallet-adapter-react';
+import { formatTokenAmountStr } from '../utils/token-amount';
+import { useSolBalance } from '../hooks/SolBalance';
 
 export interface TokenSelectorProps {
   onSelectToken(token: PublicKey): unknown;
@@ -56,6 +64,10 @@ export function TokenSelector({
   const [filter, setFilter] = useState<string>();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  const wallet = useWallet();
+  const tokenBalances = useTokenBalances(wallet.publicKey?.toBase58());
+  const solBalance = useSolBalance(wallet.publicKey?.toBase58());
+
   function onFilterChange(newFilter: string) {
     if (newFilter.trim() === '') {
       setFilter(undefined);
@@ -65,16 +77,29 @@ export function TokenSelector({
     setFilter(newFilter);
   }
 
-  const filteredTokens = useMemo(() => {
-    if (!tokens) return [];
-    if (!filter) return tokens;
+  const prioritizedTokenOpts: PrioritizedTokenOpts = useMemo(
+    () => ({
+      mints: tokens && tokens.map((token) => token.mint.toBase58()),
+      filter
+    }),
+    [tokens, filter]
+  );
 
-    return tokens.filter(
-      (token) =>
-        token.symbol?.toLowerCase().includes(filter.toLowerCase()) ||
-        token.mint.toBase58().includes(filter)
-    );
-  }, [tokens, filter]);
+  const prioritizedTokens = usePrioritizedTokens(prioritizedTokenOpts);
+
+  const tokensToRender = useMemo(() => {
+    if (!prioritizedTokens) return [];
+    return prioritizedTokens.userTokens.concat(prioritizedTokens.otherTokens);
+  }, [prioritizedTokens]);
+
+  const onTokenSelect = useCallback(
+    (token: Token) => {
+      onSelectToken(toPubkey(token.mint));
+      setFilter(undefined);
+      onClose();
+    },
+    [onSelectToken]
+  );
 
   return (
     <>
@@ -183,7 +208,7 @@ export function TokenSelector({
         >
           <ModalHeader>{modalTitle}</ModalHeader>
           <ModalCloseButton />
-          <ModalBody>
+          <ModalBody maxH="490px">
             <Input
               border="none"
               bgColor="whiteAlpha.100"
@@ -192,18 +217,31 @@ export function TokenSelector({
                 onFilterChange(e.target.value);
               }}
             />
-            <VStack mt="30px" overflowY="scroll" maxH="400px" w="100%">
-              {filteredTokens?.map((token) => (
+            {prioritizedTokens && prioritizedTokens.bluechips.length > 0 && (
+              <>
+                <Wrap my="20px" spacing="10px">
+                  {prioritizedTokens?.bluechips.map((token) => (
+                    <WrapItem key={token.mint.toBase58()}>
+                      <BluechipToken token={token} onClick={() => onTokenSelect(token)} />
+                    </WrapItem>
+                  ))}
+                </Wrap>
+                <Divider />
+              </>
+            )}
+            <VStack mt="30px" maxH="260px" overflowY="scroll" w="100%">
+              {tokensToRender?.map((token) => (
                 <TokenRow
-                  onClick={() => {
-                    onSelectToken(toPubkey(token.mint));
-                    setFilter(undefined);
-                    onClose();
-                  }}
+                  onClick={() => onTokenSelect(token)}
                   paddingY="10px"
                   paddingX="20px"
                   key={token.mint.toBase58()}
                   token={token}
+                  balance={
+                    isSol(token.mint.toBase58())
+                      ? solBalance
+                      : tokenBalances?.[token.mint.toBase58()]
+                  }
                 />
               )) ?? null}
             </VStack>
@@ -217,9 +255,10 @@ export function TokenSelector({
 
 interface TokenRowProps {
   token: Token;
+  balance?: bigint;
 }
 
-function TokenRow({ token, ...boxProps }: TokenRowProps & BoxProps) {
+function TokenRow({ token, balance, ...boxProps }: TokenRowProps & BoxProps) {
   const tokenNetworkAddr = useNetworkAddress(token.mint);
   const tokenInfo = useTokenInfo(tokenNetworkAddr);
 
@@ -235,7 +274,14 @@ function TokenRow({ token, ...boxProps }: TokenRowProps & BoxProps) {
     >
       <HStack>
         <Image borderRadius="30px" w="30px" src={tokenInfo?.iconUrl} />
-        <Text>{token.symbol}</Text>
+        <HStack alignItems="baseline">
+          <Text>{token.symbol}</Text>
+          {balance && (
+            <Text fontSize="10px">
+              {formatTokenAmountStr(balance.toString(), token.decimals, true)}
+            </Text>
+          )}
+        </HStack>
       </HStack>
       <Code
         cursor="pointer"
@@ -249,6 +295,33 @@ function TokenRow({ token, ...boxProps }: TokenRowProps & BoxProps) {
       >
         {displayPubkey(token.mint)}
       </Code>
+    </HStack>
+  );
+}
+
+interface BluechipTokenProps {
+  token: Token;
+  onClick: () => unknown;
+}
+
+function BluechipToken({ token, onClick }: BluechipTokenProps) {
+  const tokenNetworkAddr = useNetworkAddress(token.mint);
+  const tokenInfo = useTokenInfo(tokenNetworkAddr);
+
+  return (
+    <HStack
+      border="1px solid"
+      p="8px 10px"
+      borderColor="whiteAlpha.300"
+      borderRadius="80px"
+      _hover={{
+        cursor: 'pointer',
+        bgColor: 'whiteAlpha.100'
+      }}
+      onClick={onClick}
+    >
+      <Image borderRadius="30px" w="20px" src={tokenInfo?.iconUrl} />
+      <Text fontSize="12px">{token.symbol}</Text>
     </HStack>
   );
 }

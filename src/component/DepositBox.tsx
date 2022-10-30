@@ -21,7 +21,7 @@ import { DripEndTimePicker } from './DripEndTimePicker';
 import { GranularitySelect } from './GranularitySelect';
 import { MintButton } from './MintButton';
 import { TokenAmountInput } from './TokenAmountInput';
-import { TokenSelector } from './TokenSelect';
+import { TokenSelector } from './TokenSelector';
 import { useRefreshContext } from '../contexts/Refresh';
 import { Device } from '../utils/ui/css';
 
