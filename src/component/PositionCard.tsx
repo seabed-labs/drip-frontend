@@ -182,10 +182,14 @@ export function PositionCard({ position }: PositionCardProps) {
             borderRadius="50px"
             size="sm"
             w="100%"
-            value={dripProgress?.toNumber()}
+            value={dripProgress?.percentage.toNumber()}
           />
           {dripProgress ? (
-            <StyledFooterRow>{dripProgress.toNumber()}% dripped</StyledFooterRow>
+            <StyledFooterRow>
+              {`${dripProgress.percentage.toNumber()}% dripped (${dripProgress.completedDrips}/${
+                dripProgress.totalDrips
+              })`}
+            </StyledFooterRow>
           ) : (
             <StyledFooterRow>
               <Skeleton mt="5px" w="33%" h="12px" />
