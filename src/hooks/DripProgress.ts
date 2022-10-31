@@ -3,10 +3,16 @@ import BN from 'bn.js';
 import { useMemo } from 'react';
 import { VaultPositionAccountWithPubkey } from './Positions';
 
+export type DripProgress = {
+  completedDrips: BN;
+  totalDrips: BN;
+  percentage: BN;
+};
+
 export function useDripProgress(
   vault?: VaultAccount | null,
   position?: VaultPositionAccountWithPubkey | null
-): BN | undefined {
+): DripProgress | undefined {
   return useMemo(() => {
     if (!vault || !position) return undefined;
 
@@ -16,6 +22,11 @@ export function useDripProgress(
       totalDrips
     );
 
-    return completedDrips.muln(100).div(totalDrips);
+    const percentage = completedDrips.muln(100).div(totalDrips);
+    return {
+      completedDrips,
+      totalDrips,
+      percentage
+    };
   }, [vault, position]);
 }
