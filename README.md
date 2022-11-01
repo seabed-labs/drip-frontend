@@ -11,10 +11,10 @@
 
 > TODO: Update production env's via a github action
 
-|            | Devnet                      | Mainnet                      |
-| ---------- | --------------------------- | ---------------------------- |
-| Staging    | Merge to `main`             | n/a                          |
-| Production | Rebase `devnet` with `main` | Rebase `mainnet` with `main` |
+|            | Devnet                  | Mainnet                 |
+| ---------- | ----------------------- | ----------------------- |
+| Staging    | Merge to `main`         | Merge to `main`         |
+| Production | Action via `infra` repo | Action via `infra` repo |
 
 ## Getting Started
 
