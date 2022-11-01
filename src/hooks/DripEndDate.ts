@@ -11,8 +11,8 @@ export function usePositionEndDate(
 ): Date | undefined {
   return useMemo(() => {
     //  Drip is completed, return end date time
-    if (lastVaultPeriod && lastVaultPeriod.dripTimestamp) {
-      return new Date(lastVaultPeriod.dripTimestamp * 1000);
+    if (lastVaultPeriod && lastVaultPeriod.dripTimestamp.toNumber()) {
+      return new Date(lastVaultPeriod.dripTimestamp.mul(new BN(1000)).toNumber());
     }
     // Drip is still in progress, return estimated end date time
     if (!vault || !protoConfig || !position) return undefined;
