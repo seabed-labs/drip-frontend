@@ -12,59 +12,62 @@ export class CoingeckoAPI {
     Accept: 'application/json'
   };
 
-  async getUSDPriceForTokenByMint(mintAddress: string): Promise<number | undefined> {
-    // The API can support comma seperated mint addresses, but to keep the usage simple only allowing
-    // a single mint for this function
+  async getUSDPriceForTokenByMint(
+    mintAddresses: Array<string>
+  ): Promise<Partial<Record<string, number | undefined>>> {
+    const usdPricesByMint: Record<string, number | undefined> = {};
 
-    // For some reason, coinGecko doesn't return a value for USD mint
-    if (mintAddress === USD_MINT_SOLANA_MAINNET) {
-      return 1;
-    }
-
-    if (mintAddress.split(',').length != 1) {
-      throw new Error('Please provide a single mint address.');
-    }
     const params = {
-      contract_addresses: mintAddress,
+      contract_addresses: mintAddresses.join(','),
       vs_currencies: USD_CURRENCY
     };
     const { data } = await axios.get(
       `${BASE_URL}/api/v3/simple/token_price/${BLOCKCHAIN_NETWORK}`,
       { params, headers: this.headers }
     );
-    if (!data[mintAddress] || !data[mintAddress][USD_CURRENCY]) {
-      throw new Error(
-        `Unexpected data from CoinGecko while fetching USD price for mint ${mintAddress} => ${data.toString()}`
-      );
-    }
-    return data[mintAddress][USD_CURRENCY];
+    mintAddresses.forEach((mintAddress) => {
+      // For some reason, coinGecko doesn't return a value for USD mint
+      if (mintAddress === USD_MINT_SOLANA_MAINNET) {
+        usdPricesByMint[mintAddress] = 1;
+      } else {
+        if (!data[mintAddress] || !data[mintAddress][USD_CURRENCY]) {
+          console.error(
+            `Unexpected data from CoinGecko while fetching USD price for mint ${mintAddress} => ${data.toString()}`
+          );
+        }
+        usdPricesByMint[mintAddress] = data[mintAddress][USD_CURRENCY];
+      }
+    });
+    return usdPricesByMint;
   }
 
   async getUSDPriceForTokenByIds(
-    coinGeckoIDs: Array<string>
-  ): Promise<Map<string, number> | undefined> {
-    // The API can support comma seperated mint addresses, but to keep the usage simple only allowing
-    // a single mint for this function
-    if (coinGeckoIDs.length == 0) {
-      throw new Error('Please provide atleast 1 coinGeckoID');
+    coinGeckoIds: Array<string | undefined>
+  ): Promise<Partial<Record<string, number>> | undefined> {
+    coinGeckoIds = coinGeckoIds.filter((cgId) => {
+      return cgId !== undefined;
+    });
+
+    if (coinGeckoIds.length == 0) {
+      return undefined;
     }
 
-    const priceByTokenMap = new Map<string, number>();
+    const priceByTokenMap: Record<string, number | undefined> = {};
     const params = {
-      ids: coinGeckoIDs.join(','),
+      ids: coinGeckoIds.join(','),
       vs_currencies: USD_CURRENCY
     };
     const { data } = await axios.get(`${BASE_URL}/api/v3/simple/price/`, {
       params,
       headers: this.headers
     });
-    for (const cgId in coinGeckoIDs) {
+    for (const cgId in coinGeckoIds) {
       if (!data[cgId] || !data[cgId][USD_CURRENCY]) {
-        throw new Error(
+        console.error(
           `Unexpected data from CoinGecko while fetching USD price for id ${cgId} => ${data.toString()}`
         );
       }
-      priceByTokenMap.set(cgId, data[cgId][USD_CURRENCY]);
+      priceByTokenMap[cgId] = data[cgId][USD_CURRENCY] ?? undefined;
     }
 
     return priceByTokenMap;

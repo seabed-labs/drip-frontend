@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ArrowRightIcon, RepeatIcon } from '@chakra-ui/icons';
 import {
   Box,
@@ -27,7 +26,7 @@ import { useDripContext } from '../contexts/DripContext';
 import { useRefreshContext } from '../contexts/Refresh';
 import { useAverageDripPrice } from '../hooks/AverageDripPrice';
 import { VaultPositionAccountWithPubkey } from '../hooks/Positions';
-import { useTokenPairMarketPriceUSD } from '../hooks/TokenPrice';
+import { useTokensMarketPriceUSD } from '../hooks/TokenPrice';
 import { formatDate } from '../utils/date';
 import { explainGranularity } from '../utils/granularity';
 import { formatTokenAmount } from '../utils/token-amount';
@@ -68,17 +67,23 @@ export function PositionModal({
 
   let tokenAPrice = undefined;
   let tokenBPrice = undefined;
-  if (tokenAInfo?.coinGeckoId && tokenBInfo?.coinGeckoId) {
-    const tokenPairPrices = useTokenPairMarketPriceUSD([
-      tokenAInfo?.coinGeckoId,
-      tokenBInfo?.coinGeckoId
-    ]);
-    const rawTokenAPrice = tokenPairPrices?.get(tokenAInfo.coinGeckoId);
-    const rawTokenBPrice = tokenPairPrices?.get(tokenBInfo.coinGeckoId);
-    if (rawTokenAPrice && rawTokenBPrice) {
-      tokenAPrice = new Decimal(rawTokenAPrice);
-      tokenBPrice = new Decimal(rawTokenBPrice);
-    }
+  let rawTokenAPrice = undefined;
+  let rawTokenBPrice = undefined;
+  const tokenPairPrices = useTokensMarketPriceUSD([
+    tokenAInfo?.coinGeckoId,
+    tokenBInfo?.coinGeckoId
+  ]);
+  if (!tokenPairPrices) {
+    console.error('Failed to fetch market price for token pair');
+  }
+  if (tokenAInfo?.coinGeckoId && tokenBInfo?.coinGeckoId && tokenPairPrices) {
+    rawTokenAPrice = tokenPairPrices[tokenAInfo.coinGeckoId];
+    rawTokenBPrice = tokenPairPrices[tokenBInfo?.coinGeckoId];
+  }
+
+  if (rawTokenAPrice && rawTokenBPrice) {
+    tokenAPrice = new Decimal(rawTokenAPrice);
+    tokenBPrice = new Decimal(rawTokenBPrice);
   }
 
   const marketPrice =

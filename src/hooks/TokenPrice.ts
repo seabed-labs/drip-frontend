@@ -3,34 +3,30 @@ import { useEffect, useState } from 'react';
 import { CoingeckoAPI } from '../api/coingecko';
 import { useNetwork } from '../contexts/NetworkContext';
 
-export function useTokenPairMarketPriceUSD(
-  coinGeckoIDs: Array<string>
-): Map<string, number> | undefined {
-  const [usdPrices, setPrices] = useState<Map<string, number> | undefined>(undefined);
+export function useTokensMarketPriceUSD(
+  coinGeckoIds: Array<string | undefined>
+): Partial<Record<string, number> | undefined> {
+  const [usdPrices, setPrices] = useState<Partial<Record<string, number> | undefined>>(undefined);
   const network = useNetwork();
 
   useEffect(() => {
     (async () => {
-      if (!coinGeckoIDs || coinGeckoIDs.length != 2) {
-        return;
-      }
+      let priceByIds = undefined;
       if (network === Network.Devnet) {
         return -1;
       }
       const cgClient = new CoingeckoAPI();
       try {
-        const priceByIds = await cgClient.getUSDPriceForTokenByIds(coinGeckoIDs);
-
-        if (priceByIds?.size == 2) {
-          setPrices(priceByIds);
-        } else {
-          console.log(`Unable to fetch market prices for token pair ${coinGeckoIDs.join(',')}`);
+        if (coinGeckoIds) {
+          priceByIds = await cgClient.getUSDPriceForTokenByIds(coinGeckoIds);
         }
+
+        setPrices(priceByIds);
       } catch (err) {
         console.error(err);
       }
     })();
-  }, [coinGeckoIDs]);
+  }, [coinGeckoIds]);
 
   return usdPrices;
 }
