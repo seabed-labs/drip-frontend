@@ -1,7 +1,7 @@
-import { ArrowRightIcon, RepeatIcon } from '@chakra-ui/icons';
+import { ArrowRightIcon } from '@chakra-ui/icons';
 import { Text, Box, HStack, Image, Skeleton, Progress, useDisclosure } from '@chakra-ui/react';
 import { findVaultPeriodPubkey } from '@dcaf-labs/drip-sdk';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import styled from 'styled-components';
 import { useAsyncMemo } from 'use-async-memo';
 import { useDripContext } from '../contexts/DripContext';
@@ -14,13 +14,13 @@ import { formatDate } from '../utils/date';
 import { explainGranularity } from '../utils/granularity';
 import { formatTokenAmount } from '../utils/token-amount';
 import { Device } from '../utils/ui/css';
-import { AverageDripPrice } from './AveragePrice';
+// import { AverageDripPrice } from './AveragePrice';
 import { PositionModal } from './PositionModal';
 
 export function PositionCard({ position }: PositionCardProps) {
   const drip = useDripContext();
 
-  const [isPriceFlipped, setIsPriceFlipped] = useState(false);
+  // const [isPriceFlipped, setIsPriceFlipped] = useState(false);
 
   const [vault] =
     useAsyncMemo(async () => drip?.querier.fetchVaultAccounts(position.vault), [drip, position]) ??
@@ -145,14 +145,14 @@ export function PositionCard({ position }: PositionCardProps) {
               <Skeleton h="20px" w="100px" />
             )}
           </StyledDataRow>
-          <StyledDataRow>
+          {/* <StyledDataRow>
             <StyledDataRowLeft>
               <StyledDataKey>Avg. Price</StyledDataKey>
               <RepeatIcon
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setIsPriceFlipped((isFlipped) => !isFlipped);
-                }}
+                // onClick={(e) => {
+                //   e.stopPropagation();
+                //   setIsPriceFlipped((isFlipped) => !isFlipped);
+                // }}
                 _hover={{
                   color: 'rgba(255, 255, 255, 0.8)',
                   transition: '0.2s ease'
@@ -172,7 +172,7 @@ export function PositionCard({ position }: PositionCardProps) {
                 tokenBInfo={tokenBInfo}
               />
             </StyledDataRowRight>
-          </StyledDataRow>
+          </StyledDataRow> */}
         </StyledBodyContainer>
         <StyledFooterContainer>
           <Progress
@@ -281,21 +281,21 @@ const StyledDataRow = styled(Box)`
   margin-top: 10px;
 `;
 
-const StyledDataRowLeft = styled(Box)`
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  margin-top: 10px;
-`;
+// const StyledDataRowLeft = styled(Box)`
+//   display: flex;
+//   flex-direction: row;
+//   justify-content: flex-start;
+//   align-items: center;
+//   margin-top: 10px;
+// `;
 
-const StyledDataRowRight = styled(Box)`
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  align-items: baseline;
-  margin-top: 10px;
-`;
+// const StyledDataRowRight = styled(Box)`
+//   display: flex;
+//   flex-direction: row;
+//   justify-content: flex-end;
+//   align-items: baseline;
+//   margin-top: 10px;
+// `;
 
 const StyledDataKey = styled(Text)`
   font-weight: bold;
