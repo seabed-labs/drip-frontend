@@ -1,21 +1,27 @@
 import { ArrowRightIcon } from '@chakra-ui/icons';
 import { Text, Box, HStack, Image, Skeleton, Progress, useDisclosure } from '@chakra-ui/react';
-import { BN } from '@project-serum/anchor';
+import { findVaultPeriodPubkey } from '@dcaf-labs/drip-sdk';
 import { useMemo } from 'react';
 import styled from 'styled-components';
 import { useAsyncMemo } from 'use-async-memo';
 import { useDripContext } from '../contexts/DripContext';
 import { useNetworkAddress } from '../hooks/CurrentNetworkAddress';
+import { usePositionEndDate } from '../hooks/DripEndDate';
+import { useDripProgress } from '../hooks/DripProgress';
 import { VaultPositionAccountWithPubkey } from '../hooks/Positions';
 import { useTokenInfo } from '../hooks/TokenInfo';
 import { formatDate } from '../utils/date';
 import { explainGranularity } from '../utils/granularity';
 import { formatTokenAmount } from '../utils/token-amount';
 import { Device } from '../utils/ui/css';
+// import { AverageDripPrice } from './AveragePrice';
 import { PositionModal } from './PositionModal';
 
 export function PositionCard({ position }: PositionCardProps) {
   const drip = useDripContext();
+
+  // const [isPriceFlipped, setIsPriceFlipped] = useState(false);
+
   const [vault] =
     useAsyncMemo(async () => drip?.querier.fetchVaultAccounts(position.vault), [drip, position]) ??
     [];
@@ -26,42 +32,31 @@ export function PositionCard({ position }: PositionCardProps) {
       [drip, vault]
     ) ?? [];
 
+  const [lastPositionPeriod] =
+    useAsyncMemo(
+      async () =>
+        vault &&
+        drip?.querier.fetchVaultPeriodAccounts(
+          findVaultPeriodPubkey(drip.programId, {
+            vault: position.vault,
+            periodId: position.dripPeriodIdBeforeDeposit.add(position.numberOfSwaps)
+          })
+        ),
+      [drip, vault, position]
+    ) ?? [];
+
   const tokenAAddr = useNetworkAddress(vault?.tokenAMint);
   const tokenBAddr = useNetworkAddress(vault?.tokenBMint);
   const tokenAInfo = useTokenInfo(tokenAAddr);
   const tokenBInfo = useTokenInfo(tokenBAddr);
+  const dripProgress = useDripProgress(vault, position);
 
-  const dripProgress = useMemo(() => {
-    if (!vault) return undefined;
-
-    const totalDrips = position.numberOfSwaps;
-    const completedDrips = BN.min(
-      vault.lastDripPeriod.sub(position.dripPeriodIdBeforeDeposit),
-      totalDrips
-    );
-
-    return completedDrips.muln(100).div(totalDrips);
-  }, [vault, position]);
-
-  const estimatedEndDate = useMemo(() => {
-    if (!vault || !protoConfig) return undefined;
-
-    const now = new Date();
-    const totalDrips = position.numberOfSwaps;
-    const completedDrips = BN.min(
-      vault.lastDripPeriod.sub(position.dripPeriodIdBeforeDeposit),
-      totalDrips
-    );
-    const remainingDrips = totalDrips.sub(completedDrips);
-
-    if (remainingDrips.eqn(0)) {
-      return '-';
-    }
-
-    return new Date(
-      now.getTime() + remainingDrips.toNumber() * protoConfig.granularity.toNumber() * 1e3
-    );
-  }, [position, vault, protoConfig]);
+  const endDate = usePositionEndDate(protoConfig, vault, position, lastPositionPeriod);
+  const isDoneDripping = !!(
+    vault?.lastDripPeriod &&
+    lastPositionPeriod?.periodId &&
+    vault.lastDripPeriod >= lastPositionPeriod?.periodId
+  );
 
   const estimatedNextDripDate = useMemo(() => {
     if (!vault) return undefined;
@@ -71,8 +66,6 @@ export function PositionCard({ position }: PositionCardProps) {
     }
     return vaultDripActivationDate;
   }, [vault]);
-
-  const positonIsDoneDripping = estimatedEndDate === '-';
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -138,20 +131,48 @@ export function PositionCard({ position }: PositionCardProps) {
           </StyledDataRow>
           <StyledDataRow>
             <StyledDataKey>End</StyledDataKey>
-            {estimatedEndDate ? (
-              <Text>{!positonIsDoneDripping ? formatDate(estimatedEndDate) : '-'}</Text>
+            {endDate ? (
+              <Text>{endDate ? formatDate(endDate) : '-'}</Text>
             ) : (
               <Skeleton h="20px" w="100px" />
             )}
           </StyledDataRow>
           <StyledDataRow>
             <StyledDataKey>Next Drip</StyledDataKey>
-            {estimatedEndDate && estimatedNextDripDate ? (
-              <Text>{!positonIsDoneDripping ? formatDate(estimatedNextDripDate) : '-'}</Text>
+            {estimatedNextDripDate ? (
+              <Text>{!isDoneDripping ? formatDate(estimatedNextDripDate) : '-'}</Text>
             ) : (
               <Skeleton h="20px" w="100px" />
             )}
           </StyledDataRow>
+          {/* <StyledDataRow>
+            <StyledDataRowLeft>
+              <StyledDataKey>Avg. Price</StyledDataKey>
+              <RepeatIcon
+                // onClick={(e) => {
+                //   e.stopPropagation();
+                //   setIsPriceFlipped((isFlipped) => !isFlipped);
+                // }}
+                _hover={{
+                  color: 'rgba(255, 255, 255, 0.8)',
+                  transition: '0.2s ease'
+                }}
+                transition="0.2s ease"
+                cursor="pointer"
+                color="rgba(255, 255, 255, 0.6)"
+                ml="6px"
+                w="12px"
+              />
+            </StyledDataRowLeft>
+            <StyledDataRowRight>
+              <AverageDripPrice
+                isPriceFlipped={isPriceFlipped}
+                position={position}
+                tokenAInfo={tokenAInfo}
+                tokenBInfo={tokenBInfo}
+              />
+            </StyledDataRowRight>
+          </StyledDataRow> */}
         </StyledBodyContainer>
         <StyledFooterContainer>
           <Progress
@@ -161,10 +182,14 @@ export function PositionCard({ position }: PositionCardProps) {
             borderRadius="50px"
             size="sm"
             w="100%"
-            value={dripProgress?.toNumber()}
+            value={dripProgress?.percentage.toNumber()}
           />
           {dripProgress ? (
-            <StyledFooterRow>{dripProgress.toNumber()}% dripped</StyledFooterRow>
+            <StyledFooterRow>
+              {`${dripProgress.percentage.toNumber()}% dripped (${dripProgress.completedDrips}/${
+                dripProgress.totalDrips
+              })`}
+            </StyledFooterRow>
           ) : (
             <StyledFooterRow>
               <Skeleton mt="5px" w="33%" h="12px" />
@@ -178,7 +203,7 @@ export function PositionCard({ position }: PositionCardProps) {
           tokenBInfo={tokenBInfo}
           vault={vault ?? undefined}
           vaultProtoConfig={protoConfig ?? undefined}
-          estimatedEndDate={estimatedEndDate}
+          estimatedEndDate={endDate}
           position={position}
           isOpen={isOpen}
           onClose={onClose}
@@ -255,6 +280,22 @@ const StyledDataRow = styled(Box)`
   align-items: center;
   margin-top: 10px;
 `;
+
+// const StyledDataRowLeft = styled(Box)`
+//   display: flex;
+//   flex-direction: row;
+//   justify-content: flex-start;
+//   align-items: center;
+//   margin-top: 10px;
+// `;
+
+// const StyledDataRowRight = styled(Box)`
+//   display: flex;
+//   flex-direction: row;
+//   justify-content: flex-end;
+//   align-items: baseline;
+//   margin-top: 10px;
+// `;
 
 const StyledDataKey = styled(Text)`
   font-weight: bold;

@@ -3,7 +3,7 @@ import { PublicKey } from '@solana/web3.js';
 import { useEffect, useState } from 'react';
 import { getDripApi } from '../api/drip';
 
-export type TokenMap = Record<string, Token>;
+export type TokenMap = Partial<Record<string, Token>>;
 
 export function useTokenMap(): TokenMap | undefined {
   const [tokenMap, setTokenMap] = useState<TokenMap>();
