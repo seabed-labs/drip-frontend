@@ -16,7 +16,7 @@
 
 ## Getting Started
 
-### Install dependencies
+### Install dependencies via Yarn
 
 ```bash
 yarn
