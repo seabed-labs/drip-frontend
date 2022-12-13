@@ -3,6 +3,7 @@ import { AnchorProvider } from '@project-serum/anchor';
 import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react';
 import { Connection, PublicKey, Transaction } from '@solana/web3.js';
 import { useMemo } from 'react';
+import { getApiUrl } from '../api/drip';
 import { useNetwork } from '../contexts/NetworkContext';
 import { getClusterApiUrl } from '../models/Network';
 import { getClientEnv, getProgramId } from '../utils/env';
@@ -31,7 +32,7 @@ export function useDrip(): Drip {
   const anchorWallet = useAnchorWallet();
   return useMemo(() => {
     const clusterUrl = getClusterApiUrl(network);
-    const drip = Drip.fromNetworkClient(
+    const drip = Drip.fromConfigUrl(
       network,
       new AnchorProvider(
         new Connection(clusterUrl, 'confirmed'),
@@ -39,10 +40,9 @@ export function useDrip(): Drip {
         AnchorProvider.defaultOptions()
       ),
       getProgramId(),
-      getClientEnv()
+      getApiUrl(network, getClientEnv())
     );
     console.log('connected to program:', drip.programId.toString());
-
     return drip;
   }, [wallet, anchorWallet]);
 }

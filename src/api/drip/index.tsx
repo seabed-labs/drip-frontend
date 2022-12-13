@@ -11,7 +11,7 @@ export function getApiUrl(network: Network, clientEnv: ClientEnv): string {
         case ClientEnv.Production:
           return 'https://devnet.api.drip.dcaf.so';
         case ClientEnv.Staging:
-          return 'https://drip-backend-devnet-staging.herokuapp.com';
+          return 'http://localhost:8080';
       }
   }
   return 'localhost';
