@@ -1,4 +1,4 @@
-import { Box, Link, useToast } from '@chakra-ui/react';
+import { Link, useToast, VStack } from '@chakra-ui/react';
 import { BroadcastTransactionWithMetadata } from '@dcaf-labs/drip-sdk/dist/types';
 import { useMemo } from 'react';
 import { Network } from '@dcaf-labs/drip-sdk';
@@ -19,7 +19,7 @@ function getSolscanUrl(
     case Network.Devnet:
       return `https://solscan.io/tx/${txInfo.id}?cluster=devnet`;
     case Network.Localnet:
-      return ``;
+      return `#`;
   }
 }
 
@@ -33,7 +33,7 @@ function getExplorerUrl(
     case Network.Devnet:
       return `https://explorer.solana.com/tx/${txInfo.id}?cluster=devnet`;
     case Network.Localnet:
-      return ``;
+      return `#`;
   }
 }
 
@@ -56,21 +56,14 @@ export function useTxToast(): TxToast {
         toast({
           title: 'Transaction successful',
           description: (
-            <Box>
-              <Link href={getExplorerUrl(network, txInfo)} isExternal textDecoration="overline">
+            <VStack alignItems="flex-start" spacing="3px" mt="5px">
+              <Link href={getExplorerUrl(network, txInfo)} isExternal textDecoration="underline">
                 Solana Explorer
               </Link>
               <Link href={getSolscanUrl(network, txInfo)} isExternal textDecoration="underline">
                 Solscan
               </Link>
-
-              {/* <Link href={`${getExplorerUrl}`} isExternal textDecoration="overline">
-                Solana Explorer
-              </Link>
-              <Link href={`${getSolscanUrl}`} isExternal textDecoration="underline">
-                Solscan
-              </Link> */}
-            </Box>
+            </VStack>
           ),
           status: 'success',
           duration: 9000,
