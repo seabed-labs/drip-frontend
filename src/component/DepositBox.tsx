@@ -110,8 +110,13 @@ export function DepositBox() {
     return diff >= granularity;
   }, [dripUntil]);
 
-  function isValidAmount() {
-    if (Number(depositAmountStr) <= Number(maximumAmount.uiAmount)) return true;
+  function isWithinMaxAmount() {
+    const depositNum = Number(depositAmountStr);
+    const maxNum = Number(maximumAmount.uiAmount);
+    if (isNaN(depositNum)) {
+      return true;
+    }
+    return depositNum <= maxNum;
   }
 
   const readyToDeposit = Boolean(
@@ -119,7 +124,7 @@ export function DepositBox() {
       tokenB &&
       depositAmountStr &&
       Number(depositAmountStr) > 0 &&
-      Number(depositAmountStr) <= Number(maximumAmount.uiAmount) &&
+      isWithinMaxAmount() &&
       granularity &&
       dripUntil &&
       isValidDate
@@ -190,23 +195,12 @@ export function DepositBox() {
     refreshContext.forceRefresh
   ]);
 
-  // let text;
-  // if (readyToDeposit && isValidAmount()) {
-  //   text = 'Deposit';
-  // } else if (!isValidAmount()) {
-  //   text = 'Invalid amount';
-  // } else if (!dripUntil || isValidDate) {
-  //   text = 'Enter details to deposit';
-  // } else {
-  //   text = 'Invalid Date';
-  // }
-
   let text = 'Enter details to deposit';
   if (readyToDeposit) {
     text = 'Deposit';
-  } else if (!isValidAmount()) {
+  } else if (!isWithinMaxAmount()) {
     text = `Not enough ${tokenAInfo?.symbol}`;
-  } else if (!dripUntil || !isValidDate) {
+  } else if (dripUntil && !isValidDate) {
     text = 'Invalid Date';
   }
 
