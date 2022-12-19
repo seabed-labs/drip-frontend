@@ -111,11 +111,11 @@ export function DepositBox() {
   }, [dripUntil]);
 
   function isWithinMaxAmount() {
-    const depositNum = Number(depositAmountStr);
-    const maxNum = Number(maximumAmount.uiAmount);
-    if (isNaN(depositNum)) {
+    if (depositAmountStr == null || maximumAmount.uiAmount == null) {
       return true;
     }
+    const depositNum = Number(depositAmountStr);
+    const maxNum = Number(maximumAmount.uiAmount);
     return depositNum <= maxNum;
   }
 
