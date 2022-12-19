@@ -110,11 +110,21 @@ export function DepositBox() {
     return diff >= granularity;
   }, [dripUntil]);
 
+  function isWithinMaxAmount() {
+    if (depositAmountStr == null || maximumAmount.uiAmount == null) {
+      return true;
+    }
+    const depositNum = Number(depositAmountStr);
+    const maxNum = Number(maximumAmount.uiAmount);
+    return depositNum <= maxNum;
+  }
+
   const readyToDeposit = Boolean(
     tokenA &&
       tokenB &&
       depositAmountStr &&
       Number(depositAmountStr) > 0 &&
+      isWithinMaxAmount() &&
       granularity &&
       dripUntil &&
       isValidDate
@@ -184,6 +194,15 @@ export function DepositBox() {
     network,
     refreshContext.forceRefresh
   ]);
+
+  let text = 'Enter details to deposit';
+  if (readyToDeposit) {
+    text = 'Deposit';
+  } else if (!isWithinMaxAmount()) {
+    text = `Not enough ${tokenAInfo?.symbol}`;
+  } else if (dripUntil && !isValidDate) {
+    text = 'Invalid Date';
+  }
 
   return (
     <StyledContainer>
@@ -320,13 +339,7 @@ export function DepositBox() {
           <Center w="100%">
             <TransactionButton
               disabled={!readyToDeposit}
-              text={
-                readyToDeposit
-                  ? 'Deposit'
-                  : !dripUntil || isValidDate
-                  ? 'Enter details to deposit'
-                  : 'Invalid Date'
-              }
+              text={text}
               mt="10px"
               sendTx={deposit}
               onSucess={onSubmitSuccess}
