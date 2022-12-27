@@ -1,11 +1,4 @@
-import {
-  Popover,
-  PopoverArrow,
-  PopoverCloseButton,
-  PopoverContent,
-  PopoverTrigger
-} from '@chakra-ui/react';
-import { Button, Image, IconButton } from '@chakra-ui/react';
+import { Button, Image } from '@chakra-ui/react';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { FC } from 'react';
 import { Link, useLocation } from 'react-router-dom';
@@ -13,9 +6,7 @@ import styled from 'styled-components';
 import Logo from '../assets/logo.svg';
 import Drip from '../assets/drip.svg';
 import { Device } from '../utils/ui/css';
-import { FormControl, FormLabel, Input } from '@chakra-ui/react';
-
-import { BsFillBellFill } from 'react-icons/bs';
+import { NotificationsBell } from './NotificationsBell';
 
 const StyledContainer = styled.div`
   width: 100%;
@@ -98,57 +89,27 @@ const StyledNavButton = styled(Button)<{ selected: boolean }>`
     text-decoration: underline;
   }
 `;
-
 export const Header: FC = () => {
   const { pathname } = useLocation();
 
   return (
-    <>
-      <StyledContainer>
-        <StyledLeftContainer>
-          <StyledLogo src={Logo} />
-          <StyledDrip src={Drip} />
-        </StyledLeftContainer>
-        <StyledMiddleContainer>
-          <Link to="/deposit">
-            <StyledNavButton selected={pathname === '/deposit'}>Deposit</StyledNavButton>
-          </Link>
-          <Link to="/positions">
-            <StyledNavButton selected={pathname === '/positions'}>Positions</StyledNavButton>
-          </Link>
-        </StyledMiddleContainer>
-        <StyledRightContainer>
-          <Popover autoFocus={true} closeOnEsc={true}>
-            <PopoverTrigger>
-              <IconButton
-                variant="ghost"
-                colorScheme="blue"
-                aria-label="Call Sage"
-                fontSize="32.5px"
-                mr={10}
-                icon={<BsFillBellFill />}
-              />
-            </PopoverTrigger>
-            <PopoverContent>
-              <PopoverArrow />
-
-              <FormControl>
-                <FormLabel display={'flex'} justifyContent="center">
-                  NOTIFICATIONS
-                </FormLabel>
-                <FormLabel>Email address</FormLabel>
-                <Input type="email" />
-                <Input mt={3} mb={3} as={Button}>
-                  Subscribe
-                </Input>
-              </FormControl>
-              <PopoverCloseButton />
-            </PopoverContent>
-          </Popover>
-
-          <WalletMultiButton />
-        </StyledRightContainer>
-      </StyledContainer>
-    </>
+    <StyledContainer>
+      <StyledLeftContainer>
+        <StyledLogo src={Logo} />
+        <StyledDrip src={Drip} />
+      </StyledLeftContainer>
+      <StyledMiddleContainer>
+        <Link to="/deposit">
+          <StyledNavButton selected={pathname === '/deposit'}>Deposit</StyledNavButton>
+        </Link>
+        <Link to="/positions">
+          <StyledNavButton selected={pathname === '/positions'}>Positions</StyledNavButton>
+        </Link>
+      </StyledMiddleContainer>
+      <StyledRightContainer>
+        <NotificationsBell />
+        <WalletMultiButton />
+      </StyledRightContainer>
+    </StyledContainer>
   );
 };
