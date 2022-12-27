@@ -20,7 +20,7 @@ export const NotificationsBell: FC = () => {
         <IconButton
           variant="ghost"
           colorScheme="blue"
-          aria-label="Call Sage"
+          aria-label="Notification Bell Button"
           fontSize="32.5px"
           mr={10}
           icon={<BsFillBellFill />}
@@ -30,7 +30,7 @@ export const NotificationsBell: FC = () => {
         <PopoverArrow />
 
         <FormControl>
-          <FormLabel display={'flex'} justifyContent="center">
+          <FormLabel display="flex" justifyContent="center">
             NOTIFICATIONS
           </FormLabel>
           <FormLabel>Email address</FormLabel>
