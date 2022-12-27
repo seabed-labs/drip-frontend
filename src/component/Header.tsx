@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import Logo from '../assets/logo.svg';
 import Drip from '../assets/drip.svg';
 import { Device } from '../utils/ui/css';
+import { NotificationsBell } from './NotificationsBell';
 
 const StyledContainer = styled.div`
   width: 100%;
@@ -88,7 +89,6 @@ const StyledNavButton = styled(Button)<{ selected: boolean }>`
     text-decoration: underline;
   }
 `;
-
 export const Header: FC = () => {
   const { pathname } = useLocation();
 
@@ -107,6 +107,7 @@ export const Header: FC = () => {
         </Link>
       </StyledMiddleContainer>
       <StyledRightContainer>
+        <NotificationsBell />
         <WalletMultiButton />
       </StyledRightContainer>
     </StyledContainer>
