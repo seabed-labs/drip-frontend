@@ -1,41 +1,21 @@
 import {
-  Container,
-  HStack,
   Popover,
   PopoverArrow,
   PopoverCloseButton,
   PopoverContent,
-  PopoverTrigger,
-  Stack,
-  Textarea
+  PopoverTrigger
 } from '@chakra-ui/react';
-import {
-  Button,
-  Image,
-  IconButton,
-  Box,
-  useDisclosure,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  ModalFooter
-} from '@chakra-ui/react';
+import { Button, Image, IconButton } from '@chakra-ui/react';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import Logo from '../assets/logo.svg';
 import Drip from '../assets/drip.svg';
 import { Device } from '../utils/ui/css';
-import { FormControl, FormLabel, FormErrorMessage, FormHelperText, Input } from '@chakra-ui/react';
+import { FormControl, FormLabel, Input } from '@chakra-ui/react';
 
 import { BsFillBellFill } from 'react-icons/bs';
-import React from 'react';
-import { red } from 'bn.js';
-import { CloseIcon } from '@chakra-ui/icons';
 
 const StyledContainer = styled.div`
   width: 100%;
