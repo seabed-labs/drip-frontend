@@ -1,4 +1,14 @@
-import { Textarea } from '@chakra-ui/react';
+import {
+  Container,
+  HStack,
+  Popover,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverContent,
+  PopoverTrigger,
+  Stack,
+  Textarea
+} from '@chakra-ui/react';
 import {
   Button,
   Image,
@@ -16,7 +26,7 @@ import {
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { FC, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import Logo from '../assets/logo.svg';
 import Drip from '../assets/drip.svg';
 import { Device } from '../utils/ui/css';
@@ -25,6 +35,7 @@ import { FormControl, FormLabel, FormErrorMessage, FormHelperText, Input } from 
 import { BsFillBellFill } from 'react-icons/bs';
 import React from 'react';
 import { red } from 'bn.js';
+import { CloseIcon } from '@chakra-ui/icons';
 
 const StyledContainer = styled.div`
   width: 100%;
@@ -110,55 +121,54 @@ const StyledNavButton = styled(Button)<{ selected: boolean }>`
 
 export const Header: FC = () => {
   const { pathname } = useLocation();
-  const [showModal, setShowModal] = useState(false);
-  const { isOpen, onOpen, onClose } = useDisclosure();
-
-  const initialRef = React.useRef(null);
-  const finalRef = React.useRef(null);
 
   return (
-    <StyledContainer>
-      <StyledLeftContainer>
-        <StyledLogo src={Logo} />
-        <StyledDrip src={Drip} />
-      </StyledLeftContainer>
-      <StyledMiddleContainer>
-        <Link to="/deposit">
-          <StyledNavButton selected={pathname === '/deposit'}>Deposit</StyledNavButton>
-        </Link>
-        <Link to="/positions">
-          <StyledNavButton selected={pathname === '/positions'}>Positions</StyledNavButton>
-        </Link>
-      </StyledMiddleContainer>
-      <StyledRightContainer>
-        <Box>
-          <IconButton
-            variant="ghost"
-            colorScheme="blue"
-            aria-label="Call Sage"
-            fontSize="32.5px"
-            mr={10}
-            icon={<BsFillBellFill />}
-            onClick={() => setShowModal(true)}
-          />
-        </Box>
-        {showModal && (
-          <Box bg={'#101010'} border="2px" borderRadius="3xl" boxShadow="lg">
-            <FormControl>
-              <FormLabel display={'flex'} justifyContent="center">
-                NOTIFICATIONS
-              </FormLabel>
-              <FormLabel>Email address</FormLabel>
-              <Input type="email" />
-              <Input mt={3} mb={3} as={Button}>
-                Subscribe
-              </Input>
-            </FormControl>
-          </Box>
-        )}
+    <>
+      <StyledContainer>
+        <StyledLeftContainer>
+          <StyledLogo src={Logo} />
+          <StyledDrip src={Drip} />
+        </StyledLeftContainer>
+        <StyledMiddleContainer>
+          <Link to="/deposit">
+            <StyledNavButton selected={pathname === '/deposit'}>Deposit</StyledNavButton>
+          </Link>
+          <Link to="/positions">
+            <StyledNavButton selected={pathname === '/positions'}>Positions</StyledNavButton>
+          </Link>
+        </StyledMiddleContainer>
+        <StyledRightContainer>
+          <Popover autoFocus={true} closeOnEsc={true}>
+            <PopoverTrigger>
+              <IconButton
+                variant="ghost"
+                colorScheme="blue"
+                aria-label="Call Sage"
+                fontSize="32.5px"
+                mr={10}
+                icon={<BsFillBellFill />}
+              />
+            </PopoverTrigger>
+            <PopoverContent>
+              <PopoverArrow />
 
-        <WalletMultiButton />
-      </StyledRightContainer>
-    </StyledContainer>
+              <FormControl>
+                <FormLabel display={'flex'} justifyContent="center">
+                  NOTIFICATIONS
+                </FormLabel>
+                <FormLabel>Email address</FormLabel>
+                <Input type="email" />
+                <Input mt={3} mb={3} as={Button}>
+                  Subscribe
+                </Input>
+              </FormControl>
+              <PopoverCloseButton />
+            </PopoverContent>
+          </Popover>
+
+          <WalletMultiButton />
+        </StyledRightContainer>
+      </StyledContainer>
+    </>
   );
 };
