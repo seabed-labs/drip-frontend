@@ -304,7 +304,7 @@ export function DepositBox() {
       <Box h="20px" />
       <StyledMainRowContainer>
         <StyledSubRowContainer>
-          {readyToDeposit && dripUntil && isValidDate && (
+          {(readyToDeposit || !readyToDeposit) && dripUntil && isValidDate && (
             <Center w="100%">
               <Text
                 css={{
