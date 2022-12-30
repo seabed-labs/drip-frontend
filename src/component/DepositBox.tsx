@@ -199,7 +199,7 @@ export function DepositBox() {
   let text = 'Enter details to deposit';
   if (ableToDeposit) {
     text = 'Deposit';
-  } else if (!isWithinMaxAmount()) {
+  } else if (hasSufficientFunds) {
     text = `Not enough ${tokenAInfo?.symbol}`;
   } else if (dripUntil && !isValidDate) {
     text = 'Invalid Date';
