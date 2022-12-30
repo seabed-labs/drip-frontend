@@ -124,11 +124,11 @@ export function DepositBox() {
       tokenB &&
       depositAmountStr &&
       Number(depositAmountStr) > 0 &&
-      isWithinMaxAmount() &&
       granularity &&
       dripUntil &&
       isValidDate
   );
+  const ableToDeposit = Boolean(readyToDeposit && isWithinMaxAmount());
 
   const drip = useDripContext();
   const network = useNetwork();
@@ -196,7 +196,7 @@ export function DepositBox() {
   ]);
 
   let text = 'Enter details to deposit';
-  if (readyToDeposit) {
+  if (ableToDeposit) {
     text = 'Deposit';
   } else if (!isWithinMaxAmount()) {
     text = `Not enough ${tokenAInfo?.symbol}`;
@@ -304,7 +304,7 @@ export function DepositBox() {
       <Box h="20px" />
       <StyledMainRowContainer>
         <StyledSubRowContainer>
-          {dripUntil && isValidDate && (
+          {(ableToDeposit || readyToDeposit) && dripUntil && isValidDate && (
             <Center w="100%">
               <Text
                 css={{
@@ -338,7 +338,7 @@ export function DepositBox() {
         <StyledSubRowContainer>
           <Center w="100%">
             <TransactionButton
-              disabled={!readyToDeposit}
+              disabled={!ableToDeposit}
               text={text}
               mt="10px"
               sendTx={deposit}
