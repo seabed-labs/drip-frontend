@@ -128,7 +128,8 @@ export function DepositBox() {
       dripUntil &&
       isValidDate
   );
-  const ableToDeposit = Boolean(readyToDeposit && isWithinMaxAmount());
+  const hasSufficientFunds = isWithinMaxAmount();
+  const ableToDeposit = readyToDeposit && hasSufficientFunds;
 
   const drip = useDripContext();
   const network = useNetwork();
@@ -304,7 +305,7 @@ export function DepositBox() {
       <Box h="20px" />
       <StyledMainRowContainer>
         <StyledSubRowContainer>
-          {(ableToDeposit || readyToDeposit) && dripUntil && isValidDate && (
+          {readyToDeposit && dripUntil && isValidDate && (
             <Center w="100%">
               <Text
                 css={{
