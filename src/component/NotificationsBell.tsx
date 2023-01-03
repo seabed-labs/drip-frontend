@@ -21,7 +21,7 @@ import { BsFillBellFill } from 'react-icons/bs';
 
 export const NotificationsBell: FC = () => {
   return (
-    <Popover closeOnEsc={true} autoFocus={true} size="3xl">
+    <Popover closeOnEsc autoFocus size="3xl">
       <PopoverTrigger>
         <IconButton
           variant="ghost"
@@ -35,6 +35,12 @@ export const NotificationsBell: FC = () => {
       <PopoverContent
         bgColor="#101010"
         boxShadow="0 0 128px 1px rgba(98, 170, 255, 0.07)"
+        _active={{
+          boxShadow: '0 0 128px 1px rgba(98, 170, 255, 0.07)'
+        }}
+        _focus={{
+          boxShadow: '0 0 128px 1px rgba(98, 170, 255, 0.07)'
+        }}
         h="350"
         p="5"
         alignItems="center"
@@ -48,18 +54,18 @@ export const NotificationsBell: FC = () => {
             <InputLeftElement pointerEvents="none" children={<GrMail color="grey" />} />
             <Input
               variant="none"
-              placeholder={`Email Address`}
+              placeholder="Email Address"
               borderRadius="3xl"
               bgColor="#181818"
             />
           </InputGroup>
           <InputGroup mt="5">
             <InputLeftElement pointerEvents="none" children={<FaMobileAlt color="grey" />} />
-            <Input variant="none" placeholder={`Mobile`} borderRadius="3xl" bgColor="#181818" />
+            <Input variant="none" placeholder="Mobile" borderRadius="3xl" bgColor="#181818" />
           </InputGroup>
           <InputGroup mt="5">
             <InputLeftElement pointerEvents="none" children={<FaTelegramPlane color="grey" />} />
-            <Input variant="none" placeholder={`Telegram`} borderRadius="3xl" bgColor="#181818" />
+            <Input variant="none" placeholder="Telegram" borderRadius="3xl" bgColor="#181818" />
           </InputGroup>
           <Input
             variant="none"
