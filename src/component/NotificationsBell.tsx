@@ -1,3 +1,6 @@
+import { GrMail } from 'react-icons/gr';
+import { FaTelegramPlane, FaMobileAlt } from 'react-icons/fa';
+
 import {
   Popover,
   PopoverTrigger,
@@ -8,14 +11,17 @@ import {
   FormLabel,
   Input,
   Button,
-  PopoverCloseButton
+  PopoverCloseButton,
+  Box,
+  InputGroup,
+  InputLeftElement
 } from '@chakra-ui/react';
 import { FC } from 'react';
 import { BsFillBellFill } from 'react-icons/bs';
 
 export const NotificationsBell: FC = () => {
   return (
-    <Popover autoFocus={true} closeOnEsc={true}>
+    <Popover closeOnEsc={true} autoFocus={true} size="3xl">
       <PopoverTrigger>
         <IconButton
           variant="ghost"
@@ -26,20 +32,48 @@ export const NotificationsBell: FC = () => {
           icon={<BsFillBellFill />}
         />
       </PopoverTrigger>
-      <PopoverContent>
-        <PopoverArrow />
-
+      <PopoverContent
+        bgColor="#101010"
+        boxShadow="0 0 128px 1px rgba(98, 170, 255, 0.07)"
+        h="350"
+        p="5"
+        alignItems="center"
+        borderRadius="10%"
+        border="none"
+        mt="5"
+      >
         <FormControl>
-          <FormLabel display="flex" justifyContent="center">
-            NOTIFICATIONS
-          </FormLabel>
-          <FormLabel>Email address</FormLabel>
-          <Input type="email" />
-          <Input mt={3} mb={3} as={Button}>
-            Subscribe
+          <FormLabel>NOTIFICATIONS</FormLabel>
+          <InputGroup mt="5">
+            <InputLeftElement pointerEvents="none" children={<GrMail color="grey" />} />
+            <Input
+              variant="none"
+              placeholder={`Email Address`}
+              borderRadius="3xl"
+              bgColor="#181818"
+            />
+          </InputGroup>
+          <InputGroup mt="5">
+            <InputLeftElement pointerEvents="none" children={<FaMobileAlt color="grey" />} />
+            <Input variant="none" placeholder={`Mobile`} borderRadius="3xl" bgColor="#181818" />
+          </InputGroup>
+          <InputGroup mt="5">
+            <InputLeftElement pointerEvents="none" children={<FaTelegramPlane color="grey" />} />
+            <Input variant="none" placeholder={`Telegram`} borderRadius="3xl" bgColor="#181818" />
+          </InputGroup>
+          <Input
+            variant="none"
+            mt={7}
+            as={Button}
+            borderRadius="3xl"
+            bgColor="#374E6D"
+            _hover={{ bg: '#71AAF8' }}
+          >
+            Register
           </Input>
         </FormControl>
-        <PopoverCloseButton />
+
+        <PopoverCloseButton mt="4" />
       </PopoverContent>
     </Popover>
   );
