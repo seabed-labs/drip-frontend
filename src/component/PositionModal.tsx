@@ -166,10 +166,14 @@ export function PositionModal({
   );
 
   let revenue = 0;
-  if (averagePrice && marketPrice) {
+  if (averagePrice && marketPrice && accruedTokenB && tokenBInfo) {
     const avgPrice = averagePrice ? Number(formatTokenAmount(averagePrice, 0, true)) : 0;
     const markPrice = marketPrice ? Number(formatTokenAmount(marketPrice, 0, true)) : 0;
-    revenue = markPrice - avgPrice;
+    const tokenBAccrued = accruedTokenB
+      ? Number(formatTokenAmount(accruedTokenB, tokenBInfo.decimals, true))
+      : 0;
+
+    revenue = (markPrice - avgPrice) * tokenBAccrued;
   } else {
     console.log('averagePrice and marketPrice are undefined');
   }
