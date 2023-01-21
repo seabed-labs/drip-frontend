@@ -18,6 +18,7 @@ import {
   VaultProtoConfigAccount
 } from '@dcaf-labs/drip-sdk/dist/interfaces/drip-querier/results';
 import { BN } from 'bn.js';
+import { profile } from 'console';
 import Decimal from 'decimal.js';
 import { useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
@@ -163,6 +164,15 @@ export function PositionModal({
       withdrawnTokenBAmountAfterSpread.add(closePositionPreview.tokenBAmountBeingWithdrawn),
     [withdrawnTokenBAmountAfterSpread, closePositionPreview]
   );
+
+  let revenue = 0;
+  if (averagePrice && marketPrice) {
+    const avgPrice = averagePrice ? Number(formatTokenAmount(averagePrice, 0, true)) : 0;
+    const markPrice = marketPrice ? Number(formatTokenAmount(marketPrice, 0, true)) : 0;
+    revenue = markPrice - avgPrice;
+  } else {
+    console.log('averagePrice and marketPrice are undefined');
+  }
 
   return (
     <Modal size="xl" isOpen={isOpen} onClose={onClose}>
@@ -353,6 +363,22 @@ export function PositionModal({
                     )} ${tokenBInfo?.symbol}`
                   ) : (
                     <Skeleton mt="7px" w="120px" h="20px" />
+                  )}
+                </StyledModalFieldValue>
+              </StyledModalField>
+
+              <StyledModalField>
+                <StyledModalFieldHeader>Revenue</StyledModalFieldHeader>
+                <StyledModalFieldValue>
+                  {marketPrice && averagePrice ? (
+                    <Text display="flex" flexDir="row" alignItems="flex-end">
+                      <StyledPriceValue>{`${{ revenue }}`}</StyledPriceValue>
+                      <Text w="5px" display="inline"></Text>
+                    </Text>
+                  ) : closePositionPreviewLoading || (accruedTokenB && accruedTokenB.eqn(0)) ? (
+                    '-'
+                  ) : (
+                    <Skeleton mt="7px" w="170px" h="20px" />
                   )}
                 </StyledModalFieldValue>
               </StyledModalField>
