@@ -34,6 +34,7 @@ import { formatTokenAmount } from '../utils/token-amount';
 import { Device } from '../utils/ui/css';
 import { AverageDripPrice } from './AveragePrice';
 import { TransactionButton } from './TransactionButton';
+import { useProfit } from '../hooks/UseProfit';
 
 interface PositionModalProps {
   position: VaultPositionAccountWithPubkey;
@@ -165,18 +166,9 @@ export function PositionModal({
     [withdrawnTokenBAmountAfterSpread, closePositionPreview]
   );
 
-  let revenue = 0;
-  if (averagePrice && marketPrice && accruedTokenB && tokenBInfo) {
-    const avgPrice = averagePrice ? Number(formatTokenAmount(averagePrice, 0, true)) : 0;
-    const markPrice = marketPrice ? Number(formatTokenAmount(marketPrice, 0, true)) : 0;
-    const tokenBAccrued = accruedTokenB
-      ? Number(formatTokenAmount(accruedTokenB, tokenBInfo.decimals, true))
-      : 0;
-
-    revenue = (markPrice - avgPrice) * tokenBAccrued;
-  } else {
-    console.log('averagePrice and marketPrice are undefined');
-  }
+  const [profit, setProfit] = useState(0);
+  const profitValue = useProfit(averagePrice, marketPrice, accruedTokenB, tokenBInfo, QuoteToken);
+  setProfit(profitValue);
 
   return (
     <Modal size="xl" isOpen={isOpen} onClose={onClose}>
@@ -372,11 +364,11 @@ export function PositionModal({
               </StyledModalField>
 
               <StyledModalField>
-                <StyledModalFieldHeader>Revenue</StyledModalFieldHeader>
+                <StyledModalFieldHeader>Profit</StyledModalFieldHeader>
                 <StyledModalFieldValue>
                   {marketPrice && averagePrice ? (
                     <Text display="flex" flexDir="row" alignItems="flex-end">
-                      <StyledPriceValue>{`${{ revenue }}`}</StyledPriceValue>
+                      <StyledPriceValue>{`${{ profit }}`}</StyledPriceValue>
                       <Text w="5px" display="inline"></Text>
                     </Text>
                   ) : closePositionPreviewLoading || (accruedTokenB && accruedTokenB.eqn(0)) ? (
