@@ -1,31 +1,34 @@
 import { Token } from '@dcaf-labs/drip-sdk';
 import { useState, useEffect } from 'react';
 import { QuoteToken } from '@dcaf-labs/drip-sdk';
+import Decimal from 'decimal.js';
 
 export function useProfit(
-  averagePrice: number,
-  marketPrice: number,
-  accruedTokenB: number,
-  tokenBInfo: Token,
-  quoteToken: QuoteToken = QuoteToken.TokenA
+  averagePrice: Decimal | undefined,
+  marketPrice: Decimal | undefined,
+  accruedTokenB: Decimal | undefined,
+  tokenBInfo: Token | undefined,
+  quoteToken: QuoteToken
 ) {
-  const [profit, setProfit] = useState(0);
+  const [profit, setProfit] = useState(new Decimal(0));
 
   useEffect(() => {
-    if (
-      typeof averagePrice === 'number' &&
-      typeof marketPrice === 'number' &&
-      typeof accruedTokenB === 'number'
-    ) {
-      let priceRatio = marketPrice / averagePrice;
+    if (averagePrice && marketPrice && accruedTokenB && quoteToken) {
+      let normalizedMarketPrice = marketPrice;
+      let normalizedAveragePrice = averagePrice;
+
       if (tokenBInfo) {
         if (quoteToken === QuoteToken.TokenB) {
-          priceRatio = 1 / priceRatio;
+          normalizedMarketPrice = new Decimal(1).div(normalizedMarketPrice);
+          normalizedAveragePrice = new Decimal(1).div(normalizedAveragePrice);
         }
       }
-      setProfit(priceRatio * accruedTokenB);
+
+      const priceDelta = normalizedMarketPrice.sub(normalizedAveragePrice);
+      const profit = priceDelta.mul(accruedTokenB);
+      setProfit(profit);
     } else {
-      console.log('averagePrice, marketPrice, and/or accruedTokenB are not numbers');
+      console.log('averagePrice, marketPrice, accruedTokenB, and/or quoteToken are not valid');
     }
   }, [averagePrice, marketPrice, accruedTokenB, tokenBInfo, quoteToken]);
 
