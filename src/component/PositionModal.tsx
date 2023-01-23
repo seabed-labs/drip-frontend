@@ -18,7 +18,7 @@ import {
   VaultProtoConfigAccount
 } from '@dcaf-labs/drip-sdk/dist/interfaces/drip-querier/results';
 import { BN } from 'bn.js';
-import { profile } from 'console';
+
 import Decimal from 'decimal.js';
 import { useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
@@ -35,7 +35,6 @@ import { Device } from '../utils/ui/css';
 import { AverageDripPrice } from './AveragePrice';
 import { TransactionButton } from './TransactionButton';
 import { useProfit } from '../hooks/UseProfit';
-import { PublicKey } from '@solana/web3.js';
 
 interface PositionModalProps {
   position: VaultPositionAccountWithPubkey;
@@ -166,9 +165,14 @@ export function PositionModal({
       withdrawnTokenBAmountAfterSpread.add(closePositionPreview.tokenBAmountBeingWithdrawn),
     [withdrawnTokenBAmountAfterSpread, closePositionPreview]
   );
-  // there is an error here with the types, not sure what to do
-  // const profit = useProfit(averagePrice, marketPrice, accruedTokenB, tokenBInfo, QuoteToken);
 
+  const profit = useProfit(
+    averagePrice,
+    marketPrice,
+    accruedTokenB ? accruedTokenB : undefined,
+    tokenBInfo,
+    isPriceFlipped ? QuoteToken.TokenB : QuoteToken.TokenA
+  );
   return (
     <Modal size="xl" isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -367,7 +371,7 @@ export function PositionModal({
                 <StyledModalFieldValue>
                   {marketPrice && averagePrice ? (
                     <Text display="flex" flexDir="row" alignItems="flex-end">
-                      <StyledPriceValue>{`${{}}`}</StyledPriceValue>
+                      <StyledPriceValue>{`${{ profit }}`}</StyledPriceValue>
                       <Text w="5px" display="inline"></Text>
                     </Text>
                   ) : closePositionPreviewLoading || (accruedTokenB && accruedTokenB.eqn(0)) ? (

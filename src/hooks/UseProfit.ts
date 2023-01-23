@@ -2,11 +2,12 @@ import { Token } from '@dcaf-labs/drip-sdk';
 import { useState, useEffect } from 'react';
 import { QuoteToken } from '@dcaf-labs/drip-sdk';
 import Decimal from 'decimal.js';
+import BN from 'bn.js';
 
 export function useProfit(
   averagePrice: Decimal | undefined,
   marketPrice: Decimal | undefined,
-  accruedTokenB: Decimal | undefined,
+  accruedTokenB: BN | undefined,
   tokenBInfo: Token | undefined,
   quoteToken: QuoteToken
 ) {
@@ -14,6 +15,7 @@ export function useProfit(
 
   useEffect(() => {
     if (averagePrice && marketPrice && accruedTokenB && quoteToken) {
+      const accruedTokenBDecimal = new Decimal(accruedTokenB.toString());
       let normalizedMarketPrice = marketPrice;
       let normalizedAveragePrice = averagePrice;
 
@@ -25,7 +27,7 @@ export function useProfit(
       }
 
       const priceDelta = normalizedMarketPrice.sub(normalizedAveragePrice);
-      const profit = priceDelta.mul(accruedTokenB);
+      const profit = priceDelta.mul(accruedTokenBDecimal);
       setProfit(profit);
     } else {
       console.log('averagePrice, marketPrice, accruedTokenB, and/or quoteToken are not valid');
