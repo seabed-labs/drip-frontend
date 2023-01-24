@@ -370,7 +370,7 @@ export function PositionModal({
               <StyledModalField>
                 <StyledModalFieldHeader>Profit</StyledModalFieldHeader>
                 <StyledModalFieldValue>
-                  {averagePrice ? (
+                  {averagePrice && marketPrice && tokenBInfo && tokenAInfo ? (
                     <Text display="flex" flexDir="row" alignItems="flex-end">
                       <StyledPriceValue>{`${formatTokenAmount(profit, 2, true)}`}</StyledPriceValue>
                       <Text w="5px" display="inline"></Text>
