@@ -171,8 +171,9 @@ export function PositionModal({
     marketPrice,
     accruedTokenB ? accruedTokenB : undefined,
     tokenBInfo,
-    isPriceFlipped ? QuoteToken.TokenB : QuoteToken.TokenA
+    isPriceFlipped ? QuoteToken.TokenA : QuoteToken.TokenB
   );
+
   return (
     <Modal size="xl" isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -369,9 +370,9 @@ export function PositionModal({
               <StyledModalField>
                 <StyledModalFieldHeader>Profit</StyledModalFieldHeader>
                 <StyledModalFieldValue>
-                  {marketPrice && averagePrice && tokenBInfo && tokenAInfo ? (
+                  {averagePrice ? (
                     <Text display="flex" flexDir="row" alignItems="flex-end">
-                      <StyledPriceValue>{`${{ profit }}`}</StyledPriceValue>
+                      <StyledPriceValue>{`${formatTokenAmount(profit, 2, true)}`}</StyledPriceValue>
                       <Text w="5px" display="inline"></Text>
                     </Text>
                   ) : closePositionPreviewLoading || (accruedTokenB && accruedTokenB.eqn(0)) ? (
