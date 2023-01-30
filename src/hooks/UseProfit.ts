@@ -14,7 +14,7 @@ export function useProfit(
   const [profit, setProfit] = useState(new Decimal(0));
 
   useEffect(() => {
-    if (averagePrice && marketPrice && accruedTokenB && quoteToken) {
+    if (averagePrice && marketPrice && accruedTokenB) {
       const accruedTokenBDecimal = new Decimal(accruedTokenB.toString());
       let normalizedMarketPrice = marketPrice;
       let normalizedAveragePrice = averagePrice;
