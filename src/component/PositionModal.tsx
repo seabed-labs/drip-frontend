@@ -27,7 +27,7 @@ import { useDripContext } from '../contexts/DripContext';
 import { useRefreshContext } from '../contexts/Refresh';
 import { useAverageDripPrice } from '../hooks/AverageDripPrice';
 import { VaultPositionAccountWithPubkey } from '../hooks/Positions';
-
+import { useTokenMintMarketPriceUSD } from '../hooks/TokenPrice';
 import { formatDate } from '../utils/date';
 import { explainGranularity } from '../utils/granularity';
 import { formatTokenAmount } from '../utils/token-amount';
@@ -35,7 +35,6 @@ import { Device } from '../utils/ui/css';
 import { AverageDripPrice } from './AveragePrice';
 import { TransactionButton } from './TransactionButton';
 import { useProfit } from '../hooks/UseProfit';
-import { useTokenMintMarketPriceUSD } from '../hooks/TokenPrice';
 
 interface PositionModalProps {
   position: VaultPositionAccountWithPubkey;
