@@ -376,7 +376,7 @@ export function PositionModal({
                 <StyledModalFieldValue>
                   {averagePrice && marketPrice && tokenBInfo && tokenAInfo ? (
                     <Text display="flex" flexDir="row" alignItems="flex-end">
-                      <StyledPriceValue>{`${formatTokenAmount(profit, 2, true)}`}</StyledPriceValue>
+                      <StyledPriceValue>{`${formatTokenAmount(profit, 0, true)}`}</StyledPriceValue>
                       <Text w="5px" display="inline"></Text>
                     </Text>
                   ) : closePositionPreviewLoading || (accruedTokenB && accruedTokenB.eqn(0)) ? (
