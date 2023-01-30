@@ -27,7 +27,7 @@ import { useDripContext } from '../contexts/DripContext';
 import { useRefreshContext } from '../contexts/Refresh';
 import { useAverageDripPrice } from '../hooks/AverageDripPrice';
 import { VaultPositionAccountWithPubkey } from '../hooks/Positions';
-import { useTokenMintMarketPriceUSD } from '../hooks/TokenPrice';
+
 import { formatDate } from '../utils/date';
 import { explainGranularity } from '../utils/granularity';
 import { formatTokenAmount } from '../utils/token-amount';
@@ -35,6 +35,7 @@ import { Device } from '../utils/ui/css';
 import { AverageDripPrice } from './AveragePrice';
 import { TransactionButton } from './TransactionButton';
 import { useProfit } from '../hooks/UseProfit';
+import { useTokenMintMarketPriceUSD } from '../hooks/TokenPrice';
 
 interface PositionModalProps {
   position: VaultPositionAccountWithPubkey;
@@ -67,15 +68,18 @@ export function PositionModal({
   );
 
   const rawTokenAPrice = useTokenMintMarketPriceUSD(vault?.tokenAMint.toString());
-  const tokenAPrice = rawTokenAPrice ? new Decimal(rawTokenAPrice) : undefined;
   const rawTokenBPrice = useTokenMintMarketPriceUSD(vault?.tokenBMint.toString());
+  const tokenAPrice = rawTokenAPrice ? new Decimal(rawTokenAPrice) : undefined;
   const tokenBPrice = rawTokenBPrice ? new Decimal(rawTokenBPrice) : undefined;
-  const marketPrice =
-    tokenAPrice && tokenBPrice
-      ? isPriceFlipped
-        ? tokenAPrice.div(tokenBPrice)
-        : tokenBPrice.div(tokenAPrice)
-      : undefined;
+  const marketPrice = useMemo(
+    () =>
+      tokenAPrice && tokenBPrice
+        ? isPriceFlipped
+          ? tokenAPrice.div(tokenBPrice)
+          : tokenBPrice.div(tokenAPrice)
+        : undefined,
+    [rawTokenAPrice, rawTokenBPrice, isPriceFlipped]
+  );
 
   const [closePositionPreviewLoading, setClosePositionPreviewLoading] = useState(false);
 
@@ -171,7 +175,7 @@ export function PositionModal({
     marketPrice,
     accruedTokenB ? accruedTokenB : undefined,
     tokenBInfo,
-    isPriceFlipped ? QuoteToken.TokenA : QuoteToken.TokenB
+    isPriceFlipped ? QuoteToken.TokenB : QuoteToken.TokenA
   );
 
   return (
