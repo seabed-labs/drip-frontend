@@ -1,4 +1,6 @@
 import { ArrowRightIcon, RepeatIcon } from '@chakra-ui/icons';
+import { AiOutlineRise } from 'react-icons/ai';
+
 import {
   Box,
   Modal,
@@ -176,6 +178,14 @@ export function PositionModal({
     tokenBInfo,
     isPriceFlipped ? QuoteToken.TokenB : QuoteToken.TokenA
   );
+  let color = 'red';
+  const iconRotation = profit.lessThan(0) ? { transform: 'rotate(180deg)' } : {};
+
+  if (profit.equals(0)) {
+    color = 'black';
+  } else if (profit.greaterThan(0)) {
+    color = 'green';
+  }
 
   return (
     <Modal size="xl" isOpen={isOpen} onClose={onClose} isCentered>
@@ -219,7 +229,7 @@ export function PositionModal({
                 {explainGranularity(vaultProtoConfig.granularity.toNumber())}
               </Text>
             ) : (
-              <Skeleton h="40px" w="80px" />
+              <Skeleton h="40px" w="0px" />
             )}
           </StyledHeaderContainer>
         </ModalHeader>
@@ -371,7 +381,13 @@ export function PositionModal({
               </StyledModalField>
 
               <StyledModalField>
-                <StyledModalFieldHeader>Profit</StyledModalFieldHeader>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <StyledModalFieldHeader>Profit</StyledModalFieldHeader>
+                  <AiOutlineRise
+                    color={color}
+                    style={{ marginLeft: '10px', fontSize: '20px', ...iconRotation }}
+                  />
+                </div>
                 <StyledModalFieldValue>
                   {averagePrice && marketPrice && tokenBInfo && tokenAInfo ? (
                     <Text display="flex" flexDir="row" alignItems="flex-end">
