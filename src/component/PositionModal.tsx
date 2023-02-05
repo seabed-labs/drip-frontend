@@ -178,262 +178,269 @@ export function PositionModal({
   );
 
   return (
-    <Modal size="xl" isOpen={isOpen} onClose={onClose}>
-      <ModalOverlay />
-      <ModalContent padding="20px" borderRadius="20px" bgColor="#101010">
-        <ModalHeader>
-          <StyledHeaderContainer>
-            <StyledDripHeader>
-              {tokenAInfo ? (
-                <HStack>
-                  <StyledTokenIcon
-                    fallback={<Skeleton borderRadius="50px" w="32px" h="32px" />}
-                    src={tokenAInfo.iconUrl}
-                  />
-                  <Text>{tokenAInfo.symbol}</Text>
-                </HStack>
-              ) : (
-                <Skeleton h="40px" w="120px" />
-              )}
-              <ArrowRightIcon w="12px" />
-              {tokenBInfo ? (
-                <HStack>
-                  <StyledTokenIcon
-                    fallback={<Skeleton borderRadius="50px" w="32px" h="32px" />}
-                    src={tokenBInfo.iconUrl}
-                  />
-                  <Text>{tokenBInfo.symbol}</Text>
-                </HStack>
-              ) : (
-                <Skeleton h="40px" w="120px" />
-              )}
-            </StyledDripHeader>
-            {vaultProtoConfig ? (
-              <Text
-                border="2px solid #62AAFF"
-                borderRadius="50px"
-                padding="5px 10px"
-                fontSize="12px"
-                ml="5px"
-              >
-                {explainGranularity(vaultProtoConfig.granularity.toNumber())}
-              </Text>
-            ) : (
-              <Skeleton h="40px" w="80px" />
-            )}
-          </StyledHeaderContainer>
-        </ModalHeader>
-        <ModalBody>
-          <StyledModalGrid>
-            <StyledModalCol h="300px">
-              <StyledModalField>
-                <StyledModalFieldHeader>Deposit</StyledModalFieldHeader>
-                <StyledModalFieldValue>
-                  {tokenAInfo ? (
-                    `${formatTokenAmount(
-                      position.depositedTokenAAmount,
-                      tokenAInfo.decimals,
-                      true
-                    )} ${tokenAInfo?.symbol}`
-                  ) : (
-                    <Skeleton mt="7px" w="120px" h="20px" />
-                  )}
-                </StyledModalFieldValue>
-              </StyledModalField>
-              <StyledModalField>
-                <StyledModalFieldHeader>Remaining {tokenAInfo?.symbol}</StyledModalFieldHeader>
-                <StyledModalFieldValue>
-                  {tokenAInfo && remainingTokenAToDrip ? (
-                    `${formatTokenAmount(remainingTokenAToDrip, tokenAInfo.decimals, true)} ${
-                      tokenAInfo.symbol
-                    }`
-                  ) : (
-                    <Skeleton mt="7px" w="120px" h="20px" />
-                  )}
-                </StyledModalFieldValue>
-              </StyledModalField>
-              <StyledModalField>
-                <StyledModalFieldHeader>End</StyledModalFieldHeader>
-                <StyledModalFieldValue>
-                  {estimatedEndDate ? (
-                    estimatedEndDate !== '-' ? (
-                      formatDate(estimatedEndDate)
-                    ) : (
-                      '-'
-                    )
-                  ) : (
-                    <Skeleton mt="7px" w="170px" h="20px" />
-                  )}
-                </StyledModalFieldValue>
-              </StyledModalField>
-              <StyledModalField>
-                <StyledModalFieldHeader>Market Price</StyledModalFieldHeader>
-                <StyledModalFieldValue>
-                  {marketPrice && tokenAInfo && tokenBInfo ? (
-                    <Text display="flex" flexDir="row" alignItems="flex-end">
-                      <StyledPriceValue>{`${formatTokenAmount(
-                        marketPrice,
-                        0,
-                        true
-                      )}`}</StyledPriceValue>
-                      <Text w="5px" display="inline"></Text>
-                      <StyledPriceUnit>
-                        {isPriceFlipped
-                          ? `${tokenBInfo.symbol} per ${tokenAInfo.symbol}`
-                          : `${tokenAInfo.symbol} per ${tokenBInfo.symbol}`}
-                      </StyledPriceUnit>
-                    </Text>
-                  ) : closePositionPreviewLoading || (accruedTokenB && accruedTokenB.eqn(0)) ? (
-                    '-'
-                  ) : (
-                    <Skeleton mt="7px" w="170px" h="20px" />
-                  )}
-                </StyledModalFieldValue>
-              </StyledModalField>
-              <StyledModalField>
-                <StyledModalFieldHeader>
-                  <Text display="inline">Avg. Price</Text>
-                  {averagePrice && (
-                    <RepeatIcon
-                      onClick={() => setIsPriceFlipped((isFlipped) => !isFlipped)}
-                      _hover={{
-                        color: 'rgba(255, 255, 255, 0.8)',
-                        transition: '0.2s ease'
-                      }}
-                      transition="0.2s ease"
-                      cursor="pointer"
-                      color="rgba(255, 255, 255, 0.6)"
-                      ml="6px"
-                      w="12px"
+    <div>
+      <Modal size="xl" isOpen={isOpen} onClose={onClose} isCentered>
+        <ModalOverlay bg="blackAlpha.300" backdropFilter="blur(10px)" />
+        <ModalContent padding="20px" borderRadius="20px" bgColor="#101010">
+          <ModalHeader>
+            <StyledHeaderContainer>
+              <StyledDripHeader>
+                {tokenAInfo ? (
+                  <HStack>
+                    <StyledTokenIcon
+                      fallback={<Skeleton borderRadius="50px" w="32px" h="32px" />}
+                      src={tokenAInfo.iconUrl}
                     />
-                  )}
-                </StyledModalFieldHeader>
-                <StyledModalFieldValue>
-                  {averagePrice && tokenAInfo && tokenBInfo ? (
-                    <Text display="flex" flexDir="row" alignItems="flex-end">
-                      <AverageDripPrice
-                        isPriceFlipped={isPriceFlipped}
-                        position={position}
-                        tokenAInfo={tokenAInfo}
-                        tokenBInfo={tokenBInfo}
+                    <Text>{tokenAInfo.symbol}</Text>
+                  </HStack>
+                ) : (
+                  <Skeleton h="40px" w="120px" />
+                )}
+                <ArrowRightIcon w="12px" />
+                {tokenBInfo ? (
+                  <HStack>
+                    <StyledTokenIcon
+                      fallback={<Skeleton borderRadius="50px" w="32px" h="32px" />}
+                      src={tokenBInfo.iconUrl}
+                    />
+                    <Text>{tokenBInfo.symbol}</Text>
+                  </HStack>
+                ) : (
+                  <Skeleton h="40px" w="120px" />
+                )}
+              </StyledDripHeader>
+              {vaultProtoConfig ? (
+                <Text
+                  border="2px solid #62AAFF"
+                  borderRadius="50px"
+                  padding="5px 10px"
+                  fontSize="12px"
+                  ml="5px"
+                >
+                  {explainGranularity(vaultProtoConfig.granularity.toNumber())}
+                </Text>
+              ) : (
+                <Skeleton h="40px" w="80px" />
+              )}
+            </StyledHeaderContainer>
+          </ModalHeader>
+          <ModalBody>
+            <StyledModalGrid>
+              <StyledModalCol h="300px">
+                <StyledModalField>
+                  <StyledModalFieldHeader>Deposit</StyledModalFieldHeader>
+                  <StyledModalFieldValue>
+                    {tokenAInfo ? (
+                      `${formatTokenAmount(
+                        position.depositedTokenAAmount,
+                        tokenAInfo.decimals,
+                        true
+                      )} ${tokenAInfo?.symbol}`
+                    ) : (
+                      <Skeleton mt="7px" w="120px" h="20px" />
+                    )}
+                  </StyledModalFieldValue>
+                </StyledModalField>
+                <StyledModalField>
+                  <StyledModalFieldHeader>Remaining {tokenAInfo?.symbol}</StyledModalFieldHeader>
+                  <StyledModalFieldValue>
+                    {tokenAInfo && remainingTokenAToDrip ? (
+                      `${formatTokenAmount(remainingTokenAToDrip, tokenAInfo.decimals, true)} ${
+                        tokenAInfo.symbol
+                      }`
+                    ) : (
+                      <Skeleton mt="7px" w="120px" h="20px" />
+                    )}
+                  </StyledModalFieldValue>
+                </StyledModalField>
+                <StyledModalField>
+                  <StyledModalFieldHeader>End</StyledModalFieldHeader>
+                  <StyledModalFieldValue>
+                    {estimatedEndDate ? (
+                      estimatedEndDate !== '-' ? (
+                        formatDate(estimatedEndDate)
+                      ) : (
+                        '-'
+                      )
+                    ) : (
+                      <Skeleton mt="7px" w="170px" h="20px" />
+                    )}
+                  </StyledModalFieldValue>
+                </StyledModalField>
+                <StyledModalField>
+                  <StyledModalFieldHeader>Market Price</StyledModalFieldHeader>
+                  <StyledModalFieldValue>
+                    {marketPrice && tokenAInfo && tokenBInfo ? (
+                      <Text display="flex" flexDir="row" alignItems="flex-end">
+                        <StyledPriceValue>{`${formatTokenAmount(
+                          marketPrice,
+                          0,
+                          true
+                        )}`}</StyledPriceValue>
+                        <Text w="5px" display="inline"></Text>
+                        <StyledPriceUnit>
+                          {isPriceFlipped
+                            ? `${tokenBInfo.symbol} per ${tokenAInfo.symbol}`
+                            : `${tokenAInfo.symbol} per ${tokenBInfo.symbol}`}
+                        </StyledPriceUnit>
+                      </Text>
+                    ) : closePositionPreviewLoading || (accruedTokenB && accruedTokenB.eqn(0)) ? (
+                      '-'
+                    ) : (
+                      <Skeleton mt="7px" w="170px" h="20px" />
+                    )}
+                  </StyledModalFieldValue>
+                </StyledModalField>
+                <StyledModalField>
+                  <StyledModalFieldHeader>
+                    <Text display="inline">Avg. Price</Text>
+                    {averagePrice && (
+                      <RepeatIcon
+                        onClick={() => setIsPriceFlipped((isFlipped) => !isFlipped)}
+                        _hover={{
+                          color: 'rgba(255, 255, 255, 0.8)',
+                          transition: '0.2s ease'
+                        }}
+                        transition="0.2s ease"
+                        cursor="pointer"
+                        color="rgba(255, 255, 255, 0.6)"
+                        ml="6px"
+                        w="12px"
                       />
-                    </Text>
-                  ) : closePositionPreviewLoading || (accruedTokenB && accruedTokenB.eqn(0)) ? (
-                    '-'
-                  ) : (
-                    <Skeleton mt="7px" w="170px" h="20px" />
-                  )}
-                </StyledModalFieldValue>
-              </StyledModalField>
-            </StyledModalCol>
-            <StyledModalCol h="300px">
-              <StyledModalField>
-                <StyledModalFieldHeader>Start</StyledModalFieldHeader>
-                <StyledModalFieldValue>
-                  {formatDate(new Date(position.depositTimestamp.muln(1e3).toNumber()))}
-                </StyledModalFieldValue>
-              </StyledModalField>
-              <StyledModalField>
-                <StyledModalFieldHeader>Accrued {tokenBInfo?.symbol}</StyledModalFieldHeader>
-                <StyledModalFieldValue>
-                  {accruedTokenB && tokenBInfo ? (
-                    `${formatTokenAmount(accruedTokenB, tokenBInfo.decimals, true)} ${
-                      tokenBInfo.symbol
-                    }`
-                  ) : (
-                    <Skeleton mt="7px" w="120px" h="20px" />
-                  )}
-                </StyledModalFieldValue>
-              </StyledModalField>
-              <StyledModalField>
-                <StyledModalFieldHeader>Drips Completed</StyledModalFieldHeader>
-                <StyledModalFieldValue>
-                  {numberOfDripsCompleted ? (
-                    `${numberOfDripsCompleted?.toString()} out of ${position.numberOfSwaps.toString()}`
-                  ) : (
-                    <Skeleton mt="7px" w="120px" h="20px" />
-                  )}
-                </StyledModalFieldValue>
-              </StyledModalField>
-              <StyledModalField>
-                <StyledModalFieldHeader>Withdrawn {tokenBInfo?.symbol}</StyledModalFieldHeader>
-                <StyledModalFieldValue>
-                  {tokenBInfo && withdrawnTokenBAmountAfterSpread ? (
-                    `${formatTokenAmount(
-                      withdrawnTokenBAmountAfterSpread,
-                      tokenBInfo.decimals,
-                      true
-                    )} ${tokenBInfo?.symbol}`
-                  ) : (
-                    <Skeleton mt="7px" w="120px" h="20px" />
-                  )}
-                </StyledModalFieldValue>
-              </StyledModalField>
+                    )}
+                  </StyledModalFieldHeader>
+                  <StyledModalFieldValue>
+                    {averagePrice && tokenAInfo && tokenBInfo ? (
+                      <Text display="flex" flexDir="row" alignItems="flex-end">
+                        <AverageDripPrice
+                          isPriceFlipped={isPriceFlipped}
+                          position={position}
+                          tokenAInfo={tokenAInfo}
+                          tokenBInfo={tokenBInfo}
+                        />
+                      </Text>
+                    ) : closePositionPreviewLoading || (accruedTokenB && accruedTokenB.eqn(0)) ? (
+                      '-'
+                    ) : (
+                      <Skeleton mt="7px" w="170px" h="20px" />
+                    )}
+                  </StyledModalFieldValue>
+                </StyledModalField>
+              </StyledModalCol>
+              <StyledModalCol h="300px">
+                <StyledModalField>
+                  <StyledModalFieldHeader>Start</StyledModalFieldHeader>
+                  <StyledModalFieldValue>
+                    {formatDate(new Date(position.depositTimestamp.muln(1e3).toNumber()))}
+                  </StyledModalFieldValue>
+                </StyledModalField>
+                <StyledModalField>
+                  <StyledModalFieldHeader>Accrued {tokenBInfo?.symbol}</StyledModalFieldHeader>
+                  <StyledModalFieldValue>
+                    {accruedTokenB && tokenBInfo ? (
+                      `${formatTokenAmount(accruedTokenB, tokenBInfo.decimals, true)} ${
+                        tokenBInfo.symbol
+                      }`
+                    ) : (
+                      <Skeleton mt="7px" w="120px" h="20px" />
+                    )}
+                  </StyledModalFieldValue>
+                </StyledModalField>
+                <StyledModalField>
+                  <StyledModalFieldHeader>Drips Completed</StyledModalFieldHeader>
+                  <StyledModalFieldValue>
+                    {numberOfDripsCompleted ? (
+                      `${numberOfDripsCompleted?.toString()} out of ${position.numberOfSwaps.toString()}`
+                    ) : (
+                      <Skeleton mt="7px" w="120px" h="20px" />
+                    )}
+                  </StyledModalFieldValue>
+                </StyledModalField>
+                <StyledModalField>
+                  <StyledModalFieldHeader>Withdrawn {tokenBInfo?.symbol}</StyledModalFieldHeader>
+                  <StyledModalFieldValue>
+                    {tokenBInfo && withdrawnTokenBAmountAfterSpread ? (
+                      `${formatTokenAmount(
+                        withdrawnTokenBAmountAfterSpread,
+                        tokenBInfo.decimals,
+                        true
+                      )} ${tokenBInfo?.symbol}`
+                    ) : (
+                      <Skeleton mt="7px" w="120px" h="20px" />
+                    )}
+                  </StyledModalFieldValue>
+                </StyledModalField>
 
-              <StyledModalField>
-                <StyledModalFieldHeader>Profit</StyledModalFieldHeader>
-                <StyledModalFieldValue>
-                  {averagePrice && marketPrice && tokenBInfo && tokenAInfo ? (
-                    <Text display="flex" flexDir="row" alignItems="flex-end">
-                      <StyledPriceValue>{`${formatTokenAmount(profit, 0, true)}`}</StyledPriceValue>
-                      <Text w="5px" display="inline"></Text>
-                    </Text>
-                  ) : closePositionPreviewLoading || (accruedTokenB && accruedTokenB.eqn(0)) ? (
-                    '-'
-                  ) : (
-                    <Skeleton mt="7px" w="170px" h="20px" />
-                  )}
-                </StyledModalFieldValue>
-              </StyledModalField>
-            </StyledModalCol>
-          </StyledModalGrid>
-        </ModalBody>
-        <ModalFooter>
-          <StyledModalGrid mt="20px">
-            <StyledModalCol>
-              <TransactionButton
-                variant="unstyled"
-                height="46px"
-                color="white"
-                bgColor="#62AAFF"
-                transition="0.2s ease"
-                _hover={{
-                  bgColor: '#60a0ff',
-                  transition: '0.2s ease'
-                }}
-                borderRadius="50px"
-                w="100%"
-                sendTx={closePosition}
-                text="Close Position"
-                onSucess={postSubmit}
-                onError={postSubmit}
-              />
-            </StyledModalCol>
-            <StyledModalCol>
-              <TransactionButton
-                variant="unstyled"
-                border="2px solid #62AAFF"
-                height="46px"
-                color="#62AAFF"
-                bgColor="transparent"
-                transition="0.2s ease"
-                _hover={{
-                  color: '#60a0ff',
-                  border: '2px solid #60a0ff',
-                  transition: '0.2s ease'
-                }}
-                borderRadius="50px"
-                w="100%"
-                sendTx={withdrawTokenB}
-                text={`Withdraw ${tokenBInfo?.symbol}`}
-                onSucess={postSubmit}
-                onError={postSubmit}
-              />
-            </StyledModalCol>
-          </StyledModalGrid>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+                <StyledModalField>
+                  <StyledModalFieldHeader>Profit</StyledModalFieldHeader>
+                  <StyledModalFieldValue>
+                    {averagePrice && marketPrice && tokenBInfo && tokenAInfo ? (
+                      <Text display="flex" flexDir="row" alignItems="flex-end">
+                        <StyledPriceValue>{`${formatTokenAmount(
+                          profit,
+                          0,
+                          true
+                        )}`}</StyledPriceValue>
+                        <Text w="5px" display="inline"></Text>
+                      </Text>
+                    ) : closePositionPreviewLoading || (accruedTokenB && accruedTokenB.eqn(0)) ? (
+                      '-'
+                    ) : (
+                      <Skeleton mt="7px" w="170px" h="20px" />
+                    )}
+                  </StyledModalFieldValue>
+                </StyledModalField>
+              </StyledModalCol>
+            </StyledModalGrid>
+          </ModalBody>
+          <ModalFooter>
+            <StyledModalGrid mt="20px">
+              <StyledModalCol>
+                <TransactionButton
+                  variant="unstyled"
+                  height="46px"
+                  color="white"
+                  bgColor="#62AAFF"
+                  transition="0.2s ease"
+                  _hover={{
+                    bgColor: '#60a0ff',
+                    transition: '0.2s ease'
+                  }}
+                  borderRadius="50px"
+                  w="100%"
+                  sendTx={closePosition}
+                  text="Close Position"
+                  onSucess={postSubmit}
+                  onError={postSubmit}
+                />
+              </StyledModalCol>
+              <StyledModalCol>
+                <TransactionButton
+                  variant="unstyled"
+                  border="2px solid #62AAFF"
+                  height="46px"
+                  color="#62AAFF"
+                  bgColor="transparent"
+                  transition="0.2s ease"
+                  _hover={{
+                    color: '#60a0ff',
+                    border: '2px solid #60a0ff',
+                    transition: '0.2s ease'
+                  }}
+                  borderRadius="50px"
+                  w="100%"
+                  sendTx={withdrawTokenB}
+                  text={`Withdraw ${tokenBInfo?.symbol}`}
+                  onSucess={postSubmit}
+                  onError={postSubmit}
+                />
+              </StyledModalCol>
+            </StyledModalGrid>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+      ;
+    </div>
   );
 }
 
