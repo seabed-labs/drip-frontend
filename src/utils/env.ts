@@ -21,3 +21,10 @@ export function getClientEnv(): ClientEnv {
 export function getProgramId(): string {
   return process.env.REACT_APP_DRIP_PROGRAM_ID ?? 'F1NyoZsUhJzcpGyoEqpDNbUMKVvCnSXcCki1nN3ycAeo';
 }
+
+export function getSolanaRpcUrl(): string {
+  if (!process.env.REACT_APP_SOLANA_RPC_URL) {
+    throw new Error('REACT_APP_SOLANA_RPC_URL env var was not set!');
+  }
+  return process.env.REACT_APP_SOLANA_RPC_URL;
+}

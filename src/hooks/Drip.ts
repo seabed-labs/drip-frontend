@@ -5,8 +5,7 @@ import { Connection, PublicKey, Transaction } from '@solana/web3.js';
 import { useMemo } from 'react';
 import { getApiUrl } from '../api/drip';
 import { useNetwork } from '../contexts/NetworkContext';
-import { getClusterApiUrl } from '../models/Network';
-import { getClientEnv, getProgramId } from '../utils/env';
+import { getClientEnv, getProgramId, getSolanaRpcUrl } from '../utils/env';
 
 export class DefaultWallet {
   publicKey: PublicKey = PublicKey.default;
@@ -31,7 +30,7 @@ export function useDrip(): Drip {
   const wallet = useWallet();
   const anchorWallet = useAnchorWallet();
   return useMemo(() => {
-    const clusterUrl = getClusterApiUrl(network);
+    const clusterUrl = getSolanaRpcUrl();
     const drip = Drip.fromConfigUrl(
       network,
       new AnchorProvider(

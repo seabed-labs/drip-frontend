@@ -19,12 +19,13 @@ import {
   createDefaultWalletNotFoundHandler
 } from '@solana-mobile/wallet-adapter-mobile';
 import { useNetwork } from './NetworkContext';
-import { getClusterApiUrl, toWalletAdapterNetwork } from '../models/Network';
+import { toWalletAdapterNetwork } from '../models/Network';
+import { getSolanaRpcUrl } from '../utils/env';
 
 export const WalletContext: FC<{ children: ReactNode }> = ({ children }) => {
   const network = useNetwork();
 
-  const endpoint = useMemo(() => getClusterApiUrl(network), [network]);
+  const endpoint = getSolanaRpcUrl();
   const walletAdapterNetwork = useMemo(() => toWalletAdapterNetwork(network), [network]);
 
   const wallets = useMemo(
