@@ -4,7 +4,7 @@
 
 |             | Devnet | Mainnet                                                                                                                                                                                          |
 | ----------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Staging n/a | n/a    |
+| Staging n/a | n/a    | n/a                                                                                                                                                                                              |
 | Production  | n/a    | [![Netlify Status](https://api.netlify.com/api/v1/badges/47c5386b-c0ef-4bc4-b3bf-5eda0a9c378d/deploy-status)](https://app.netlify.com/sites/drip-dcaf/deploys) <br/> [App](https://drip.dcaf.so) |
 
 ## Deploy Process
