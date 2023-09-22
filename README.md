@@ -2,10 +2,10 @@
 
 [![Maintainability](https://api.codeclimate.com/v1/badges/652ca31a64079f1ebc00/maintainability)](https://codeclimate.com/repos/62c90637d150fe5a9a00007f/maintainability)
 
-|            | Devnet                                                                                                                                                                                                             | Mainnet                                                                                                                                                                                                      |
-| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Staging    n/a | n/a |
-| Production | n/a          | [![Netlify Status](https://api.netlify.com/api/v1/badges/47c5386b-c0ef-4bc4-b3bf-5eda0a9c378d/deploy-status)](https://app.netlify.com/sites/drip-dcaf/deploys) <br/> [App](https://drip.dcaf.so)             |
+|             | Devnet | Mainnet                                                                                                                                                                                          |
+| ----------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Staging n/a | n/a    |
+| Production  | n/a    | [![Netlify Status](https://api.netlify.com/api/v1/badges/47c5386b-c0ef-4bc4-b3bf-5eda0a9c378d/deploy-status)](https://app.netlify.com/sites/drip-dcaf/deploys) <br/> [App](https://drip.dcaf.so) |
 
 ## Deploy Process
 
@@ -30,7 +30,7 @@ yarn
 yarn link
 ```
 
-- In `dcaf-labsdrip-frontend`, run:
+- In `dcaf-labs/drip-frontend`, run:
 
 ```bash
 yarn link @dcaf-labs/drip-sdk
