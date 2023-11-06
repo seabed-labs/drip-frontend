@@ -16,6 +16,8 @@
 
 ## Getting Started
 
+Export `REACT_APP_SOLANA_RPC_URL` and run `yarn && yarn start-mainnet-prod`.
+
 ### Install dependencies
 
 ```bash
